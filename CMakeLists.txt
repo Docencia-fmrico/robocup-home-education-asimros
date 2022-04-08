@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(visual-behavior-asimros)
+project(robocup-home-education-asimros)
 set(CMAKE_CXX_FLAGS "-std=c++17")
 
 set(CMAKE_CONFIG_PATH ${CMAKE_MODULE_PATH}  "${CMAKE_CURRENT_LIST_DIR}/cmake")

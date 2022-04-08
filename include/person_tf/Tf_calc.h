@@ -38,7 +38,7 @@ class Tf_calc
 {
   public:
     Tf_calc();
-    void callback_bbx(const sensor_msgs::ImageConstPtr& image,
+    void callback_tf(const sensor_msgs::ImageConstPtr& image,
                       const darknet_ros_msgs::BoundingBoxesConstPtr& boxes);
     
     void callback_caminfo(const sensor_msgs::CameraInfoConstPtr& msg);
@@ -51,6 +51,7 @@ class Tf_calc
     ros::Subscriber sub_cam_;
     image_geometry::PinholeCameraModel cammodel_;
     double dist_;
+    ros::Time boundingtime_;
 
     std::string objectFrameId_;
     std::string workingFrameId_;

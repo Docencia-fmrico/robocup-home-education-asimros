@@ -4,7 +4,7 @@
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "rgbd_tf");
-  Tf_calc calculator;
+  person_tf::Tf_calc calculator;
   ros::spin();
   return 0;
 }
