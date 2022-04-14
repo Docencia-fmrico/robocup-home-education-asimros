@@ -12,43 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "behaviour_trees/ChooseSide.h"
+#ifndef BEHAVIOUR_TREES_TURN_H
+#define BEHAVIOUR_TREES_TURN_H
+
 #include "behaviortree_cpp_v3/behavior_tree.h"
+#include "behaviortree_cpp_v3/bt_factory.h"
 #include <string>
 
 #include "ros/ros.h"
 
 namespace behaviour_trees
 {
-    ChooseSide::ChooseSide(const std::string& name)
-    : BT::ActionNodeBase(name, {})
-    {
-    }
 
-    void 
-    ChooseSide::halt()
-    {
-        ROS_INFO("ChooseSide halt");
-    }
+class Turn :  public BT::ActionNodeBase
+{
+    public:
+        explicit Turn(const std::string& name);
+        
+        void halt();
 
-    BT::NodeStatus
-    ChooseSide::tick()
-    {
-        if(!side_case.find())
-        {
-            return BT::NodeStatus::RUNNING;  
-        }
-        else
-        {
-            //crear el goal y meterlo en un puerto
-            return BT::NodeStatus::SUCCESS;
-        }
-    }
+        BT::NodeStatus tick();
+
+    private:
+        ros::Publisher vel_pub_;
+        float angspeed_ = 0.4;
+        std::string error;
+};
 
 }  // namespace behaviour_trees
 
-#include "behaviortree_cpp_v3/bt_factory.h"
-BT_REGISTER_NODES(factory)
-{
-  factory.registerNodeType<behaviour_trees::ChooseSide>("ChooseSide");
-}
+#endif  // BEHAVIOUR_TREES_TURN_H

@@ -21,6 +21,8 @@
 
 #include "ros/ros.h"
 
+#include "detect_case/SideCase.h"
+
 namespace behaviour_trees
 {
 
@@ -33,7 +35,8 @@ class ChooseSide :  public BT::ActionNodeBase
 
         BT::NodeStatus tick();
 
-    //private:
+    private:
+        detect_case::SideCase side_case;
 };
 
 }  // namespace behaviour_trees
