@@ -25,35 +25,16 @@ objectFrameId_("/person"),
 workingFrameId_("/base_footprint")
 {
     sub_cam_ = nh_.subscribe("/camera/depth/camera_info", 1, &Tf_calc::callback_caminfo, this);
-    sync_bbx.registerCallback(boost::bind(&Tf_calc::callback_bbx, this, _1, _2));
+    sync_bbx.registerCallback(boost::bind(&Tf_calc::callback_tf, this, _1, _2));
 }
 
 void Tf_calc::callback_caminfo(const sensor_msgs::CameraInfoConstPtr& msg)
 {
     cammodel_.fromCameraInfo(msg);
-    xyz_ = cammodel_.projectPixelTo3dRay(pixel_);
-
-    transform_.setOrigin(tf::Vector3(dist_, xyz_.x, xyz_.y));
-    transform_.setRotation(tf::Quaternion(0.0, 0.0, 0.0, 1.0));
-
-    transform_.stamp_ = ros::Time::now();
-    transform_.frame_id_ = workingFrameId_;
-    transform_.child_frame_id_ = objectFrameId_;
-
-    try
-    {
-        tfBroadcaster_.sendTransform(transform_);
-    }
-    catch(tf::TransformException& ex)
-    {
-        ROS_ERROR_STREAM("Transform error of sensor data: " << ex.what() << ", quitting callback");
-        return;
-    }
-    
 }
 
 void
-Tf_calc::callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msgs::BoundingBoxesConstPtr& boxes)
+Tf_calc::callback_tf(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msgs::BoundingBoxesConstPtr& boxes)
 {
     cv_bridge::CvImagePtr img_ptr_depth;
 
@@ -72,6 +53,24 @@ Tf_calc::callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros
         pixel_.x = (box.xmax + box.xmin) / 2;
         pixel_.y = (box.ymax + box.ymin) / 2;
         dist_ = img_ptr_depth->image.at<float>(cv::Point(pixel_.x, pixel_.y));
+    }
+
+    xyz_ = cammodel_.projectPixelTo3dRay(pixel_);
+    transform_.setOrigin(tf::Vector3(dist_/1000, -xyz_.x, xyz_.y));
+    transform_.setRotation(tf::Quaternion(0.0, 0.0, 0.0, 1.0));
+
+    transform_.stamp_ = ros::Time::now();
+    transform_.frame_id_ = workingFrameId_;
+    transform_.child_frame_id_ = objectFrameId_;
+
+    try
+    {
+        tfBroadcaster_.sendTransform(transform_);
+    }
+    catch(tf::TransformException& ex)
+    {
+        ROS_ERROR_STREAM("Transform error of sensor data: " << ex.what() << ", quitting callback");
+        return;
     }
 }
 
