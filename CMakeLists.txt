@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(visual-behavior-asimros)
+project(robocup-asimros)
 set(CMAKE_CXX_FLAGS "-std=c++17")
 
 set(CMAKE_CONFIG_PATH ${CMAKE_MODULE_PATH}  "${CMAKE_CURRENT_LIST_DIR}/cmake")
@@ -47,6 +47,11 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
   ${ZMQ_INCLUDE_DIRS}
+)
+
+add_library(asr_choose_side_node SHARED src/behaviour_trees/ChooseSide.cpp)
+list(APPEND plugin_libs
+  asr_choose_side_node
 )
 
 add_library(${PROJECT_NAME}
