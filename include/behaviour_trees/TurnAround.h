@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BEHAVIOUR_TREES_WAITFORPERSON_H
-#define BEHAVIOUR_TREES_WAITFORPERSON_H
+#ifndef BEHAVIOUR_TREES_TURNAROUND_H
+#define BEHAVIOUR_TREES_TURNAROUND_H
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
@@ -24,10 +24,10 @@
 namespace behaviour_trees
 {
 
-class WaitForPerson : public BT::ActionNodeBase
+class TurnAround :  public BT::ActionNodeBase
 {
     public:
-        explicit WaitForPerson(const std::string& name);
+        explicit TurnAround(const std::string& name);
         
         void halt();
 
@@ -35,9 +35,11 @@ class WaitForPerson : public BT::ActionNodeBase
 
     private:
         ros::NodeHandle nh_;
+        ros::Publisher vel_pub_;
+        float angspeed_ = 0.4;
         std::string error_;
 };
 
 }  // namespace behaviour_trees
 
-#endif  // BEHAVIOUR_TREES_WAITFORPERSON_H
+#endif  // BEHAVIOUR_TREES_TURNAROUND_H

@@ -32,7 +32,10 @@ int main(int argc, char **argv)
   BT::BehaviorTreeFactory factory;
   BT::SharedLibrary loader;
 
-  factory.registerFromPlugin(loader.getOSName("asr_turn_recovery_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_loc_person_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_turn_around_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_request_come_closer_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_follow_point_node"));
 
   auto blackboard = BT::Blackboard::create();
 

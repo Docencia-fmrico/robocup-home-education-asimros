@@ -40,6 +40,7 @@ namespace behaviour_trees
         }
         else
         {
+            // hacer una captura
             //crear el goal y meterlo en un puerto
             return BT::NodeStatus::SUCCESS;
         }
@@ -50,5 +51,5 @@ namespace behaviour_trees
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<behaviour_trees::ChooseSide>("ChooseSide");
+  factory.registerNodeType<behaviour_trees::ChooseSide>("choose_side");
 }

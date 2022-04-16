@@ -12,32 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BEHAVIOUR_TREES_WAITFORPERSON_H
-#define BEHAVIOUR_TREES_WAITFORPERSON_H
-
+#include "behaviour_trees/AskForCase.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
-#include "behaviortree_cpp_v3/bt_factory.h"
 #include <string>
 
 #include "ros/ros.h"
 
 namespace behaviour_trees
 {
+    AskForCase::AskForCase(const std::string& name)
+    : BT::ActionNodeBase(name, {})
+    {
+    }
 
-class WaitForPerson : public BT::ActionNodeBase
-{
-    public:
-        explicit WaitForPerson(const std::string& name);
-        
-        void halt();
+    void 
+    AskForCase::halt()
+    {
+        ROS_INFO("AskForCase halt");
+    }
 
-        BT::NodeStatus tick();
-
-    private:
-        ros::NodeHandle nh_;
-        std::string error_;
-};
+    BT::NodeStatus
+    AskForCase::tick()
+    {
+        // pide la maleta
+        return BT::NodeStatus::SUCCESS;
+    }
 
 }  // namespace behaviour_trees
 
-#endif  // BEHAVIOUR_TREES_WAITFORPERSON_H
+#include "behaviortree_cpp_v3/bt_factory.h"
+BT_REGISTER_NODES(factory)
+{
+  factory.registerNodeType<behaviour_trees::AskForCase>("ask_for_case");
+}

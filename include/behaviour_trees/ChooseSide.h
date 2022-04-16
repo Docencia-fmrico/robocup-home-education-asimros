@@ -36,6 +36,7 @@ class ChooseSide :  public BT::ActionNodeBase
         BT::NodeStatus tick();
 
     private:
+        ros::NodeHandle nh_;
         detect_case::SideCase side_case;
 };
 

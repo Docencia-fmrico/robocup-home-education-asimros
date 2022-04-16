@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BEHAVIOUR_TREES_TURN_H
-#define BEHAVIOUR_TREES_TURN_H
+#ifndef BEHAVIOUR_TREES_REQUESTCOMECLOSER_H
+#define BEHAVIOUR_TREES_REQUESTCOMECLOSER_H
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
@@ -24,21 +24,19 @@
 namespace behaviour_trees
 {
 
-class Turn :  public BT::ActionNodeBase
+class RequestComeCloser :  public BT::ActionNodeBase
 {
     public:
-        explicit Turn(const std::string& name);
+        explicit RequestComeCloser(const std::string& name);
         
         void halt();
 
         BT::NodeStatus tick();
 
     private:
-        ros::Publisher vel_pub_;
-        float angspeed_ = 0.4;
-        std::string error;
+        ros::NodeHandle nh_;
 };
 
 }  // namespace behaviour_trees
 
-#endif  // BEHAVIOUR_TREES_TURN_H
+#endif  // BEHAVIOUR_TREES_REQUESTCOMECLOSER_H

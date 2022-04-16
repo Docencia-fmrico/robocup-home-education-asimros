@@ -12,24 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BEHAVIOR_TREES_LOC_PERSON_H
-#define BEHAVIOR_TREES_LOC_PERSON_H
+#ifndef BEHAVIOUR_TREES_LOCPERSON_H
+#define BEHAVIOUR_TREES_LOCPERSON_H
 
-namespace behavior_trees
+#include "behaviortree_cpp_v3/behavior_tree.h"
+#include "behaviortree_cpp_v3/bt_factory.h"
+#include <string>
+
+#include "ros/ros.h"
+
+namespace behaviour_trees
 {
 
-class LocPerson : public BT::ActionNodeBase
+class LocPerson :  public BT::ActionNodeBase
 {
-  public:
-    explicit LocPerson(const std::string& name);
+    public:
+        explicit LocPerson(const std::string& name);
+        
+        void halt();
 
-    void halt();
+        BT::NodeStatus tick();
 
-    BT::NodeStatus tick();
-
-  private:
-    ros::NodeHandle n;
+    private:
+        ros::NodeHandle nh_;
+        std::string error_;
 };
-}  // namespace behavior_trees
 
-#endif  // BEHAVIOR_TREES_LOC_PERSON_H
+}  // namespace behaviour_trees
+
+#endif  // BEHAVIOUR_TREES_LOCPERSON_H

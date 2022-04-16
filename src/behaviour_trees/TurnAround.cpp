@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "behaviour_trees/WaitForPerson.h"
+#include "behaviour_trees/TurnAround.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include <string>
 #include "ros/ros.h"
+#include "geometry_msgs/Twist.h"
 
 #include "tf2/transform_datatypes.h"
 #include "tf2_ros/transform_listener.h"
@@ -26,32 +27,38 @@
 
 namespace behaviour_trees
 {
-    WaitForPerson::WaitForPerson(const std::string& name)
+    TurnAround::TurnAround(const std::string& name)
     : BT::ActionNodeBase(name, {})
     {
     }
 
     void 
-    WaitForPerson::halt()
+    TurnAround::halt()
     {
-        ROS_INFO("WaitForPerson halt");
+        ROS_INFO("TurnAround halt");
     }
 
     BT::NodeStatus
-    WaitForPerson::tick()
+    TurnAround::tick()
     {
+        // modificar el 50 -> de una vuelta
+        geometry_msgs::Twist cmd;
         tf2_ros::Buffer buffer;
         tf2_ros::TransformListener listener(buffer);
 
+        cmd.linear.x = 0.0;
+        cmd.angular.z = angspeed_;
+        vel_pub_.publish(cmd);
+
         if(buffer.canTransform("base_footprint", "person/0", ros::Time(0), ros::Duration(1.0), &error_))
         {
-            ROS_INFO("I have seen a person");
+            ROS_INFO("I have seen the person again");
             return BT::NodeStatus::SUCCESS;
         }
         else
         {
-            ROS_INFO("I haven't seen a person yet");
-            return BT::NodeStatus::RUNNING;  
+            ROS_INFO("I still haven't see the person");
+            return BT::NodeStatus::FAILURE;  
         }
     }
 
@@ -60,5 +67,5 @@ namespace behaviour_trees
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<behaviour_trees::WaitForPerson>("wait_for_person");
+  factory.registerNodeType<behaviour_trees::TurnAround>("turn_around");
 }

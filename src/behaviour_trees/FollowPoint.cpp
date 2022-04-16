@@ -1,4 +1,3 @@
-// Copyright 2019 Intelligent Robotics Lab
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,32 +11,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <string>
-#include "behavior_trees/loc_person.h"
+#include "behaviour_trees/FollowPoint.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
+#include <string>
+
 #include "ros/ros.h"
 
-namespace behavior_trees
+namespace behaviour_trees
 {
+    FollowPoint::FollowPoint(const std::string& name)
+    : BT::ActionNodeBase(name, {})
+    {
+    }
 
-LocPerson::LocPerson(const std::string& name)
-: BT::ActionNodeBase(name, {})
-{
-}
+    void 
+    FollowPoint::halt()
+    {
+        ROS_INFO("FollowPoint halt");
+    }
 
-void
-LocPerson::halt()
-{
-  ROS_INFO("LocPerson halt");
-}
+    BT::NodeStatus
+    FollowPoint::tick()
+    {
+        // coge el goal nav y hace lo que cliente nav??
+        return BT::NodeStatus::SUCCESS;
+    }
 
-
-
-
-}  // namespace behavior_trees
+}  // namespace behaviour_trees
 
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<behavior_trees::loc_person>("loc_person");
+  factory.registerNodeType<behaviour_trees::FollowPoint>("follow_point");
 }

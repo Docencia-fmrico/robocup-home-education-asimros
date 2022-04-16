@@ -6,12 +6,12 @@
             <ReactiveFallback>
                 <Action ID="loc_person" goal_nav=""/>
                 <Inverter>
-                    <RetryUntilSuccessful num_attempts="">
-                        <Fallback>
-                            <Action ID="turn"/>
-                            <Action ID="request_come_closer"/>
-                        </Fallback>
-                    </RetryUntilSuccessful>
+                    <Fallback>
+                        <RetryUntilSuccessful num_attempts="50">
+                            <Action ID="turn_around"/>
+                        </RetryUntilSuccessful>
+                        <Action ID="request_come_closer"/>
+                    </Fallback>
                 </Inverter>
             </ReactiveFallback>
             <Action ID="follow_point" goal_nav=""/>
@@ -26,7 +26,7 @@
             <output_port name="goal_nav"/>
         </Action>
         <Action ID="request_come_closer"/>
-        <Action ID="turn"/>
+        <Action ID="turn_around"/>
     </TreeNodesModel>
     <!-- ////////// -->
 </root>

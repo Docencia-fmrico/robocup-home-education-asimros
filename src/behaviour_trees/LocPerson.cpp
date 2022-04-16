@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "behaviour_trees/Turn.h"
+#include "behaviour_trees/LocPerson.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include <string>
 #include "ros/ros.h"
-#include "geometry_msgs/Twist.h"
 
 #include "tf2/transform_datatypes.h"
 #include "tf2_ros/transform_listener.h"
@@ -27,35 +26,32 @@
 
 namespace behaviour_trees
 {
-    Turn::Turn(const std::string& name)
+    LocPerson::LocPerson(const std::string& name)
     : BT::ActionNodeBase(name, {})
     {
     }
 
     void 
-    Turn::halt()
+    LocPerson::halt()
     {
-        ROS_INFO("Turn halt");
+        ROS_INFO("LocPerson halt");
     }
 
     BT::NodeStatus
-    Turn::tick()
+    LocPerson::tick()
     {
-        geometry_msgs::Twist cmd;
         tf2_ros::Buffer buffer;
         tf2_ros::TransformListener listener(buffer);
 
-        cmd.linear.x = 0.0;
-        cmd.angular.z = angspeed_;
-        vel_pub_.publish(cmd);
-
-        if(buffer.canTransform("base_footprint", "person/0", ros::Time(0), ros::Duration(1.0), &error))
+        if(buffer.canTransform("base_footprint", "person/0", ros::Time(0), ros::Duration(1.0), &error_))
         {
-            ROS_INFO("I have seen the person again");
+            ROS_INFO("I have seen a person");
+            //crea el goal y meterlo en un puerto
             return BT::NodeStatus::SUCCESS;
         }
         else
         {
+            ROS_INFO("I haven't seen a person yet");
             return BT::NodeStatus::FAILURE;  
         }
     }
@@ -65,5 +61,5 @@ namespace behaviour_trees
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<behaviour_trees::Turn>("Turn");
+  factory.registerNodeType<behaviour_trees::LocPerson>("loc_person");
 }

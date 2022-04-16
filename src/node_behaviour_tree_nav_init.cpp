@@ -34,6 +34,8 @@ int main(int argc, char **argv)
 
   factory.registerFromPlugin(loader.getOSName("asr_wait_for_person_node"));
   factory.registerFromPlugin(loader.getOSName("asr_choose_side_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_follow_point_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_ask_for_case_node"));
 
   auto blackboard = BT::Blackboard::create();
 

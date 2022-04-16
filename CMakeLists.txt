@@ -49,14 +49,28 @@ include_directories(
   ${ZMQ_INCLUDE_DIRS}
 )
 
-add_library(asr_choose_side_node SHARED src/behaviour_trees/ChooseSide.cpp)
 add_library(asr_wait_for_person_node SHARED src/behaviour_trees/WaitForPerson.cpp)
-add_library(asr_turn_recovery_node SHARED src/behaviour_trees/Turn.cpp)
+add_library(asr_choose_side_node SHARED src/behaviour_trees/ChooseSide.cpp)
+add_library(asr_follow_point_node SHARED src/behaviour_trees/FollowPoint.cpp)
+add_library(asr_ask_for_case_node SHARED src/behaviour_trees/AskForCase.cpp)
+add_library(asr_loc_person_node SHARED src/behaviour_trees/LocPerson.cpp)
+add_library(asr_turn_around_node SHARED src/behaviour_trees/TurnAround.cpp)
+add_library(asr_request_come_closer_node SHARED src/behaviour_trees/RequestComeCloser.cpp)
+
 list(APPEND plugin_libs
   asr_choose_side_node
   asr_wait_for_person_node
-  asr_turn_recovery_node
+  asr_follow_point_node
+  asr_ask_for_case_node
+  asr_loc_person_node
+  asr_request_come_closer_node
+  asr_turn_around_node
 )
+
+foreach(bt_plugin ${plugin_libs})
+  target_link_libraries(${bt_plugin} ${PROJECT_NAME} ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} )
+  target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
+endforeach()
 
 add_library(${PROJECT_NAME}
   src/person_tf/Tf_calc.cpp
@@ -69,16 +83,27 @@ add_executable(node_behaviour_tree_nav_init src/node_behaviour_tree_nav_init.cpp
 target_link_libraries(node_behaviour_tree_nav_init ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 add_executable(node_behaviour_tree_nav src/node_behaviour_tree_nav.cpp)
 target_link_libraries(node_behaviour_tree_nav ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
-add_executable(nodo_prueba src/nodo_prueba.cpp)
-target_link_libraries(nodo_prueba ${PROJECT_NAME}  ${OpenCV_LIBRARIES} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 
 roslint_cpp(
   src/nodo_calc_tf_person.cpp
   include/person_tf/Tf_calc.h src/person_tf/Tf_calc.cpp
+  src/behaviour_trees/WaitForPerson.cpp
+  include/behaviour_trees/WaitForPerson.h
   src/behaviour_trees/ChooseSide.cpp
   include/behaviour_trees/ChooseSide.h
   src/detect_case/SideCase.cpp
   include/detect_case/SideCase.h
-  src/behaviour_trees/WaitForPerson.cpp
-  include/behaviour_trees/WaitForPerson.h
+  src/behaviour_trees/FollowPoint.cpp
+  include/behaviour_trees/FollowPoint.h
+  src/behaviour_trees/AskForCase.cpp
+  include/behaviour_trees/AskForCase.h
+  src/behaviour_trees/TurnAround.cpp
+  include/behaviour_trees/TurnAround.cpp
+  src/behaviour_trees/LocPerson.cpp
+  include/behaviour_trees/LocPerson.h
+  src/behaviour_trees/RequestComeCloser.cpp
+  include/behaviour_trees/RequestComeCloser.h
+  src/node_behaviour_tree_nav.cpp
+  src/node_behaviour_tree_nav_init.cpp
+  src/nodo_calc_tf_person.cpp
 )
