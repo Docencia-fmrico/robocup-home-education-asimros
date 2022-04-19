@@ -14,8 +14,10 @@
 
 #include "behaviour_trees/LocPerson.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
+
 #include <string>
 #include "ros/ros.h"
+#include <move_base_msgs/MoveBaseAction.h>
 
 #include "tf2/transform_datatypes.h"
 #include "tf2_ros/transform_listener.h"
@@ -26,27 +28,50 @@
 
 namespace behaviour_trees
 {
-    LocPerson::LocPerson(const std::string& name)
-    : BT::ActionNodeBase(name, {})
+    
+    LocPerson::LocPerson(const std::string& name, const BT::NodeConfiguration& config)
+    : BT::ActionNodeBase(name, config)
     {
     }
-
+    
+    
     void 
     LocPerson::halt()
     {
         ROS_INFO("LocPerson halt");
     }
+    
+    
+    BT::PortsList 
+    LocPerson::providedPorts() 
+    { 
+        return { BT::OutputPort<move_base_msgs::MoveBaseGoal>("goal_nav") }; 
+    }
+    
 
     BT::NodeStatus
     LocPerson::tick()
     {
         tf2_ros::Buffer buffer;
         tf2_ros::TransformListener listener(buffer);
+        move_base_msgs::MoveBaseGoal goal;
 
         if(buffer.canTransform("base_footprint", "person/0", ros::Time(0), ros::Duration(1.0), &error_))
         {
             ROS_INFO("I have seen a person");
-            //crea el goal y meterlo en un puerto
+
+            goal.target_pose.header.frame_id = "map";
+            goal.target_pose.header.stamp = ros::Time::now();
+            goal.target_pose.pose.position.x = bf2person_.getOrigin().x();
+            goal.target_pose.pose.position.y = bf2person_.getOrigin().y();
+            goal.target_pose.pose.position.z = 0.0;
+            goal.target_pose.pose.orientation.x = 0.0;
+            goal.target_pose.pose.orientation.y = 0.0;
+            goal.target_pose.pose.orientation.z = 0.0;
+            goal.target_pose.pose.orientation.w = 1.0;
+
+            setOutput("goal_nav", goal);
+
             return BT::NodeStatus::SUCCESS;
         }
         else

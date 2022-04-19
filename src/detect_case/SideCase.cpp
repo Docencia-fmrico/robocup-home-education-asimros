@@ -19,8 +19,6 @@
 #include <message_filters/sync_policies/approximate_time.h>
 
 #include <cv_bridge/cv_bridge.h>
-#include <cmath>
-
 #include <sensor_msgs/Image.h>
 #include <darknet_ros_msgs/BoundingBoxes.h>
 
@@ -57,7 +55,7 @@ SideCase::callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ro
     for (const auto & box : boxes->bounding_boxes)
     {
         int px = (box.xmax + box.xmin) / 2;
-        find_case_ = px_ != 0 && abs(px - px_) > 130; // mirarlo en el robot real
+        find_case_ = px_ != 0 && px - px_ > 130; // mirarlo en el robot real
         px_ = px;
     }
 }

@@ -19,8 +19,8 @@
 
 namespace behaviour_trees
 {
-    FollowPoint::FollowPoint(const std::string& name)
-    : BT::ActionNodeBase(name, {})
+    FollowPoint::FollowPoint(const std::string& name, const BT::NodeConfiguration& config)
+    : BT::ActionNodeBase(name, config)
     {
     }
 
@@ -30,10 +30,24 @@ namespace behaviour_trees
         ROS_INFO("FollowPoint halt");
     }
 
+    BT::PortsList 
+    FollowPoint::providedPorts() 
+    { 
+        return { BT::InputPort<move_base_msgs::MoveBaseGoal>("goal_nav") }; 
+    }
+
     BT::NodeStatus
     FollowPoint::tick()
     {
-        // coge el goal nav y hace lo que cliente nav??
+        BT::Optional<move_base_msgs::MoveBaseGoal> goal = getInput<move_base_msgs::MoveBaseGoal>("goal_nav"); 
+        
+        if(!goal)
+        {
+            throw BT::RuntimeError("missing required input [goal_nav]: ", goal.error());
+        }
+
+        nav_client_.doWork(goal.value());
+
         return BT::NodeStatus::SUCCESS;
     }
 

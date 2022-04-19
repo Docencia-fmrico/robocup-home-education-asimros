@@ -75,6 +75,7 @@ endforeach()
 add_library(${PROJECT_NAME}
   src/person_tf/Tf_calc.cpp
   src/detect_case/SideCase.cpp
+  src/navigation/NavClient.cpp
 )
 
 add_executable(nodo_calc_tf_person src/nodo_calc_tf_person.cpp)
@@ -86,7 +87,8 @@ target_link_libraries(node_behaviour_tree_nav ${PROJECT_NAME} ${catkin_LIBRARIES
 
 roslint_cpp(
   src/nodo_calc_tf_person.cpp
-  include/person_tf/Tf_calc.h src/person_tf/Tf_calc.cpp
+  include/person_tf/Tf_calc.h 
+  src/person_tf/Tf_calc.cpp
   src/behaviour_trees/WaitForPerson.cpp
   include/behaviour_trees/WaitForPerson.h
   src/behaviour_trees/ChooseSide.cpp
@@ -105,5 +107,6 @@ roslint_cpp(
   include/behaviour_trees/RequestComeCloser.h
   src/node_behaviour_tree_nav.cpp
   src/node_behaviour_tree_nav_init.cpp
-  src/nodo_calc_tf_person.cpp
+  src/navigation/NavClient.cpp
+  include/navigation/NavClient.h
 )

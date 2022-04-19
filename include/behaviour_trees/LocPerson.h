@@ -21,20 +21,26 @@
 
 #include "ros/ros.h"
 
+#include "tf2/transform_datatypes.h"
+#include "tf2/LinearMath/Transform.h"
+
 namespace behaviour_trees
 {
 
 class LocPerson :  public BT::ActionNodeBase
 {
     public:
-        explicit LocPerson(const std::string& name);
-        
+        explicit LocPerson(const std::string& name, const BT::NodeConfiguration& config);
+
         void halt();
+
+        static BT::PortsList providedPorts();
 
         BT::NodeStatus tick();
 
     private:
         ros::NodeHandle nh_;
+        tf2::Stamped<tf2::Transform> bf2person_;
         std::string error_;
 };
 

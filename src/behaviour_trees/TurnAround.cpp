@@ -30,6 +30,7 @@ namespace behaviour_trees
     TurnAround::TurnAround(const std::string& name)
     : BT::ActionNodeBase(name, {})
     {
+        vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 100);
     }
 
     void 

@@ -20,8 +20,8 @@
 
 namespace behaviour_trees
 {
-    ChooseSide::ChooseSide(const std::string& name)
-    : BT::ActionNodeBase(name, {})
+    ChooseSide::ChooseSide(const std::string& name, const BT::NodeConfiguration& config)
+    : BT::ActionNodeBase(name, config)
     {
     }
 
@@ -31,17 +31,37 @@ namespace behaviour_trees
         ROS_INFO("ChooseSide halt");
     }
 
+    BT::PortsList 
+    ChooseSide::providedPorts() 
+    { 
+        return { BT::OutputPort<move_base_msgs::MoveBaseGoal>("goal_nav") }; 
+    }
+
     BT::NodeStatus
     ChooseSide::tick()
     {
+        move_base_msgs::MoveBaseGoal goal;
+
         if(!side_case.find())
         {
             return BT::NodeStatus::RUNNING;  
         }
         else
         {
+            // los timestapms no se comprueban -> sabemos que hay persona por side_case ????
+            goal.target_pose.header.frame_id = "map";
+            goal.target_pose.header.stamp = ros::Time::now();
+            goal.target_pose.pose.position.x = bf2person_.getOrigin().x(); // modificarlos: aún más a un lado ¿cuál?
+            goal.target_pose.pose.position.y = bf2person_.getOrigin().y(); // modificarlos: se pare antes
+            goal.target_pose.pose.position.z = 0.0;
+            goal.target_pose.pose.orientation.x = 0.0;
+            goal.target_pose.pose.orientation.y = 0.0;
+            goal.target_pose.pose.orientation.z = 0.0;
+            goal.target_pose.pose.orientation.w = 1.0;
+
+            setOutput("goal_nav", goal);
+
             // hacer una captura
-            //crear el goal y meterlo en un puerto
             return BT::NodeStatus::SUCCESS;
         }
     }

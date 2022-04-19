@@ -17,9 +17,13 @@
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
-#include <string>
-
 #include "ros/ros.h"
+
+#include <string>
+#include <move_base_msgs/MoveBaseAction.h>
+
+#include "tf2/transform_datatypes.h"
+#include "tf2/LinearMath/Transform.h"
 
 #include "detect_case/SideCase.h"
 
@@ -29,15 +33,18 @@ namespace behaviour_trees
 class ChooseSide :  public BT::ActionNodeBase
 {
     public:
-        explicit ChooseSide(const std::string& name);
+        explicit ChooseSide(const std::string& name, const BT::NodeConfiguration& config);
         
         void halt();
+
+        static BT::PortsList providedPorts();
 
         BT::NodeStatus tick();
 
     private:
         ros::NodeHandle nh_;
         detect_case::SideCase side_case;
+        tf2::Stamped<tf2::Transform> bf2person_;
 };
 
 }  // namespace behaviour_trees

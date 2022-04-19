@@ -12,37 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BEHAVIOUR_TREES_FOLLOWPOINT_H
-#define BEHAVIOUR_TREES_FOLLOWPOINT_H
+#ifndef NAVIGATION_NAVCLIENT_H
+#define NAVIGATION_NAVCLIENT_H
 
-#include "behaviortree_cpp_v3/behavior_tree.h"
-#include "behaviortree_cpp_v3/bt_factory.h"
-
-#include <string>
+#include <ros/ros.h>
+#include <actionlib/client/simple_action_client.h>
 #include <move_base_msgs/MoveBaseAction.h>
 
-#include "ros/ros.h"
-#include "navigation/NavClient.h"
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> Client;
 
-namespace behaviour_trees
+namespace navigation
 {
 
-class FollowPoint :  public BT::ActionNodeBase
+class NavClient
 {
     public:
-        explicit FollowPoint(const std::string& name, const BT::NodeConfiguration& config);
+        NavClient();
 
-        void halt();
-
-        static BT::PortsList providedPorts();
-
-        BT::NodeStatus tick();
+        void doWork(move_base_msgs::MoveBaseGoal goal);
+        void feedbackCb(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback);
+        void doneCb(const actionlib::SimpleClientGoalState& state, const move_base_msgs::MoveBaseResultConstPtr& result);
 
     private:
-        ros::NodeHandle nh_;
-        navigation::NavClient nav_client_;
+        Client ac_;
+        move_base_msgs::MoveBaseGoal goal_;
 };
 
-}  // namespace behaviour_trees
+}  // namespace navigation
 
-#endif  // BEHAVIOUR_TREES_FOLLOWPOINT_H
+#endif  // NAVIGATION_NAVCLIENT_H
