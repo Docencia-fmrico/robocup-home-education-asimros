@@ -45,6 +45,7 @@ class ChooseSide :  public BT::ActionNodeBase
         ros::NodeHandle nh_;
         detect_case::SideCase side_case;
         tf2::Stamped<tf2::Transform> bf2person_;
+        std::string error_;
 };
 
 }  // namespace behaviour_trees

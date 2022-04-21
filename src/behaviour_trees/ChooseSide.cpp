@@ -16,6 +16,13 @@
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include <string>
 
+#include "tf2/transform_datatypes.h"
+#include "tf2_ros/transform_listener.h"
+#include "tf2/LinearMath/Transform.h"
+#include "geometry_msgs/TransformStamped.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+#include "tf2/convert.h"
+
 #include "ros/ros.h"
 
 namespace behaviour_trees
@@ -40,15 +47,12 @@ namespace behaviour_trees
     BT::NodeStatus
     ChooseSide::tick()
     {
+        tf2_ros::Buffer buffer;
+        tf2_ros::TransformListener listener(buffer);
         move_base_msgs::MoveBaseGoal goal;
 
-        if(!side_case.find())
+        if(side_case.find() && buffer.canTransform("base_footprint", "person/0", ros::Time(0), ros::Duration(1.0), &error_))
         {
-            return BT::NodeStatus::RUNNING;  
-        }
-        else
-        {
-            // los timestapms no se comprueban -> sabemos que hay persona por side_case ????
             goal.target_pose.header.frame_id = "map";
             goal.target_pose.header.stamp = ros::Time::now();
             goal.target_pose.pose.position.x = bf2person_.getOrigin().x(); // modificarlos: aún más a un lado ¿cuál?
@@ -63,6 +67,10 @@ namespace behaviour_trees
 
             // hacer una captura
             return BT::NodeStatus::SUCCESS;
+        }
+        else
+        {
+            return BT::NodeStatus::RUNNING; 
         }
     }
 
