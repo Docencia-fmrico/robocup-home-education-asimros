@@ -19,42 +19,64 @@
 
 namespace behaviour_trees
 {
-    FollowPoint::FollowPoint(const std::string& name, const BT::NodeConfiguration& config)
-    : BT::ActionNodeBase(name, config)
-    {
-    }
 
-    void 
-    FollowPoint::halt()
-    {
-        ROS_INFO("FollowPoint halt");
-    }
+FollowPoint::FollowPoint(
+  const std::string& name,
+  const std::string & action_name,
+  const BT::NodeConfiguration & config)
+: BTNavAction(name, action_name, config), counter_(0)
+{
+}
 
-    BT::PortsList 
-    FollowPoint::providedPorts() 
-    { 
-        return { BT::InputPort<move_base_msgs::MoveBaseGoal>("goal_nav") }; 
-    }
+void
+FollowPoint::on_halt()
+{
+  ROS_INFO("Move halt");
+}
 
-    BT::NodeStatus
-    FollowPoint::tick()
-    {
-        BT::Optional<move_base_msgs::MoveBaseGoal> goal = getInput<move_base_msgs::MoveBaseGoal>("goal_nav"); 
-        
-        if(!goal)
-        {
-            throw BT::RuntimeError("missing required input [goal_nav]: ", goal.error());
-        }
+void
+FollowPoint::on_start()
+{
+  move_base_msgs::MoveBaseGoal goal = getInput<move_base_msgs::MoveBaseGoal>("goal_nav").value();
+  set_goal(goal);
 
-        nav_client_.doWork(goal.value());
+  ROS_INFO("Move start");
+}
 
-        return BT::NodeStatus::SUCCESS;
-    }
+BT::NodeStatus
+FollowPoint::on_tick()
+{
+  ROS_INFO("Move tick");
+  
+  if (counter_++ == 20)
+  {
+    std::cerr << "New Goal===========================" << std::endl;
 
-}  // namespace behaviour_trees
+    move_base_msgs::MoveBaseGoal goal = getInput<move_base_msgs::MoveBaseGoal>("goal_nav").value();
+	set_goal(goal);
+  }
+
+  return BT::NodeStatus::RUNNING;
+}
+
+void
+FollowPoint::on_feedback(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback)
+{
+	ROS_INFO("Current count %lf", feedback->base_position.pose.position.x);
+}
+
+}  // namespace behavior_trees
 
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<behaviour_trees::FollowPoint>("follow_point");
+    BT::NodeBuilder builder =
+    [](const std::string & name, const BT::NodeConfiguration & config)
+    {
+      return std::make_unique<behaviour_trees::FollowPoint>(
+        name, "move_base", config);
+    };
+
+  factory.registerBuilder<behaviour_trees::FollowPoint>(
+    "FollowPoint", builder);
 }

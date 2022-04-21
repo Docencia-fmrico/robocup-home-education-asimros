@@ -56,7 +56,7 @@ Tf_calc::callback_tf(const sensor_msgs::ImageConstPtr& image, const darknet_ros_
     }
 
     xyz_ = cammodel_.projectPixelTo3dRay(pixel_);
-    transform_.setOrigin(tf::Vector3(dist_/1000, -xyz_.x, xyz_.y));
+    transform_.setOrigin(tf::Vector3(dist_, -xyz_.x, xyz_.y));
     transform_.setRotation(tf::Quaternion(0.0, 0.0, 0.0, 1.0));
 
     transform_.stamp_ = ros::Time::now();

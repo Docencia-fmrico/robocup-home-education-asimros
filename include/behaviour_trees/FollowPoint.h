@@ -20,27 +20,40 @@
 
 #include <string>
 #include <move_base_msgs/MoveBaseAction.h>
+#include "behaviour_trees/BTNavAction.h"
 
 #include "ros/ros.h"
 #include "navigation/NavClient.h"
 
+#include "tf2/transform_datatypes.h"
+#include "tf2_ros/transform_listener.h"
+#include "tf2/LinearMath/Transform.h"
+#include "geometry_msgs/TransformStamped.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+#include "tf2/convert.h"
+
 namespace behaviour_trees
 {
 
-class FollowPoint :  public BT::ActionNodeBase
+class FollowPoint : public BTNavAction
 {
-    public:
-        explicit FollowPoint(const std::string& name, const BT::NodeConfiguration& config);
+  public:
+    explicit FollowPoint(const std::string& name,
+    const std::string & action_name,
+    const BT::NodeConfiguration & config);
 
-        void halt();
+    void on_halt() override;
+    BT::NodeStatus on_tick() override;
+    void on_start() override;
+    void on_feedback(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback) override;
 
-        static BT::PortsList providedPorts();
+	static BT::PortsList providedPorts() 
+	{ 
+    	return { BT::InputPort<move_base_msgs::MoveBaseGoal>("goal_nav") }; 
+	}
 
-        BT::NodeStatus tick();
-
-    private:
-        ros::NodeHandle nh_;
-        navigation::NavClient nav_client_;
+  private:
+    int counter_;
 };
 
 }  // namespace behaviour_trees
