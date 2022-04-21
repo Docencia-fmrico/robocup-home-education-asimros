@@ -23,7 +23,6 @@
 #include "behaviour_trees/BTNavAction.h"
 
 #include "ros/ros.h"
-#include "navigation/NavClient.h"
 
 #include "tf2/transform_datatypes.h"
 #include "tf2_ros/transform_listener.h"

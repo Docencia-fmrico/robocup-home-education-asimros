@@ -30,7 +30,8 @@ namespace behaviour_trees
 {
     
     LocPerson::LocPerson(const std::string& name, const BT::NodeConfiguration& config)
-    : BT::ActionNodeBase(name, config)
+    : BT::ActionNodeBase(name, config),
+      listener(buffer)
     {
     }
     
@@ -52,11 +53,9 @@ namespace behaviour_trees
     BT::NodeStatus
     LocPerson::tick()
     {
-        tf2_ros::Buffer buffer;
-        tf2_ros::TransformListener listener(buffer);
         move_base_msgs::MoveBaseGoal goal;
 
-        if(buffer.canTransform("base_footprint", "person/0", ros::Time(0), ros::Duration(1.0), &error_))
+        if(buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
         {
             ROS_INFO("I have seen a person");
 
