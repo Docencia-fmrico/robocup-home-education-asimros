@@ -51,7 +51,7 @@ namespace behaviour_trees
         tf2_ros::TransformListener listener(buffer);
         move_base_msgs::MoveBaseGoal goal;
 
-        if(side_case.find() && buffer.canTransform("base_footprint", "person/0", ros::Time(0), ros::Duration(1.0), &error_))
+        if(side_case.find() && buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
         {
             goal.target_pose.header.frame_id = "map";
             goal.target_pose.header.stamp = ros::Time::now();

@@ -36,6 +36,8 @@ class WaitForPerson : public BT::ActionNodeBase
     private:
         ros::NodeHandle nh_;
         std::string error_;
+		tf2_ros::Buffer buffer;
+        tf2_ros::TransformListener listener;
 };
 
 }  // namespace behaviour_trees
