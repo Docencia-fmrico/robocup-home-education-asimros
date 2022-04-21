@@ -34,7 +34,7 @@ namespace behaviour_trees
     BT::NodeStatus
     RequestComeCloser::tick()
     {
-        //decir que se acerque
+        ROS_INFO("ven cerca por favor");
         return BT::NodeStatus::SUCCESS;
     }
 

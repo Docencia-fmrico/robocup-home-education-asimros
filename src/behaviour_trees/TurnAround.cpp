@@ -28,7 +28,8 @@
 namespace behaviour_trees
 {
     TurnAround::TurnAround(const std::string& name)
-    : BT::ActionNodeBase(name, {})
+    : BT::ActionNodeBase(name, {}),
+    listener(buffer)
     {
         vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 100);
     }
@@ -44,8 +45,8 @@ namespace behaviour_trees
     {
         // modificar el 50 -> de una vuelta
         geometry_msgs::Twist cmd;
-        tf2_ros::Buffer buffer;
-        tf2_ros::TransformListener listener(buffer);
+        
+        
 
         cmd.linear.x = 0.0;
         cmd.angular.z = angspeed_;
