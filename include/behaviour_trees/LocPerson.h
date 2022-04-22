@@ -22,7 +22,11 @@
 #include "ros/ros.h"
 
 #include "tf2/transform_datatypes.h"
+#include "tf2_ros/transform_listener.h"
 #include "tf2/LinearMath/Transform.h"
+#include "geometry_msgs/TransformStamped.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+#include "tf2/convert.h"
 
 namespace behaviour_trees
 {
@@ -42,6 +46,8 @@ class LocPerson :  public BT::ActionNodeBase
         ros::NodeHandle nh_;
         tf2::Stamped<tf2::Transform> bf2person_;
         std::string error_;
+        tf2_ros::Buffer buffer;
+        tf2_ros::TransformListener listener;
 };
 
 }  // namespace behaviour_trees
