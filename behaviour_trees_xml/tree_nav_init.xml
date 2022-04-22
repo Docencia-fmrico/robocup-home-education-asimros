@@ -5,7 +5,7 @@
         <Sequence>
             <Action ID="wait_for_person"/>
             <Action ID="choose_side" goal_nav=""/>
-            <Action ID="FollowPoint" goal_nav=""/>
+            <Action ID="follow_point" goal_nav=""/>
             <Action ID="ask_for_case"/>
         </Sequence>
     </BehaviorTree>
@@ -15,7 +15,7 @@
         <Action ID="choose_side">
             <output_port name="goal_nav"/>
         </Action>
-        <Action ID="FollowPoint">
+        <Action ID="follow_point">
             <input_port name="goal_nav"/>
         </Action>
         <Action ID="wait_for_person"/>

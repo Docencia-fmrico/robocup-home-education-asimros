@@ -55,7 +55,19 @@ SideCase::callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ro
     for (const auto & box : boxes->bounding_boxes)
     {
         int px = (box.xmax + box.xmin) / 2;
-        find_case_ = px_ != 0 && px - px_ > 130; // mirarlo en el robot real
+
+        if (px - px_ > 130 && px_ != 0)
+        {
+            find_case_ = 2; //right
+        }
+        else if (px - px_< -130 && px_ != 0) 
+        {
+            find_case_ = 1; //left
+        }         
+        else
+        {
+            find_case_ = 0; //not choose
+        }   
         px_ = px;
     }
 }

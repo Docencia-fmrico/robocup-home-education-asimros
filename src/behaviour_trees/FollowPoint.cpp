@@ -79,5 +79,5 @@ BT_REGISTER_NODES(factory)
     };
 
   factory.registerBuilder<behaviour_trees::FollowPoint>(
-    "FollowPoint", builder);
+    "follow_point", builder);
 }
