@@ -49,7 +49,7 @@ class FollowPoint : public BTNavAction
 
 	static BT::PortsList providedPorts() 
 	{ 
-    	return { BT::InputPort<move_base_msgs::MoveBaseGoal>("goal_nav") }; 
+    	return { BT::InputPort<move_base_msgs::MoveBaseGoal>("goal_nav")}; 
 	}
 
   private:

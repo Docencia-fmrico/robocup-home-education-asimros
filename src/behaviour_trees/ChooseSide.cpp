@@ -44,7 +44,7 @@ namespace behaviour_trees
     {
         move_base_msgs::MoveBaseGoal goal;
 
-        if(side_case.find() && buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
+        if(buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
         {	
 			map2person_msg = buffer.lookupTransform("map", "person", ros::Time(0));
       		tf2::fromMsg(map2person_msg, map2person);
@@ -58,7 +58,6 @@ namespace behaviour_trees
             goal.target_pose.pose.orientation.y = 0.0;
             goal.target_pose.pose.orientation.z = 0.0;
             goal.target_pose.pose.orientation.w = 1.0;
-
             setOutput<move_base_msgs::MoveBaseGoal>("goal_nav", goal);
 
             // hacer una captura
@@ -66,6 +65,7 @@ namespace behaviour_trees
         }
         else
         {
+			ROS_INFO("Unable to transform");
             return BT::NodeStatus::RUNNING; 
         }
     }

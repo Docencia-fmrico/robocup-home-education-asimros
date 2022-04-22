@@ -20,7 +20,9 @@
 #include "ros/ros.h"
 
 #include <string>
+#include <actionlib/client/simple_action_client.h>
 #include <move_base_msgs/MoveBaseAction.h>
+
 
 #include "tf2/transform_datatypes.h"
 #include "tf2_ros/transform_listener.h"
@@ -43,7 +45,7 @@ class ChooseSide : public BT::ActionNodeBase
 
         static BT::PortsList providedPorts() 
     	{ 
-        	return { BT::OutputPort<move_base_msgs::MoveBaseGoal>("goal_nav") }; 
+        	return { BT::OutputPort<move_base_msgs::MoveBaseGoal>("goal_nav")}; 
     	}
 
         BT::NodeStatus tick();

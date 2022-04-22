@@ -75,7 +75,6 @@ endforeach()
 add_library(${PROJECT_NAME}
   src/person_tf/Tf_calc.cpp
   src/detect_case/SideCase.cpp
-  src/navigation/NavClient.cpp
 )
 
 add_executable(nodo_calc_tf_person src/nodo_calc_tf_person.cpp)
@@ -105,8 +104,7 @@ roslint_cpp(
   include/behaviour_trees/LocPerson.h
   src/behaviour_trees/RequestComeCloser.cpp
   include/behaviour_trees/RequestComeCloser.h
+  include/behaviour_trees/BTNavAction.h
   src/node_behaviour_tree_nav.cpp
   src/node_behaviour_tree_nav_init.cpp
-  src/navigation/NavClient.cpp
-  include/navigation/NavClient.h
 )
