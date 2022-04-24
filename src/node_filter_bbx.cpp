@@ -67,7 +67,8 @@ public:
 		for (const auto & box : boxes->bounding_boxes) {
         	cv::Vec3i hsvMean;
 			calc_hsv_mean(hsv, box, hsvMean);
-			ROS_INFO("H = %d S = %d V = %d", hsvMean[0], hsvMean[1], hsvMean[2]);
+			ROS_INFO("H = %d S = %d V = %d", hsvMean[0] - hsvReference[0], hsvMean[1] - hsvReference[1], hsvMean[2] - hsvReference[2]);
+
     	}
 	}
   }
