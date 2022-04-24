@@ -83,9 +83,12 @@ add_executable(node_behaviour_tree_nav_init src/node_behaviour_tree_nav_init.cpp
 target_link_libraries(node_behaviour_tree_nav_init ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 add_executable(node_behaviour_tree_nav src/node_behaviour_tree_nav.cpp)
 target_link_libraries(node_behaviour_tree_nav ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
+add_executable(node_filter_bbx src/node_filter_bbx.cpp)
+target_link_libraries(node_filter_bbx ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 
 roslint_cpp(
   src/nodo_calc_tf_person.cpp
+  src/node_filter_bbx.cpp
   include/person_tf/Tf_calc.h 
   src/person_tf/Tf_calc.cpp
   src/behaviour_trees/WaitForPerson.cpp

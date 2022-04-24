@@ -52,6 +52,7 @@ class Tf_calc
     image_geometry::PinholeCameraModel cammodel_;
     double dist_;
     ros::Time boundingtime_;
+	bool detected_;
 
     std::string objectFrameId_;
     std::string workingFrameId_;

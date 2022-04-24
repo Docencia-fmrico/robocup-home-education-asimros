@@ -38,7 +38,6 @@ void
 FollowPoint::on_start()
 {
   move_base_msgs::MoveBaseGoal goal = getInput<move_base_msgs::MoveBaseGoal>("goal_nav").value();
-  ROS_INFO("Llego");
   set_goal(goal);
 
   ROS_INFO("Move start");

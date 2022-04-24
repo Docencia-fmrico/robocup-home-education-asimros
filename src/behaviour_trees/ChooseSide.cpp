@@ -44,15 +44,17 @@ namespace behaviour_trees
     {
         move_base_msgs::MoveBaseGoal goal;
 
-        if(buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
+        if(buffer.canTransform("person", "map", ros::Time(0), ros::Duration(1.0), &error_))
         {	
-			map2person_msg = buffer.lookupTransform("map", "person", ros::Time(0));
+			map2person_msg = buffer.lookupTransform("person", "map", ros::Time(0));
       		tf2::fromMsg(map2person_msg, map2person);
 
             goal.target_pose.header.frame_id = "map";
             goal.target_pose.header.stamp = ros::Time::now();
-            goal.target_pose.pose.position.x = map2person.getOrigin().x(); // modificarlos: aún más a un lado ¿cuál?
-            goal.target_pose.pose.position.y = map2person.getOrigin().y(); // modificarlos: se pare antes
+			ROS_INFO("X = %f", map2person.getOrigin().x());
+			ROS_INFO("Y = %f", map2person.getOrigin().y());
+            goal.target_pose.pose.position.x = map2person.getOrigin().x(); 
+            goal.target_pose.pose.position.y = map2person.getOrigin().y(); 
             goal.target_pose.pose.position.z = 0.0;
             goal.target_pose.pose.orientation.x = 0.0;
             goal.target_pose.pose.orientation.y = 0.0;

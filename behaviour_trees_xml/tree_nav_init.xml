@@ -4,8 +4,8 @@
     <BehaviorTree ID="BehaviorTree">
         <Sequence>
             <Action ID="wait_for_person"/>
-            <Action ID="choose_side" goal_nav=""/>
-            <Action ID="FollowPoint" goal_nav=""/>
+            <Action ID="choose_side" goal_nav="{goal}"/>
+            <Action ID="FollowPoint" goal_nav="{goal}"/>
             <Action ID="ask_for_case"/>
         </Sequence>
     </BehaviorTree>
