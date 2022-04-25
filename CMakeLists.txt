@@ -84,6 +84,9 @@ target_link_libraries(node_behaviour_tree_nav_init ${PROJECT_NAME} ${catkin_LIBR
 add_executable(node_behaviour_tree_nav src/node_behaviour_tree_nav.cpp)
 target_link_libraries(node_behaviour_tree_nav ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 
+add_executable(node_bt_together src/node_bt_together.cpp)
+target_link_libraries(node_bt_together ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
+
 roslint_cpp(
   src/nodo_calc_tf_person.cpp
   include/person_tf/Tf_calc.h 
@@ -107,4 +110,5 @@ roslint_cpp(
   include/behaviour_trees/BTNavAction.h
   src/node_behaviour_tree_nav.cpp
   src/node_behaviour_tree_nav_init.cpp
+  src/node_bt_together.cpp
 )
