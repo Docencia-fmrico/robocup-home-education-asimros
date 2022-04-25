@@ -27,7 +27,7 @@
 
 #include <darknet_ros_msgs/BoundingBoxes.h>
 
-enum {Nsegments = 4, Memory = 5};
+enum {Nsegments = 4, Memory = 20, Seg_thres = 13};
 
 typedef struct
 {
@@ -35,12 +35,85 @@ typedef struct
 }
 Segmented_Image;
 
-typedef struct
+class ImgBuffer
 {
-  Segmented_Image img[Memory]; 
-  int index;
-}
-Img_buffer;
+public:
+	ImgBuffer(): index(0), nimages(0)
+	{} 
+	void add(Segmented_Image img) 
+	{
+		if (index >= Memory) index = 0;
+		if (nimages < Memory) nimages++;
+
+		ROS_INFO("Current number of images = %d", nimages);
+		ROS_INFO("Current index = %d", index);
+
+		images[index] = img;
+		index++;
+	}
+
+	bool stored_similar(Segmented_Image & s_img) 
+	{
+		bool similar;
+		for (int i = 0; i < nimages; i++) {
+			similar = check_similarity(s_img, images[i]) >= Seg_thres;
+			if (similar) return similar;
+		}
+
+		return false;
+	}
+
+private:
+	int index;
+	int nimages;
+	Segmented_Image images[Memory];
+
+	int check_similarity(Segmented_Image & s_img, Segmented_Image & ref_img) 
+	{
+		int h_thres = 25;
+		int s_thres = 25;
+		int v_thres = 100;
+		int sim_segments;
+		double similarity;
+		int nsegments = Nsegments^2;
+		cv::Vec3i diff;
+		cv::Vec3i vPerson;
+		cv::Vec3i vRef;
+		
+		sim_segments = 0;
+		for (int y = 0; y < Nsegments; y++){
+			for (int x = 0; x < Nsegments; x++){
+				vPerson = s_img.segment[y][x];
+				vRef = ref_img.segment[y][x];
+				diff[0] = abs(vPerson[0]- vRef[0]);
+				diff[1] = abs(vPerson[1]- vRef[1]);
+				diff[2] = abs(vPerson[2]- vRef[2]);
+				ROS_INFO("Diff H = %d, Diff S = %d, Diff V = %d", diff[0], diff[1], diff[2]);
+				if (diff[0] <= h_thres && diff[1] <= s_thres && diff[2] <= v_thres) sim_segments++;
+			}
+		}
+
+		return sim_segments;
+	}
+
+	void debug_s_image(Segmented_Image & s_img) 
+	{
+		int h_value;
+		int s_value;
+		int v_value;
+
+		for (int y = 0; y < Nsegments; y++){
+			for (int x = 0; x < Nsegments; x++){
+				ROS_INFO("Segment (%d,%d)", y, x);
+				h_value = s_img.segment[y][x][0];
+				s_value = s_img.segment[y][x][1];
+				v_value = s_img.segment[y][x][2];
+				ROS_INFO("H = %d, S = %d, V = %d", h_value, s_value, v_value);
+			}
+		}
+	}
+
+};
 
 class BbxConverter
 {
@@ -53,7 +126,6 @@ public:
   {
     sync_bbx.registerCallback(boost::bind(&BbxConverter::filter_callback, this, _1, _2));
 	first_time = true;
-	buffer.index = 0;
   }
 
 
@@ -75,25 +147,23 @@ public:
 
 	if (first_time) {
 		const auto & box = boxes->bounding_boxes[0];
+		Segmented_Image img_reference;
 		segment_image(hsv, box, img_reference);
-		debug_hsv_mean(img_reference);
+		buffer.add(img_reference);
 		first_time = false;
 	}
 	else {
 		for (const auto & box : boxes->bounding_boxes) {
         	Segmented_Image s_img;
 			segment_image(hsv, box, s_img);
-			int sim_segments = check_similarity(s_img);
-			ROS_INFO("Hay %d segmentos similares", sim_segments);
-			if (sim_segments >= 13 || is_in_buffer(s_img)) {
+			if(buffer.stored_similar(s_img))
+			{
 				ROS_INFO("Es la persona de referencia");
-				store_in_buffer(s_img);
-				segment_image(hsv, box, img_reference);
+				buffer.add(s_img);
 			}
 			else {
 				ROS_INFO("No es la persona de referencia");
 			}
-			
     	}
 	}
   }
@@ -113,8 +183,7 @@ private:
 	cv::Point2d pixel_;
 	bool first_time;
 
-	Img_buffer buffer;
-	Segmented_Image img_reference;
+	ImgBuffer buffer;
 	
 	void segment_image(cv::Mat img, const darknet_ros_msgs::BoundingBox &box, Segmented_Image & s_img) 
 	{
@@ -174,58 +243,6 @@ private:
 		segment[0] /= pixels;
 		segment[1] /= pixels;
 		segment[2] /= pixels;
-	}
-
-	void store_in_buffer(Segmented_Image & s_img)
-	{
-		int index;
-		index = buffer.index;
-		
-	}
-
-	int check_similarity(Segmented_Image & s_img) 
-	{
-		int h_thres = 30;
-		int s_thres = 30;
-		int v_thres = 100;
-		int sim_segments;
-		double similarity;
-		int nsegments = Nsegments^2;
-		cv::Vec3i diff;
-		cv::Vec3i vPerson;
-		cv::Vec3i vRef;
-		
-		sim_segments = 0;
-		for (int y = 0; y < Nsegments; y++){
-			for (int x = 0; x < Nsegments; x++){
-				vPerson = s_img.segment[y][x];
-				vRef = img_reference.segment[y][x];
-				diff[0] = abs(vPerson[0]- vRef[0]);
-				diff[1] = abs(vPerson[1]- vRef[1]);
-				diff[2] = abs(vPerson[2]- vRef[2]);
-				// ROS_INFO("Diff H = %d, Diff S = %d, Diff V = %d", diff[0], diff[1], diff[2]);
-				if (diff[0] <= h_thres && diff[1] <= s_thres && diff[2] <= v_thres) sim_segments++;
-			}
-		}
-
-		return sim_segments;
-	}
-
-	void debug_hsv_mean(Segmented_Image & s_img) 
-	{
-		int h_value;
-		int s_value;
-		int v_value;
-
-		for (int y = 0; y < Nsegments; y++){
-			for (int x = 0; x < Nsegments; x++){
-				ROS_INFO("Segment (%d,%d)", y, x);
-				h_value = s_img.segment[y][x][0];
-				s_value = s_img.segment[y][x][1];
-				v_value = s_img.segment[y][x][2];
-				ROS_INFO("H = %d, S = %d, V = %d", h_value, s_value, v_value);
-			}
-		}
 	}
 };
 
