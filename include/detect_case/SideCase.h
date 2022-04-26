@@ -35,13 +35,13 @@ class SideCase
         SideCase();
 
         void callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msgs::BoundingBoxesConstPtr& boxes);
-        int find() {return find_case_;}
+        int get_side() {return side_;}
 
     private:
         ros::NodeHandle nh;
 
         int px_;
-        int find_case_;
+        int side_;
 
         typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image, darknet_ros_msgs::BoundingBoxes> MySyncPolicy_bbx;
         message_filters::Subscriber<sensor_msgs::Image> image_depth_sub;

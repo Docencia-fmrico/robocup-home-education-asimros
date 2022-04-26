@@ -34,7 +34,7 @@ sync_bbx(MySyncPolicy_bbx(10), image_depth_sub, bbx_sub)
 {
     sync_bbx.registerCallback(boost::bind(&SideCase::callback_bbx, this, _1, _2));
 
-    find_case_ = false;
+    side_ = 0;
     px_ = 0;
 }
 
@@ -58,15 +58,15 @@ SideCase::callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ro
 
         if (px - px_ > 130 && px_ != 0)
         {
-            find_case_ = 2; //right
+            side_ = 2; //right
         }
         else if (px - px_< -130 && px_ != 0) 
         {
-            find_case_ = 1; //left
+            side_ = 1; //left
         }         
         else
         {
-            find_case_ = 0; //not choose
+            side_ = 0; //not choose
         }   
         px_ = px;
     }

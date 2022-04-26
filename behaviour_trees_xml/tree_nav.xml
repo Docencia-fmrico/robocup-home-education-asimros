@@ -3,30 +3,44 @@
     <!-- ////////// -->
     <BehaviorTree ID="BehaviorTree">
         <Sequence>
-            <ReactiveFallback>
-                <Action ID="loc_person" goal_nav=""/>
-                <Inverter>
-                    <Fallback>
-                        <RetryUntilSuccessful num_attempts="50">
-                            <Action ID="turn_around"/>
-                        </RetryUntilSuccessful>
-                        <Action ID="request_come_closer"/>
-                    </Fallback>
-                </Inverter>
-            </ReactiveFallback>
-            <Action ID="follow_point" goal_nav=""/>
+            <Fallback>
+                <ReactiveFallback>
+                    <Action ID="loc_person" goal_nav="goal_person"/>
+                    <Inverter>
+                        <Fallback>
+                            <RetryUntilSuccessful num_attempts="100">
+                                <Action ID="turn_around"/>
+                            </RetryUntilSuccessful>
+                            <Action ID="request_come_closer"/>
+                        </Fallback>
+                    </Inverter>
+                </ReactiveFallback>
+                <Action ID="follow_point" goal_nav="goal_person"/>
+                <Action ID="have_finished"/>
+            </Fallback>
+            <Action ID="sand" goal_nav="goal_finish"/>
+            <Action ID="follow_point" goal_nav="goal_finish"/>
         </Sequence>
     </BehaviorTree>
     <!-- ////////// -->
     <TreeNodesModel>
+        <Action ID="ask_for_case"/>
+        <Action ID="choose_side">
+            <output_port name="goal_nav"/>
+        </Action>
         <Action ID="follow_point">
             <input_port name="goal_nav"/>
         </Action>
+        <Action ID="have_finished"/>
         <Action ID="loc_person">
             <output_port name="goal_nav"/>
         </Action>
         <Action ID="request_come_closer"/>
+        <Action ID="sand">
+            <output_port name="goal_nav"/>
+        </Action>
         <Action ID="turn_around"/>
+        <Action ID="wait_for_person"/>
     </TreeNodesModel>
     <!-- ////////// -->
 </root>

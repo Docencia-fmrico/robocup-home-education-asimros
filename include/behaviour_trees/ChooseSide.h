@@ -52,7 +52,7 @@ class ChooseSide : public BT::ActionNodeBase
 
     private:
         ros::NodeHandle nh_;
-        detect_case::SideCase side_case;
+        detect_case::SideCase case_;
         std::string error_;
 		tf2_ros::Buffer buffer;
         tf2_ros::TransformListener listener;
