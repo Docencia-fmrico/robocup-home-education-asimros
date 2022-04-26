@@ -44,9 +44,9 @@ namespace behaviour_trees
     {
         move_base_msgs::MoveBaseGoal goal;
 
-        if(buffer.canTransform("person", "map", ros::Time(0), ros::Duration(1.0), &error_))
+        if(buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
         {	
-			map2person_msg = buffer.lookupTransform("person", "map", ros::Time(0));
+			map2person_msg = buffer.lookupTransform("map", "person", ros::Time(0));
       		tf2::fromMsg(map2person_msg, map2person);
 
             goal.target_pose.header.frame_id = "map";

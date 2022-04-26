@@ -27,7 +27,7 @@
 
 #include <darknet_ros_msgs/BoundingBoxes.h>
 
-enum {Nsegments = 4, Memory = 20, Seg_thres = 13};
+enum {Nsegments = 10, Memory = 5};
 
 typedef struct
 {
@@ -44,20 +44,22 @@ public:
 	{
 		if (index >= Memory) index = 0;
 		if (nimages < Memory) nimages++;
-
-		ROS_INFO("Current number of images = %d", nimages);
-		ROS_INFO("Current index = %d", index);
-
 		images[index] = img;
 		index++;
 	}
 
 	bool stored_similar(Segmented_Image & s_img) 
 	{
+		double prob;
 		bool similar;
 		for (int i = 0; i < nimages; i++) {
-			similar = check_similarity(s_img, images[i]) >= Seg_thres;
-			if (similar) return similar;
+			prob = check_similarity(s_img, images[i]);
+			ROS_INFO("Prob imagen %d = %f", i, prob);
+			similar = prob >= 0.6;
+			if (similar) {
+				ROS_INFO("Prob imagen elegida = %f", prob);
+				return similar;
+			}
 		}
 
 		return false;
@@ -68,19 +70,20 @@ private:
 	int nimages;
 	Segmented_Image images[Memory];
 
-	int check_similarity(Segmented_Image & s_img, Segmented_Image & ref_img) 
+	double check_similarity(Segmented_Image & s_img, Segmented_Image & ref_img) 
 	{
-		int h_thres = 25;
-		int s_thres = 25;
-		int v_thres = 100;
+		int h_thres = 40;
+		int s_thres = 40;
+		int v_thres = 60;
 		int sim_segments;
-		double similarity;
-		int nsegments = Nsegments^2;
+		double prob_mean;
+		int nsegments = Nsegments * Nsegments;
 		cv::Vec3i diff;
 		cv::Vec3i vPerson;
 		cv::Vec3i vRef;
 		
 		sim_segments = 0;
+		prob_mean = 0;
 		for (int y = 0; y < Nsegments; y++){
 			for (int x = 0; x < Nsegments; x++){
 				vPerson = s_img.segment[y][x];
@@ -88,12 +91,43 @@ private:
 				diff[0] = abs(vPerson[0]- vRef[0]);
 				diff[1] = abs(vPerson[1]- vRef[1]);
 				diff[2] = abs(vPerson[2]- vRef[2]);
-				ROS_INFO("Diff H = %d, Diff S = %d, Diff V = %d", diff[0], diff[1], diff[2]);
+				// ROS_INFO("Diff H = %d, Diff S = %d, Diff V = %d", diff[0], diff[1], diff[2]);
+				prob_mean += calc_prob_mean(diff[0], diff[1], diff[2]);
 				if (diff[0] <= h_thres && diff[1] <= s_thres && diff[2] <= v_thres) sim_segments++;
 			}
 		}
 
-		return sim_segments;
+		prob_mean = prob_mean / nsegments;
+		// return prob_mean;
+		return double(sim_segments) / double(nsegments);
+	}
+
+	double calc_prob_mean(int h_diff, int s_diff, int v_diff) 
+	{
+		double max_diff = 30;
+		double diff_h;
+		double diff_s;	
+		double diff_v;
+		double prob_h;
+		double prob_s;
+		double prob_v;
+		double prob_mean;
+
+		diff_h = double(h_diff) / max_diff;
+		diff_s = double(s_diff) / max_diff;
+		diff_v = double(v_diff) / max_diff;
+
+		if (diff_h > 1.0) diff_h = 1.0;
+		if (diff_s > 1.0) diff_s = 1.0;
+		if (diff_v > 1.0) diff_v = 1.0;
+
+		prob_h = 1.0 - diff_h;
+		prob_s = 1.0 - diff_s;
+		prob_v = 1.0 - diff_v;
+
+		prob_mean = (prob_h * 0.4 + prob_s * 0.4 + prob_v * 0.3);
+
+		return prob_mean;
 	}
 
 	void debug_s_image(Segmented_Image & s_img) 
@@ -120,7 +154,7 @@ class BbxConverter
 public:
   	BbxConverter()
 	: it_(nh_),
-  	image_sub(nh_, "/usb_cam/image_raw", 1),
+  	image_sub(nh_, "/camera/rgb/image_raw", 1),
 	bbx_sub(nh_, "/darknet_ros/bounding_boxes", 1),
 	sync_bbx(MySyncPolicy_bbx(10), image_sub, bbx_sub)
   {
