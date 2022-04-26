@@ -1,0 +1,5 @@
+<launch>
+	<include file="$(find darknet_ros)/launch/darknet_ros.launch"></include>
+	<include file="$(find navigation)/launch/navigation.launch"></include>
+	<node pkg="robocup-home-education-asimros" type="nodo_calc_tf_person" name="calc_tf_person" output="screen"></node>
+</launch>

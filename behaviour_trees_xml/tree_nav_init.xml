@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="BehaviorTree">
+    <!-- ////////// -->
+    <BehaviorTree ID="BehaviorTree">
+        <Sequence>
+            <Action ID="wait_for_person"/>
+            <Action ID="choose_side" goal_nav="{goal}"/>
+            <Action ID="FollowPoint" goal_nav="{goal}"/>
+            <Action ID="ask_for_case"/>
+        </Sequence>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <TreeNodesModel>
+        <Action ID="ask_for_case"/>
+        <Action ID="choose_side">
+            <output_port name="goal_nav"/>
+        </Action>
+        <Action ID="FollowPoint">
+            <input_port name="goal_nav"/>
+        </Action>
+        <Action ID="wait_for_person"/>
+    </TreeNodesModel>
+    <!-- ////////// -->
+</root>
+
+
