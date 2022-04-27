@@ -1,0 +1,5 @@
+<launch>
+	<include file="$(find darknet_ros)/launch/darknet_ros.launch"></include>
+	<node pkg="personlocalization" type="node_filter_bbx" name="filter_bbx" output="screen"></node>
+	<node pkg="personlocalization" type="node_calc_tf_person" name="calc_tf_person" output="screen"></node>
+</launch>
