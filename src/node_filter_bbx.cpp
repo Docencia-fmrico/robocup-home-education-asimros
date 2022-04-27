@@ -126,6 +126,7 @@ public:
 	sync_bbx(MySyncPolicy_bbx(10), image_sub, bbx_sub)
   {
 	cv::namedWindow("Image debug");
+	bbx_pub = nh_.advertise<darknet_ros_msgs::BoundingBoxes>("/bbx_filtered", 1);
     sync_bbx.registerCallback(boost::bind(&BbxConverter::filter_callback, this, _1, _2));
 	first_time = true;
   }
@@ -147,6 +148,7 @@ public:
 
     cv::Mat rgb;
 	cv::Mat debug_img;
+	darknet_ros_msgs::BoundingBoxes bbx_filtered;
 
 	rgb = cv_ptr->image;
 	debug_img = cv_imageout->image;
@@ -165,7 +167,12 @@ public:
 			segment_image(rgb, box, img_ref);
 			if(buffer.stored_similar(img_ref)) {
 				calc_debug_img(debug_img, box, img_ref);
+				bbx_filtered.bounding_boxes.push_back(box);
+				bbx_filtered.image_header = image->header;
+				bbx_filtered.header = boxes->header;
+				bbx_pub.publish(bbx_filtered);
 				buffer.add(img_ref);
+				// ROS_INFO("Es la persona objetivo");
 				cv::imshow("Image debug", debug_img);
 				cv::waitKey(3);
 			}
@@ -187,6 +194,8 @@ private:
 
 	cv::Point2d pixel_;
 	bool first_time;
+	ros::Publisher bbx_pub;
+
 
 	ImgBuffer buffer;
 	
