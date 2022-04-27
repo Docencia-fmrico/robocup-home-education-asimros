@@ -54,9 +54,11 @@ public:
 		bool similar;
 		for (int i = 0; i < nimages; i++) {
 			nsims = calc_nsims(s_img, images[i]);
-			ROS_INFO("Hay %d segmentos parecidos", nsims);
 			similar = exp_backoff(nsims);
-			if (similar) return similar;
+			if (similar) {
+				return similar;
+				times_nd = 0;
+			}
 		}
 		times_nd++;
 		return false;
@@ -124,6 +126,7 @@ public:
 	sync_bbx(MySyncPolicy_bbx(10), image_sub, bbx_sub)
   {
 	cv::namedWindow("Image debug");
+	bbx_pub = nh_.advertise<darknet_ros_msgs::BoundingBox>("/bbx_filtered", 1);
     sync_bbx.registerCallback(boost::bind(&BbxConverter::filter_callback, this, _1, _2));
 	first_time = true;
   }
@@ -162,6 +165,7 @@ public:
 			segment_image(rgb, box, img_ref);
 			if(buffer.stored_similar(img_ref)) {
 				calc_debug_img(debug_img, box, img_ref);
+				bbx_pub.publish(box);
 				buffer.add(img_ref);
 				// ROS_INFO("Es la persona objetivo");
 				cv::imshow("Image debug", debug_img);
@@ -185,6 +189,8 @@ private:
 
 	cv::Point2d pixel_;
 	bool first_time;
+	ros::Publisher bbx_pub;
+
 
 	ImgBuffer buffer;
 	
