@@ -72,13 +72,16 @@ private:
 	bool exp_backoff(int nsims) 
 	{	
 		bool similar;
-		int high = (Nsegments * Nsegments) - 1 * Nsegments;
-		int medium = (Nsegments * Nsegments) - 2 * Nsegments;
-		int low = (Nsegments * Nsegments) - 3 * Nsegments; 
+		int total_segments = Nsegments * Nsegments;
+		int lev1 = int(total_segments * 0.9);
+		int lev2 = int(total_segments * 0.8);
+		int lev3 = int(total_segments * 0.7);
+		int lev4 = int(total_segments * 0.6);
 
-		if (times_nd < 100) similar = nsims >= high;
-		else if (times_nd > 100 && times_nd < 500) similar = nsims >= medium;
-		else similar = nsims >= low;
+		if (times_nd < 100) similar = nsims >= lev1;
+		else if (times_nd > 100 && times_nd < 500) similar = nsims >= lev2;
+		else if (times_nd > 500 && times_nd < 2000) similar = nsims >= lev3;
+		else similar = nsims >= lev4;
 
 		return similar;
 	}
