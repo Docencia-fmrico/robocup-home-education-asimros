@@ -129,24 +129,6 @@ private:
 
 		return prob_mean;
 	}
-
-	void debug_s_image(Segmented_Image & s_img) 
-	{
-		int h_value;
-		int s_value;
-		int v_value;
-
-		for (int y = 0; y < Nsegments; y++){
-			for (int x = 0; x < Nsegments; x++){
-				ROS_INFO("Segment (%d,%d)", y, x);
-				h_value = s_img.segment[y][x][0];
-				s_value = s_img.segment[y][x][1];
-				v_value = s_img.segment[y][x][2];
-				ROS_INFO("H = %d, S = %d, V = %d", h_value, s_value, v_value);
-			}
-		}
-	}
-
 };
 
 class BbxConverter
@@ -154,7 +136,7 @@ class BbxConverter
 public:
   	BbxConverter()
 	: it_(nh_),
-  	image_sub(nh_, "/camera/rgb/image_raw", 1),
+  	image_sub(nh_, "/usb_cam/image_raw", 1),
 	bbx_sub(nh_, "/darknet_ros/bounding_boxes", 1),
 	sync_bbx(MySyncPolicy_bbx(10), image_sub, bbx_sub)
   {
@@ -176,29 +158,20 @@ public:
       return;
     }
 
-    cv::Mat hsv;
-    cv::cvtColor(cv_ptr->image, hsv, CV_RGB2HSV);
+    cv::Mat rgb;
+	rgb = cv_ptr->image;
+    // cv::cvtColor(cv_ptr->image, rgb, CV_RGB2HSV);
 
 	if (first_time) {
 		const auto & box = boxes->bounding_boxes[0];
-		Segmented_Image img_reference;
-		segment_image(hsv, box, img_reference);
-		buffer.add(img_reference);
+		Segmented_Image img_ref;
+		segment_image(rgb, box, img_ref);
+		debug_s_image(img_ref);
+		// buffer.add(img_reference);
 		first_time = false;
 	}
 	else {
-		for (const auto & box : boxes->bounding_boxes) {
-        	Segmented_Image s_img;
-			segment_image(hsv, box, s_img);
-			if(buffer.stored_similar(s_img))
-			{
-				ROS_INFO("Es la persona de referencia");
-				buffer.add(s_img);
-			}
-			else {
-				ROS_INFO("No es la persona de referencia");
-			}
-    	}
+		
 	}
   }
 
@@ -250,12 +223,13 @@ private:
 				seg_y_end = seg_y_start + y_inc - 1;
 				if (x == (Nsegments - 1)) seg_x_end += off_x + 1;
 				if (y == (Nsegments - 1)) seg_y_end += off_y + 1;
-				calc_segment_hsv(s_img.segment[y][x], img, seg_x_start, seg_x_end, seg_y_start, seg_y_end);
+				calc_segment_rgb(s_img.segment[y][x], img, seg_x_start, seg_x_end, seg_y_start, seg_y_end);
+				show_debug()
 			}
 		}
 	}
 
-	void calc_segment_hsv(cv::Vec3i & segment, cv::Mat img, int x_min, int x_max, int y_min, int y_max) 
+	void calc_segment_rgb(cv::Vec3i & segment, cv::Mat img_in, segment, cv::Mat img_in int x_min, int x_max, int y_min, int y_max) 
 	{
 		int step = img.step;
 		int channels = 3;
@@ -277,6 +251,23 @@ private:
 		segment[0] /= pixels;
 		segment[1] /= pixels;
 		segment[2] /= pixels;
+	}
+
+	void debug_s_image(Segmented_Image & s_img) 
+	{
+		int b;
+		int g;
+		int r;
+
+		for (int y = 0; y < Nsegments; y++){
+			for (int x = 0; x < Nsegments; x++){
+				ROS_INFO("Segment (%d,%d)", y, x);
+				b = s_img.segment[y][x][0];
+				g = s_img.segment[y][x][1];
+				r = s_img.segment[y][x][2];
+				ROS_INFO("B = %d, G = %d, R = %d", b, g, r);
+			}
+		}
 	}
 };
 
