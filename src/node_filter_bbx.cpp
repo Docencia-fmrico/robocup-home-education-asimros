@@ -27,7 +27,7 @@
 
 #include <darknet_ros_msgs/BoundingBoxes.h>
 
-enum {Nsegments = 10, Memory = 5};
+enum {Nsegments = 20, Memory = 5};
 
 typedef struct
 {
@@ -140,6 +140,7 @@ public:
 	bbx_sub(nh_, "/darknet_ros/bounding_boxes", 1),
 	sync_bbx(MySyncPolicy_bbx(10), image_sub, bbx_sub)
   {
+	cv::namedWindow("Image debug");
     sync_bbx.registerCallback(boost::bind(&BbxConverter::filter_callback, this, _1, _2));
 	first_time = true;
   }
@@ -147,10 +148,11 @@ public:
 
   void filter_callback(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msgs::BoundingBoxesConstPtr& boxes)
   {
-    cv_bridge::CvImagePtr cv_ptr;
+    cv_bridge::CvImagePtr cv_ptr, cv_imageout;
     try
     {
       cv_ptr = cv_bridge::toCvCopy(image, sensor_msgs::image_encodings::BGR8);
+	  cv_imageout = cv_bridge::toCvCopy(image, sensor_msgs::image_encodings::BGR8);
     }
     catch (cv_bridge::Exception& e)
     {
@@ -159,16 +161,19 @@ public:
     }
 
     cv::Mat rgb;
+	cv::Mat debug_img;
 	rgb = cv_ptr->image;
+	debug_img = cv_imageout->image;
     // cv::cvtColor(cv_ptr->image, rgb, CV_RGB2HSV);
 
 	if (first_time) {
 		const auto & box = boxes->bounding_boxes[0];
 		Segmented_Image img_ref;
-		segment_image(rgb, box, img_ref);
-		debug_s_image(img_ref);
+		segment_image(rgb, debug_img, box, img_ref);
+		cv::imshow("Image debug", debug_img);
+		cv::waitKey(3);
 		// buffer.add(img_reference);
-		first_time = false;
+		first_time = true;
 	}
 	else {
 		
@@ -192,7 +197,7 @@ private:
 
 	ImgBuffer buffer;
 	
-	void segment_image(cv::Mat img, const darknet_ros_msgs::BoundingBox &box, Segmented_Image & s_img) 
+	void segment_image(cv::Mat img, cv::Mat & debug_img, const darknet_ros_msgs::BoundingBox &box, Segmented_Image & s_img) 
 	{
 		int x_size;
 		int y_size;
@@ -224,12 +229,31 @@ private:
 				if (x == (Nsegments - 1)) seg_x_end += off_x + 1;
 				if (y == (Nsegments - 1)) seg_y_end += off_y + 1;
 				calc_segment_rgb(s_img.segment[y][x], img, seg_x_start, seg_x_end, seg_y_start, seg_y_end);
-				show_debug()
+				fill_segment_debug(s_img.segment[y][x], debug_img, seg_x_start, seg_x_end, seg_y_start, seg_y_end);
 			}
 		}
 	}
 
-	void calc_segment_rgb(cv::Vec3i & segment, cv::Mat img_in, segment, cv::Mat img_in int x_min, int x_max, int y_min, int y_max) 
+	void fill_segment_debug(cv::Vec3i & segment, cv::Mat & img, int x_min, int x_max, int y_min, int y_max) 
+	{
+		int step = img.step;
+		int channels = 3;
+		int posdata;
+
+		for (int i = y_min; i < y_max; i++ ){
+      		for (int j = x_min; j < x_max; j++ ) {
+        		posdata = i * step + j * channels;
+				img.data[posdata] = segment[0];
+				img.data[posdata + 1] = segment[1];
+				img.data[posdata + 1] = segment[2];
+      		}
+  		}
+
+		// cv::imshow("Image debug", cv_imageout->image);
+	}
+
+
+	void calc_segment_rgb(cv::Vec3i & segment, cv::Mat img, int x_min, int x_max, int y_min, int y_max) 
 	{
 		int step = img.step;
 		int channels = 3;
