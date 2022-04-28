@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(robocup-home-education-asimros)
+project(carrymyluggage)
 set(CMAKE_CXX_FLAGS "-std=c++17")
 
 set(CMAKE_CONFIG_PATH ${CMAKE_MODULE_PATH}  "${CMAKE_CURRENT_LIST_DIR}/cmake")
@@ -73,24 +73,15 @@ foreach(bt_plugin ${plugin_libs})
 endforeach()
 
 add_library(${PROJECT_NAME}
-  src/person_tf/Tf_calc.cpp
   src/detect_case/SideCase.cpp
 )
 
-add_executable(nodo_calc_tf_person src/nodo_calc_tf_person.cpp)
-target_link_libraries(nodo_calc_tf_person ${PROJECT_NAME}  ${OpenCV_LIBRARIES} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 add_executable(node_behaviour_tree_nav_init src/node_behaviour_tree_nav_init.cpp)
 target_link_libraries(node_behaviour_tree_nav_init ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 add_executable(node_behaviour_tree_nav src/node_behaviour_tree_nav.cpp)
 target_link_libraries(node_behaviour_tree_nav ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
-add_executable(node_filter_bbx src/node_filter_bbx.cpp)
-target_link_libraries(node_filter_bbx ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 
 roslint_cpp(
-  src/nodo_calc_tf_person.cpp
-  src/node_filter_bbx.cpp
-  include/person_tf/Tf_calc.h 
-  src/person_tf/Tf_calc.cpp
   src/behaviour_trees/WaitForPerson.cpp
   include/behaviour_trees/WaitForPerson.h
   src/behaviour_trees/ChooseSide.cpp

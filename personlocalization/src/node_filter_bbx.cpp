@@ -27,7 +27,7 @@
 
 #include <darknet_ros_msgs/BoundingBoxes.h>
 
-enum {Nsegments = 10, Memory = 5};
+enum {Nsegments = 6, Memory = 8};
 
 typedef struct
 {
@@ -38,7 +38,7 @@ Segmented_Image;
 class ImgBuffer
 {
 public:
-	ImgBuffer(): index(0), nimages(0)
+	ImgBuffer(): index(0), nimages(0), times_nd(0)
 	{} 
 	void add(Segmented_Image img) 
 	{
@@ -50,40 +50,58 @@ public:
 
 	bool stored_similar(Segmented_Image & s_img) 
 	{
-		double prob;
+		int nsims;
 		bool similar;
 		for (int i = 0; i < nimages; i++) {
-			prob = check_similarity(s_img, images[i]);
-			ROS_INFO("Prob imagen %d = %f", i, prob);
-			similar = prob >= 0.6;
+			nsims = calc_nsims(s_img, images[i]);
+			similar = exp_backoff(nsims);
 			if (similar) {
-				ROS_INFO("Prob imagen elegida = %f", prob);
 				return similar;
+				times_nd = 0;
 			}
 		}
-
+		times_nd++;
 		return false;
 	}
 
 private:
 	int index;
 	int nimages;
+	int times_nd;
 	Segmented_Image images[Memory];
 
-	double check_similarity(Segmented_Image & s_img, Segmented_Image & ref_img) 
+	// Needs to be standarized and probably redone
+	bool exp_backoff(int nsims) 
+	{	
+		bool similar;
+		int total_segments = Nsegments * Nsegments;
+		int lev1 = int(total_segments * 0.9);
+		int lev2 = int(total_segments * 0.8);
+		int lev3 = int(total_segments * 0.7);
+		int lev4 = int(total_segments * 0.6);
+
+		if (times_nd < 100) similar = nsims >= lev1;
+		else if (times_nd > 100 && times_nd < 500) similar = nsims >= lev2;
+		else if (times_nd > 500 && times_nd < 2000) similar = nsims >= lev3;
+		else similar = nsims >= lev4;
+
+		return similar;
+	}
+
+	int calc_nsims(Segmented_Image & s_img, Segmented_Image & ref_img) 
 	{
-		int h_thres = 40;
-		int s_thres = 40;
-		int v_thres = 60;
+		int b_thres = 30;
+		int g_thres = 30;
+		int r_thres = 30;
+
 		int sim_segments;
-		double prob_mean;
 		int nsegments = Nsegments * Nsegments;
+
 		cv::Vec3i diff;
 		cv::Vec3i vPerson;
 		cv::Vec3i vRef;
 		
 		sim_segments = 0;
-		prob_mean = 0;
 		for (int y = 0; y < Nsegments; y++){
 			for (int x = 0; x < Nsegments; x++){
 				vPerson = s_img.segment[y][x];
@@ -91,62 +109,11 @@ private:
 				diff[0] = abs(vPerson[0]- vRef[0]);
 				diff[1] = abs(vPerson[1]- vRef[1]);
 				diff[2] = abs(vPerson[2]- vRef[2]);
-				// ROS_INFO("Diff H = %d, Diff S = %d, Diff V = %d", diff[0], diff[1], diff[2]);
-				prob_mean += calc_prob_mean(diff[0], diff[1], diff[2]);
-				if (diff[0] <= h_thres && diff[1] <= s_thres && diff[2] <= v_thres) sim_segments++;
+				if (diff[0] <= b_thres && diff[1] <= g_thres && diff[2] <= r_thres) sim_segments++;
 			}
 		}
-
-		prob_mean = prob_mean / nsegments;
-		// return prob_mean;
-		return double(sim_segments) / double(nsegments);
+		return sim_segments;
 	}
-
-	double calc_prob_mean(int h_diff, int s_diff, int v_diff) 
-	{
-		double max_diff = 30;
-		double diff_h;
-		double diff_s;	
-		double diff_v;
-		double prob_h;
-		double prob_s;
-		double prob_v;
-		double prob_mean;
-
-		diff_h = double(h_diff) / max_diff;
-		diff_s = double(s_diff) / max_diff;
-		diff_v = double(v_diff) / max_diff;
-
-		if (diff_h > 1.0) diff_h = 1.0;
-		if (diff_s > 1.0) diff_s = 1.0;
-		if (diff_v > 1.0) diff_v = 1.0;
-
-		prob_h = 1.0 - diff_h;
-		prob_s = 1.0 - diff_s;
-		prob_v = 1.0 - diff_v;
-
-		prob_mean = (prob_h * 0.4 + prob_s * 0.4 + prob_v * 0.3);
-
-		return prob_mean;
-	}
-
-	void debug_s_image(Segmented_Image & s_img) 
-	{
-		int h_value;
-		int s_value;
-		int v_value;
-
-		for (int y = 0; y < Nsegments; y++){
-			for (int x = 0; x < Nsegments; x++){
-				ROS_INFO("Segment (%d,%d)", y, x);
-				h_value = s_img.segment[y][x][0];
-				s_value = s_img.segment[y][x][1];
-				v_value = s_img.segment[y][x][2];
-				ROS_INFO("H = %d, S = %d, V = %d", h_value, s_value, v_value);
-			}
-		}
-	}
-
 };
 
 class BbxConverter
@@ -154,10 +121,12 @@ class BbxConverter
 public:
   	BbxConverter()
 	: it_(nh_),
-  	image_sub(nh_, "/camera/rgb/image_raw", 1),
+  	image_sub(nh_, "/usb_cam/image_raw", 1),
 	bbx_sub(nh_, "/darknet_ros/bounding_boxes", 1),
 	sync_bbx(MySyncPolicy_bbx(10), image_sub, bbx_sub)
   {
+	cv::namedWindow("Image debug");
+	bbx_pub = nh_.advertise<darknet_ros_msgs::BoundingBoxes>("/bbx_filtered", 1);
     sync_bbx.registerCallback(boost::bind(&BbxConverter::filter_callback, this, _1, _2));
 	first_time = true;
   }
@@ -165,10 +134,11 @@ public:
 
   void filter_callback(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msgs::BoundingBoxesConstPtr& boxes)
   {
-    cv_bridge::CvImagePtr cv_ptr;
+    cv_bridge::CvImagePtr cv_ptr, cv_imageout;
     try
     {
       cv_ptr = cv_bridge::toCvCopy(image, sensor_msgs::image_encodings::BGR8);
+	  cv_imageout = cv_bridge::toCvCopy(image, sensor_msgs::image_encodings::BGR8);
     }
     catch (cv_bridge::Exception& e)
     {
@@ -176,29 +146,37 @@ public:
       return;
     }
 
-    cv::Mat hsv;
-    cv::cvtColor(cv_ptr->image, hsv, CV_RGB2HSV);
+    cv::Mat rgb;
+	cv::Mat debug_img;
+	darknet_ros_msgs::BoundingBoxes bbx_filtered;
+
+	rgb = cv_ptr->image;
+	debug_img = cv_imageout->image;
 
 	if (first_time) {
 		const auto & box = boxes->bounding_boxes[0];
-		Segmented_Image img_reference;
-		segment_image(hsv, box, img_reference);
-		buffer.add(img_reference);
+		Segmented_Image img_init;
+		segment_image(rgb, box, img_init);
+		buffer.add(img_init);
 		first_time = false;
 	}
 	else {
-		for (const auto & box : boxes->bounding_boxes) {
-        	Segmented_Image s_img;
-			segment_image(hsv, box, s_img);
-			if(buffer.stored_similar(s_img))
-			{
-				ROS_INFO("Es la persona de referencia");
-				buffer.add(s_img);
+		for (const auto & box : boxes->bounding_boxes)
+    	{
+			Segmented_Image img_ref;
+			segment_image(rgb, box, img_ref);
+			if(buffer.stored_similar(img_ref)) {
+				calc_debug_img(debug_img, box, img_ref);
+				bbx_filtered.bounding_boxes.push_back(box);
+				bbx_filtered.image_header = image->header;
+				bbx_filtered.header = boxes->header;
+				bbx_pub.publish(bbx_filtered);
+				buffer.add(img_ref);
+				// ROS_INFO("Es la persona objetivo");
+				cv::imshow("Image debug", debug_img);
+				cv::waitKey(3);
 			}
-			else {
-				ROS_INFO("No es la persona de referencia");
-			}
-    	}
+		}
 	}
   }
 
@@ -216,6 +194,8 @@ private:
 
 	cv::Point2d pixel_;
 	bool first_time;
+	ros::Publisher bbx_pub;
+
 
 	ImgBuffer buffer;
 	
@@ -250,12 +230,67 @@ private:
 				seg_y_end = seg_y_start + y_inc - 1;
 				if (x == (Nsegments - 1)) seg_x_end += off_x + 1;
 				if (y == (Nsegments - 1)) seg_y_end += off_y + 1;
-				calc_segment_hsv(s_img.segment[y][x], img, seg_x_start, seg_x_end, seg_y_start, seg_y_end);
+				calc_segment_rgb(s_img.segment[y][x], img, seg_x_start, seg_x_end, seg_y_start, seg_y_end);
 			}
 		}
 	}
 
-	void calc_segment_hsv(cv::Vec3i & segment, cv::Mat img, int x_min, int x_max, int y_min, int y_max) 
+	void calc_debug_img(cv::Mat & debug_img, const darknet_ros_msgs::BoundingBox &box, Segmented_Image & s_img) 
+	{
+		int x_size;
+		int y_size;
+		int off_x;
+		int off_y;
+		int x_inc;
+		int y_inc;
+		int seg_x_start;
+		int seg_x_end;
+		int seg_y_start;
+		int seg_y_end;
+		int nsegment;
+
+		x_size = box.xmax - box.xmin;
+		y_size = box.ymax - box.ymin;
+
+		off_x = x_size % Nsegments;
+		off_y = y_size % Nsegments;
+
+		x_inc = x_size / Nsegments;
+		y_inc = y_size / Nsegments;
+
+		for (int y = 0; y < Nsegments; y++) {
+			for (int x = 0; x < Nsegments; x++){
+				seg_x_start = box.xmin + x * x_inc;
+				seg_x_end = seg_x_start + x_inc - 1;
+				seg_y_start = box.ymin + y * y_inc;
+				seg_y_end = seg_y_start + y_inc - 1;
+				if (x == (Nsegments - 1)) seg_x_end += off_x + 1;
+				if (y == (Nsegments - 1)) seg_y_end += off_y + 1;
+				fill_segment_debug(s_img.segment[y][x], debug_img, seg_x_start, seg_x_end, seg_y_start, seg_y_end);
+			}
+		}
+	}	
+
+	void fill_segment_debug(cv::Vec3i & segment, cv::Mat & img, int x_min, int x_max, int y_min, int y_max) 
+	{
+		int step = img.step;
+		int channels = 3;
+		int posdata;
+
+		for (int i = y_min; i < y_max; i++ ){
+      		for (int j = x_min; j < x_max; j++ ) {
+        		posdata = i * step + j * channels;
+				img.data[posdata] = segment[0];
+				img.data[posdata + 1] = segment[1];
+				img.data[posdata + 1] = segment[2];
+      		}
+  		}
+
+		// cv::imshow("Image debug", cv_imageout->image);
+	}
+
+
+	void calc_segment_rgb(cv::Vec3i & segment, cv::Mat img, int x_min, int x_max, int y_min, int y_max) 
 	{
 		int step = img.step;
 		int channels = 3;
@@ -277,6 +312,23 @@ private:
 		segment[0] /= pixels;
 		segment[1] /= pixels;
 		segment[2] /= pixels;
+	}
+
+	void debug_s_image(Segmented_Image & s_img) 
+	{
+		int b;
+		int g;
+		int r;
+
+		for (int y = 0; y < Nsegments; y++){
+			for (int x = 0; x < Nsegments; x++){
+				ROS_INFO("Segment (%d,%d)", y, x);
+				b = s_img.segment[y][x][0];
+				g = s_img.segment[y][x][1];
+				r = s_img.segment[y][x][2];
+				ROS_INFO("B = %d, G = %d, R = %d", b, g, r);
+			}
+		}
 	}
 };
 

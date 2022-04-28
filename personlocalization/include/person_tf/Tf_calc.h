@@ -40,9 +40,9 @@ class Tf_calc
     Tf_calc();
     void callback_tf(const sensor_msgs::ImageConstPtr& image,
                       const darknet_ros_msgs::BoundingBoxesConstPtr& boxes);
-    
-    void callback_caminfo(const sensor_msgs::CameraInfoConstPtr& msg);
 
+	void callback_caminfo(const sensor_msgs::CameraInfoConstPtr& msg);
+    
   private:
     ros::NodeHandle nh_;
 
@@ -53,6 +53,7 @@ class Tf_calc
     double dist_;
     ros::Time boundingtime_;
 	bool detected_;
+	bool modeladquired_;
 
     std::string objectFrameId_;
     std::string workingFrameId_;
