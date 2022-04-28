@@ -29,8 +29,8 @@ public:
 
   void messageCallback(const std_msgs::String::ConstPtr& msg);
 
-  bool get_finished() {return finished;}
-  bool warn();
+  bool get_finished() {return finished_;}
+  void warn();
 
 private:
   ros::NodeHandle n_;
@@ -41,8 +41,8 @@ private:
   bool finished_;
   bool warn_;
 
-  ros::Time warning_ts_;
-  WARNING_TIME = 0.25;
+  double warning_ts_;
+  static constexpr double WARNING_TIME = 0.25;
 };
 
 }  // namespace sound
