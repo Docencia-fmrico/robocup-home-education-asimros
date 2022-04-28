@@ -27,7 +27,7 @@ class Speaker
 public:
   Speaker();
 
-  void speak(string say);
+  void speak(std::string say);
 
 private:
   ros::NodeHandle n_;
