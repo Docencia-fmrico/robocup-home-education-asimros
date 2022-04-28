@@ -3,9 +3,12 @@
     <!-- ////////// -->
     <BehaviorTree ID="BehaviorTree">
         <Sequence>
+            <Action ID="sand" goal_nav="goal_sand"/>
+            <Action ID="follow_point" goal_nav="goal_sand"/>
             <Action ID="wait_for_person"/>
-            <Action ID="choose_side" goal_nav="{goal}"/>
-            <Action ID="FollowPoint" goal_nav="{goal}"/>
+            <Action ID="choose_side" goal_nav="goal_case"/>
+            <Action ID="follow_point" goal_nav="goal_case"/>
+
             <Action ID="ask_for_case"/>
         </Sequence>
     </BehaviorTree>
@@ -15,12 +18,19 @@
         <Action ID="choose_side">
             <output_port name="goal_nav"/>
         </Action>
-        <Action ID="FollowPoint">
+        <Action ID="follow_point">
             <input_port name="goal_nav"/>
         </Action>
+        <Action ID="loc_person">
+            <output_port name="goal_nav"/>
+        </Action>
+        <Action ID="request_come_closer"/>
+        <Action ID="sand">
+            <output_port name="goal_nav"/>
+        </Action>
+        <Action ID="turn_around"/>
         <Action ID="wait_for_person"/>
     </TreeNodesModel>
     <!-- ////////// -->
 </root>
-
 

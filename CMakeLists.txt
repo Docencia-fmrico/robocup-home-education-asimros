@@ -56,6 +56,8 @@ add_library(asr_ask_for_case_node SHARED src/behaviour_trees/AskForCase.cpp)
 add_library(asr_loc_person_node SHARED src/behaviour_trees/LocPerson.cpp)
 add_library(asr_turn_around_node SHARED src/behaviour_trees/TurnAround.cpp)
 add_library(asr_request_come_closer_node SHARED src/behaviour_trees/RequestComeCloser.cpp)
+add_library(asr_sand_node SHARED src/behaviour_trees/Sand.cpp)
+add_library(asr_have_finished_node SHARED src/behaviour_trees/Sand.cpp)
 
 list(APPEND plugin_libs
   asr_choose_side_node
@@ -65,6 +67,8 @@ list(APPEND plugin_libs
   asr_loc_person_node
   asr_request_come_closer_node
   asr_turn_around_node
+  asr_sand_node
+  asr_have_finished_node
 )
 
 foreach(bt_plugin ${plugin_libs})
@@ -75,6 +79,7 @@ endforeach()
 add_library(${PROJECT_NAME}
   src/person_tf/Tf_calc.cpp
   src/detect_case/SideCase.cpp
+  src/sound/Listener.cpp
 )
 
 add_executable(nodo_calc_tf_person src/nodo_calc_tf_person.cpp)
@@ -83,8 +88,9 @@ add_executable(node_behaviour_tree_nav_init src/node_behaviour_tree_nav_init.cpp
 target_link_libraries(node_behaviour_tree_nav_init ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 add_executable(node_behaviour_tree_nav src/node_behaviour_tree_nav.cpp)
 target_link_libraries(node_behaviour_tree_nav ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
-add_executable(node_filter_bbx src/node_filter_bbx.cpp)
-target_link_libraries(node_filter_bbx ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
+add_executable(node_bt_together src/node_bt_together.cpp)
+target_link_libraries(node_bt_together ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
+
 
 roslint_cpp(
   src/nodo_calc_tf_person.cpp
@@ -110,4 +116,11 @@ roslint_cpp(
   include/behaviour_trees/BTNavAction.h
   src/node_behaviour_tree_nav.cpp
   src/node_behaviour_tree_nav_init.cpp
+  src/node_bt_together.cpp
+  src/behaviour_trees/Sand.cpp
+  include/behaviour_trees/Sand.h
+  src/behaviour_trees/HaveFinished.cpp
+  include/behaviour_trees/HaveFinished.h
+  src/sound/Listener.cpp
+  include/sound/Listener.h
 )
