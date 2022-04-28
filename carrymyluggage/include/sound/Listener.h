@@ -34,11 +34,16 @@ public:
 private:
   ros::NodeHandle n_;
   ros::Subscriber sub_;
+  ros::Publisher pub_;
+  std_msgs::String msg_;
 
-  bool finished;
+  bool finished_;
+  bool warn_;
+
+  ros::Time warning_ts_;
+  WARNING_TIME = 0.25;
 };
 
 }  // namespace sound
 
 #endif // SOUND_LISTENER_H
-

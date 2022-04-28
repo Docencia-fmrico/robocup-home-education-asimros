@@ -23,18 +23,24 @@ namespace sound
   Listener::Listener(): n_()
   {
     sub_ = n_.subscribe("message", 1, &Listener::messageCallback, this);
-    finished = false;
+    warn_;
+    finished_ = false;
+    msg_ = "listen bro";
   }
 
-  void 
+  void
   Listener::messageCallback(const std_msgs::String::ConstPtr& msg)
   {
     if(msg->data.compare("true"))
     {
-        finished = true;
+        finished_ = true;
+        warn_ = false;
+    } else
+    {
+      finished_ = true;
+      warn_ = true;
+      warning_ts_ = ros::Time::now().toSec();
     }
   }
 
 }  // namespace sound
-
-
