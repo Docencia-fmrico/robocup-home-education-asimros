@@ -25,10 +25,10 @@ namespace behaviour_trees
     {
     }
 
-    void 
+    void
     HaveFinished::halt()
     {
-        ROS_INFO("HaveFinished halt");
+      ROS_INFO("HaveFinished halt");
     }
 
     BT::NodeStatus
@@ -40,7 +40,7 @@ namespace behaviour_trees
             return BT::NodeStatus::SUCCESS;
         }
 
-
+        listener_.warn();
         ROS_INFO("no ha llegado");
         return BT::NodeStatus::FAILURE;
     }

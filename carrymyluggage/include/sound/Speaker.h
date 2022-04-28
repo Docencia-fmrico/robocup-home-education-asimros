@@ -12,45 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#ifndef SOUND_SPEAKER_H
+#define SOUND_SPEAKER_H
+
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include <string>
-#include "sound/Listener.h"
 
 namespace sound
 {
 
-  Listener::Listener(): n_()
-  {
-    sub_ = n_.subscribe("/answer", 1, &Listener::messageCallback, this);
-    pub_ = n_.advertise<std_msgs::String>("/listen", 1);
-    finished_ = false;
-    warn_ = false;
-    msg_.data = "listen bro";
-  }
+class Speaker
+{
+public:
+  Speaker();
 
-  void
-  Listener::messageCallback(const std_msgs::String::ConstPtr& msg)
-  {
-    if(msg->data.compare("true"))
-    {
-      finished_ = true;
-      warn_ = false;
-    } 
-    else
-    {
-      warn_ = true;
-      warning_ts_ = (ros::Time::now()).toSec();
-    }
-  }
+  void speak(std::string say);
 
-  void
-  Listener::warn()
-  {
-    if(warn_ && ((warning_ts_ - ros::Time::now().toSec()) >= WARNING_TIME))
-    {
-      pub_.publish(msg_);
-    }
-  }
+private:
+  ros::NodeHandle n_;
+  ros::Publisher pub_;
+  std_msgs::String msg_;
+};
 
 }  // namespace sound
+
+#endif // SOUND_SPEAKER_H
