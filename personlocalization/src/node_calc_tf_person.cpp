@@ -3,7 +3,7 @@
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "rgbd_tf");
+  ros::init(argc, argv, "calc_tf_person");
   person_tf::Tf_calc calculator;
   ros::spin();
   return 0;
