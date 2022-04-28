@@ -85,12 +85,8 @@ add_executable(node_behaviour_tree_nav_init src/node_behaviour_tree_nav_init.cpp
 target_link_libraries(node_behaviour_tree_nav_init ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 add_executable(node_behaviour_tree_nav src/node_behaviour_tree_nav.cpp)
 target_link_libraries(node_behaviour_tree_nav ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
-<<<<<<< HEAD:carrymyluggage/CMakeLists.txt
-=======
 add_executable(node_bt_together src/node_bt_together.cpp)
 target_link_libraries(node_bt_together ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
-
->>>>>>> 99f675e49dff5a2860003949ea30ddea1496ebdd:CMakeLists.txt
 
 roslint_cpp(
   src/behaviour_trees/WaitForPerson.cpp
