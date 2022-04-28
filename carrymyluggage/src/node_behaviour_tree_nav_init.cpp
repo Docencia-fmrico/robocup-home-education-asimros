@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 
   auto blackboard = BT::Blackboard::create();
 
-  std::string pkgpath = ros::package::getPath("robocup-home-education-asimros");
+  std::string pkgpath = ros::package::getPath("carrymyluggage");
 
   std::string xml_file = pkgpath + "/behaviour_trees_xml/tree_nav_init.xml";
 

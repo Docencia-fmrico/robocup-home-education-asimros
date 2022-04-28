@@ -41,6 +41,8 @@ include_directories(
 
 add_library(${PROJECT_NAME}
   src/person_tf/Tf_calc.cpp
+  src/bbx_filter/person_filter.cpp
+  src/bbx_filter/img_buffer.cpp
 )
 
 add_executable(node_calc_tf_person src/node_calc_tf_person.cpp)
@@ -53,4 +55,8 @@ roslint_cpp(
   src/node_filter_bbx.cpp
   include/person_tf/Tf_calc.h 
   src/person_tf/Tf_calc.cpp
+  include/bbx_filter/person_filter.h 
+  src/bbx_filter/person_filter.cpp
+  include/bbx_filter/img_buffer.h 
+  src/bbx_filter/img_buffer.cpp
 )
