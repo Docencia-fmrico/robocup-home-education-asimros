@@ -50,6 +50,7 @@ namespace behaviour_trees
             
             goal.target_pose.header.frame_id = "map";
             goal.target_pose.header.stamp = ros::Time::now();
+			ROS_INFO("x = %f y = %f", map2person.getOrigin().x(), map2person.getOrigin().y());
             goal.target_pose.pose.position.x = map2person.getOrigin().x(); 
             goal.target_pose.pose.position.y = map2person.getOrigin().y(); 
             goal.target_pose.pose.position.z = 0.0;
