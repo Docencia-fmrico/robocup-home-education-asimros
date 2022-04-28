@@ -30,6 +30,7 @@ public:
   void messageCallback(const std_msgs::String::ConstPtr& msg);
 
   bool get_finished() {return finished;}
+  bool warn();
 
 private:
   ros::NodeHandle n_;
