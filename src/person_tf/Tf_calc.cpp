@@ -18,37 +18,25 @@ namespace person_tf
 {
 
 Tf_calc::Tf_calc()
-: image_depth_sub(nh_, "/camera/depth/image_raw", 1),
+: image_depth_sub(nh_, "/camera/depth_registered/image_raw", 1),
 bbx_sub(nh_, "/darknet_ros/bounding_boxes", 1),
 sync_bbx(MySyncPolicy_bbx(10), image_depth_sub, bbx_sub),
 objectFrameId_("/person"),
 workingFrameId_("/base_footprint")
 {
-    sub_cam_ = nh_.subscribe("/camera/depth/camera_info", 1, &Tf_calc::callback_caminfo, this);
+	detected_ = false;
+	modeladquired_ = false;
+    sub_cam_ = nh_.subscribe("/camera/depth_registered/camera_info", 1, &Tf_calc::callback_caminfo, this);
     sync_bbx.registerCallback(boost::bind(&Tf_calc::callback_tf, this, _1, _2));
 }
 
 void Tf_calc::callback_caminfo(const sensor_msgs::CameraInfoConstPtr& msg)
 {
-    cammodel_.fromCameraInfo(msg);
-
-	xyz_ = cammodel_.projectPixelTo3dRay(pixel_);
-    transform_.setOrigin(tf::Vector3(dist_, -xyz_.x, xyz_.y));
-    transform_.setRotation(tf::Quaternion(0.0, 0.0, 0.0, 1.0));
-
-    transform_.stamp_ = ros::Time::now();
-    transform_.frame_id_ = workingFrameId_;
-    transform_.child_frame_id_ = objectFrameId_;
-
-    try
-    {
-        tfBroadcaster_.sendTransform(transform_);
-    }
-    catch(tf::TransformException& ex)
-    {
-        ROS_ERROR_STREAM("Transform error of sensor data: " << ex.what() << ", quitting callback");
-        return;
-    }
+	if (!modeladquired_)
+	{
+		cammodel_.fromCameraInfo(msg);
+		modeladquired_ = true;
+	}
 }
 
 void
@@ -66,12 +54,33 @@ Tf_calc::callback_tf(const sensor_msgs::ImageConstPtr& image, const darknet_ros_
         return;
     }
 
-    for (const auto & box : boxes->bounding_boxes)
-    {
-        pixel_.x = (box.xmax + box.xmin) / 2;
-        pixel_.y = (box.ymax + box.ymin) / 2;
-    }
+    const auto & box = boxes->bounding_boxes[0];
+
+    pixel_.x = (box.xmax + box.xmin) / 2;
+    pixel_.y = (box.ymax + box.ymin) / 2;
 	dist_ = img_ptr_depth->image.at<float>(cv::Point(pixel_.x, pixel_.y));
+    
+	if (modeladquired_)
+	{
+		xyz_ = cammodel_.projectPixelTo3dRay(pixel_);
+		ROS_INFO("%f", dist_);
+    	transform_.setOrigin(tf::Vector3(dist_, -xyz_.x, xyz_.y));
+   		transform_.setRotation(tf::Quaternion(0.0, 0.0, 0.0, 1.0));
+
+    	transform_.stamp_ = ros::Time::now();
+    	transform_.frame_id_ = workingFrameId_;
+    	transform_.child_frame_id_ = objectFrameId_;
+
+    	try
+    	{
+      		tfBroadcaster_.sendTransform(transform_);
+    	}
+    	catch(tf::TransformException& ex)
+    	{
+        	ROS_ERROR_STREAM("Transform error of sensor data: " << ex.what() << ", quitting callback");
+       		return;
+   		}
+	}
 }
 
 }  // namespace tf_calc

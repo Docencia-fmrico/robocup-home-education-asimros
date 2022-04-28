@@ -34,7 +34,8 @@ namespace behaviour_trees
     BT::NodeStatus
     AskForCase::tick()
     {
-        ROS_INFO("Ponme la maleta encima elchu");
+		ROS_INFO("La navegación ha terminado");
+        ROS_INFO("Ponme la maleta encima");
         return BT::NodeStatus::SUCCESS;
     }
 

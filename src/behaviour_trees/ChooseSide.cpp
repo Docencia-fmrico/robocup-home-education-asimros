@@ -50,7 +50,8 @@ namespace behaviour_trees
             
             goal.target_pose.header.frame_id = "map";
             goal.target_pose.header.stamp = ros::Time::now();
-            goal.target_pose.pose.position.x = 0.0; // modificarlos: aún más a un lado ¿cuál?
+            goal.target_pose.pose.position.x = map2person.getOrigin().x(); 
+            goal.target_pose.pose.position.y = map2person.getOrigin().y(); 
             goal.target_pose.pose.position.z = 0.0;
             goal.target_pose.pose.orientation.x = 0.0;
             goal.target_pose.pose.orientation.y = 0.0;

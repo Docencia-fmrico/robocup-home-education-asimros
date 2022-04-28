@@ -91,8 +91,10 @@ target_link_libraries(node_behaviour_tree_nav ${PROJECT_NAME} ${catkin_LIBRARIES
 add_executable(node_bt_together src/node_bt_together.cpp)
 target_link_libraries(node_bt_together ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 
+
 roslint_cpp(
   src/nodo_calc_tf_person.cpp
+  src/node_filter_bbx.cpp
   include/person_tf/Tf_calc.h 
   src/person_tf/Tf_calc.cpp
   src/behaviour_trees/WaitForPerson.cpp
