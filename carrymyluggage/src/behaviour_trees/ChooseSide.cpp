@@ -42,17 +42,14 @@ namespace behaviour_trees
     BT::NodeStatus
     ChooseSide::tick()
     {
-        move_base_msgs::MoveBaseGoal goal;
-
-        if(buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
+        if(case_.get_side() != 0 && buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
         {	
 			map2person_msg = buffer.lookupTransform("map", "person", ros::Time(0));
       		tf2::fromMsg(map2person_msg, map2person);
-
+            move_base_msgs::MoveBaseGoal goal;
+            
             goal.target_pose.header.frame_id = "map";
             goal.target_pose.header.stamp = ros::Time::now();
-			ROS_INFO("X = %f", map2person.getOrigin().x());
-			ROS_INFO("Y = %f", map2person.getOrigin().y());
             goal.target_pose.pose.position.x = map2person.getOrigin().x(); 
             goal.target_pose.pose.position.y = map2person.getOrigin().y(); 
             goal.target_pose.pose.position.z = 0.0;
@@ -60,6 +57,15 @@ namespace behaviour_trees
             goal.target_pose.pose.orientation.y = 0.0;
             goal.target_pose.pose.orientation.z = 0.0;
             goal.target_pose.pose.orientation.w = 1.0;
+            if(case_.get_side() == 1){
+                goal.target_pose.pose.position.y = map2person.getOrigin().y() - 5;
+            }
+            else{
+                goal.target_pose.pose.position.y = map2person.getOrigin().y() + 5;
+            }
+            
+             
+            
             setOutput<move_base_msgs::MoveBaseGoal>("goal_nav", goal);
 
             // hacer una captura

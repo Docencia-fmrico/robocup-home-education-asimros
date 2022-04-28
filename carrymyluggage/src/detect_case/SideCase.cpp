@@ -34,7 +34,7 @@ sync_bbx(MySyncPolicy_bbx(10), image_depth_sub, bbx_sub)
 {
     sync_bbx.registerCallback(boost::bind(&SideCase::callback_bbx, this, _1, _2));
 
-    find_case_ = false;
+    side_ = 0;
     px_ = 0;
 }
 
@@ -55,7 +55,19 @@ SideCase::callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ro
     for (const auto & box : boxes->bounding_boxes)
     {
         int px = (box.xmax + box.xmin) / 2;
-        find_case_ = px_ != 0 && px - px_ > 130; // mirarlo en el robot real
+
+        if (px - px_ > 130 && px_ != 0)
+        {
+            side_ = 2; //right
+        }
+        else if (px - px_< -130 && px_ != 0) 
+        {
+            side_ = 1; //left
+        }         
+        else
+        {
+            side_ = 0; //not choose
+        }   
         px_ = px;
     }
 }
