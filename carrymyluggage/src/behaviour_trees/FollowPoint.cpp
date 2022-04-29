@@ -47,18 +47,6 @@ BT::NodeStatus
 FollowPoint::on_tick()
 {
   ROS_INFO("Move tick");
-  
-  if (counter_++ == 20)
-  {
-    std::cerr << "New Goal===========================" << std::endl;
-
-    move_base_msgs::MoveBaseGoal newgoal = getInput<move_base_msgs::MoveBaseGoal>("goal_nav").value();
-	if(FollowPoint::isDifferentGoal(newgoal)){
-		set_goal(goal);
-	}
-	
-  }
-
   return BT::NodeStatus::RUNNING;
 }
 

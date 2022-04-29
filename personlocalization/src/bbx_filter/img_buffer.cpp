@@ -69,9 +69,9 @@ bool Img_buffer::exp_backoff(int nsims)
 	int lev3 = int(total_segments * 0.7);
 	int lev4 = int(total_segments * 0.6);
 
-	if (times_nd < 100) similar = nsims >= lev1;
-	else if (times_nd > 100 && times_nd < 500) similar = nsims >= lev2;
-	else if (times_nd > 500 && times_nd < 2000) similar = nsims >= lev3;
+	if (times_nd < 10) similar = nsims >= lev1;
+	else if (times_nd > 20 && times_nd < 500) similar = nsims >= lev2;
+	else if (times_nd > 40 && times_nd < 80) similar = nsims >= lev3;
 	else similar = nsims >= lev4;
 
 	return similar;

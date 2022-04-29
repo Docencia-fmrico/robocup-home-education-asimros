@@ -31,6 +31,7 @@ namespace behaviour_trees
     : BT::ActionNodeBase(name, config),
 	listener(buffer)
     {
+		nh_.serviceClient<move_base_msgs::Plan>("plan");
     }
 
     void 
@@ -42,20 +43,13 @@ namespace behaviour_trees
     BT::NodeStatus
     ChooseSide::tick()
     {
-        if(buffer.canTransform("map", "odom", ros::Time(0), ros::Duration(1.0), &error_))
-        {	
-			if(buffer.canTransform("odom", "base_footprint", ros::Time(0), ros::Duration(1.0), &error_))
-        	{
-				if(buffer.canTransform("base_footprint", "person", ros::Time(0), ros::Duration(1.0), &error_))
-        		{
-					
-					map2odom_msg = buffer.lookupTransform("map", "odom", ros::Time(0));
-					odom2bf_msg = buffer.lookupTransform("odom", "base_footprint", ros::Time(0));
-					bf2person_msg = buffer.lookupTransform("base_footprint", "person", ros::Time(0));
+        if(buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
+        {			
+			map2person_msg = buffer.lookupTransform("map", "person", ros::Time(0));
+      		tf2::fromMsg(map2person_msg, map2person);
 
-      				tf2::fromMsg(map2odom_msg, map2odom);
-					tf2::fromMsg(odom2bf_msg, odom2bf);
-					tf2::fromMsg(bf2person_msg, bf2person);
+					nave_msgs::GetPlan srv;
+					srv.
 
             		move_base_msgs::MoveBaseGoal goal;
 					map2person = map2odom * odom2bf * bf2person;

@@ -23,11 +23,15 @@
 #include <actionlib/client/simple_action_client.h>
 #include <move_base_msgs/MoveBaseAction.h>
 
-
 #include "tf2/transform_datatypes.h"
 #include "tf2_ros/transform_listener.h"
 #include "tf2/LinearMath/Transform.h"
 #include "geometry_msgs/TransformStamped.h"
+
+#include "nav_msgs/GetPlan.h"
+#include "nav_msgs/Path.h"
+#include "geometry_msgs/PoseStamped.h"
+
 #include "tf2_geometry_msgs/tf2_geometry_msgs.h"
 #include "tf2/convert.h"
 
@@ -52,18 +56,13 @@ class ChooseSide : public BT::ActionNodeBase
 
     private:
         ros::NodeHandle nh_;
-        detect_case::SideCase case_;
         std::string error_;
 		tf2_ros::Buffer buffer;
+		ros::ServiceClient client;
+		
         tf2_ros::TransformListener listener;
-		geometry_msgs::TransformStamped map2odom_msg;
-    	tf2::Stamped<tf2::Transform> map2odom;
-		geometry_msgs::TransformStamped odom2bf_msg;
-    	tf2::Stamped<tf2::Transform> odom2bf;
-	 	geometry_msgs::TransformStamped bf2person_msg;
-    	tf2::Stamped<tf2::Transform> bf2person;
-
-		tf2::Transform map2person;
+		geometry_msgs::TransformStamped map2person_msg;
+    	tf2::Stamped<tf2::Transform> map2person;
 };
 
 }  // namespace behaviour_trees
