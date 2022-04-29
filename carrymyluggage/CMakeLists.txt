@@ -26,6 +26,12 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
   darknet_ros_msgs
   geometry_msgs
+
+  dialogflow_ros_msgs
+  std_srvs
+  sound_play
+  actionlib
+  actionlib_msgs
 )
 
 find_package(OpenCV)
@@ -41,6 +47,8 @@ CATKIN_DEPENDS
   tf
   cv_bridge
   image_transport
+
+	LIBRARIES gb_dialog
 )
 
 include_directories(
@@ -81,12 +89,22 @@ add_library(${PROJECT_NAME}
   src/sound/Listener.cpp
 )
 
+
 add_executable(node_behaviour_tree_nav_init src/node_behaviour_tree_nav_init.cpp)
 target_link_libraries(node_behaviour_tree_nav_init ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 add_executable(node_behaviour_tree_nav src/node_behaviour_tree_nav.cpp)
 target_link_libraries(node_behaviour_tree_nav ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 add_executable(node_bt_together src/node_bt_together.cpp)
 target_link_libraries(node_bt_together ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
+
+add_executable(listener_df_node src/sound/listenerDF.cpp)
+add_dependencies(listener_df_node ${catkin_EXPORTED_TARGETS} )
+target_link_libraries(listener_df_node ${catkin_LIBRARIES} gb_dialog)
+
+add_executable(speaker_df_node src/sound/speakerDF.cpp)
+add_dependencies(speaker_df_node ${catkin_EXPORTED_TARGETS} )
+target_link_libraries(speaker_df_node ${catkin_LIBRARIES} gb_dialog)
+
 
 roslint_cpp(
   src/behaviour_trees/WaitForPerson.cpp
