@@ -42,41 +42,45 @@ namespace behaviour_trees
     BT::NodeStatus
     ChooseSide::tick()
     {
-        if(case_.get_side() != 0 && buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
+        if(buffer.canTransform("map", "odom", ros::Time(0), ros::Duration(1.0), &error_))
         {	
-			map2person_msg = buffer.lookupTransform("map", "person", ros::Time(0));
-      		tf2::fromMsg(map2person_msg, map2person);
-            move_base_msgs::MoveBaseGoal goal;
-            
-            goal.target_pose.header.frame_id = "map";
-            goal.target_pose.header.stamp = ros::Time::now();
-			ROS_INFO("x = %f y = %f", map2person.getOrigin().x(), map2person.getOrigin().y());
-            goal.target_pose.pose.position.x = map2person.getOrigin().x(); 
-            goal.target_pose.pose.position.y = map2person.getOrigin().y(); 
-            goal.target_pose.pose.position.z = 0.0;
-            goal.target_pose.pose.orientation.x = 0.0;
-            goal.target_pose.pose.orientation.y = 0.0;
-            goal.target_pose.pose.orientation.z = 0.0;
-            goal.target_pose.pose.orientation.w = 1.0;
-            if(case_.get_side() == 1){
-                goal.target_pose.pose.position.y = map2person.getOrigin().y() - 5;
-            }
-            else{
-                goal.target_pose.pose.position.y = map2person.getOrigin().y() + 5;
-            }
-            
-             
-            
-            setOutput<move_base_msgs::MoveBaseGoal>("goal_nav", goal);
+			if(buffer.canTransform("odom", "base_footprint", ros::Time(0), ros::Duration(1.0), &error_))
+        	{
+				if(buffer.canTransform("base_footprint", "person", ros::Time(0), ros::Duration(1.0), &error_))
+        		{
+					
+					map2odom_msg = buffer.lookupTransform("map", "odom", ros::Time(0));
+					odom2bf_msg = buffer.lookupTransform("odom", "base_footprint", ros::Time(0));
+					bf2person_msg = buffer.lookupTransform("base_footprint", "person", ros::Time(0));
 
-            // hacer una captura
-            return BT::NodeStatus::SUCCESS;
-        }
-        else
-        {
-			ROS_INFO("Unable to transform");
-            return BT::NodeStatus::RUNNING; 
-        }
+      				tf2::fromMsg(map2odom_msg, map2odom);
+					tf2::fromMsg(odom2bf_msg, odom2bf);
+					tf2::fromMsg(bf2person_msg, bf2person);
+
+            		move_base_msgs::MoveBaseGoal goal;
+					map2person = map2odom * odom2bf * bf2person;
+            
+            		goal.target_pose.header.frame_id = "map";
+            		goal.target_pose.header.stamp = ros::Time::now();
+					ROS_INFO("x = %f y = %f", map2person.getOrigin().x(), map2person.getOrigin().y());
+            		goal.target_pose.pose.position.x = map2person.getOrigin().x(); 
+            		goal.target_pose.pose.position.y = map2person.getOrigin().y(); 
+            		goal.target_pose.pose.position.z = 0.0;
+            		goal.target_pose.pose.orientation.x = 0.0;
+           		 	goal.target_pose.pose.orientation.y = 0.0;
+            		goal.target_pose.pose.orientation.z = 0.0;
+            		goal.target_pose.pose.orientation.w = 1.0;
+
+					setOutput<move_base_msgs::MoveBaseGoal>("goal_nav", goal);
+
+            		// hacer una captura
+           			return BT::NodeStatus::SUCCESS;
+				}
+			}
+		}
+        
+		ROS_INFO("Unable to transform");
+        return BT::NodeStatus::RUNNING; 
     }
 
 }  // namespace behaviour_trees

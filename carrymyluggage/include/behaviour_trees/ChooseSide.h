@@ -56,8 +56,14 @@ class ChooseSide : public BT::ActionNodeBase
         std::string error_;
 		tf2_ros::Buffer buffer;
         tf2_ros::TransformListener listener;
-		geometry_msgs::TransformStamped map2person_msg;
-    	tf2::Stamped<tf2::Transform> map2person;;
+		geometry_msgs::TransformStamped map2odom_msg;
+    	tf2::Stamped<tf2::Transform> map2odom;
+		geometry_msgs::TransformStamped odom2bf_msg;
+    	tf2::Stamped<tf2::Transform> odom2bf;
+	 	geometry_msgs::TransformStamped bf2person_msg;
+    	tf2::Stamped<tf2::Transform> bf2person;
+
+		tf2::Transform map2person;
 };
 
 }  // namespace behaviour_trees
