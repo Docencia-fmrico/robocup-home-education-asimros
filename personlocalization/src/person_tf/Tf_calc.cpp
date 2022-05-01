@@ -18,7 +18,7 @@ namespace person_tf
 {
 
 Tf_calc::Tf_calc()
-: image_depth_sub(nh_, "/camera/depth_registered/image_raw", 1),
+: image_depth_sub(nh_, "/camera/depth/image_raw", 1),
 bbx_sub(nh_, "/bbx_filtered", 1),
 sync_bbx(MySyncPolicy_bbx(10), image_depth_sub, bbx_sub),
 objectFrameId_("/person"),
@@ -26,7 +26,7 @@ workingFrameId_("/base_footprint")
 {
 	detected_ = false;
 	modeladquired_ = false;
-    sub_cam_ = nh_.subscribe("/camera/depth_registered/camera_info", 1, &Tf_calc::callback_caminfo, this);
+    sub_cam_ = nh_.subscribe("/camera/depth/camera_info", 1, &Tf_calc::callback_caminfo, this);
     sync_bbx.registerCallback(boost::bind(&Tf_calc::callback_tf, this, _1, _2));
 }
 

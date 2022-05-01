@@ -36,12 +36,12 @@ namespace behaviour_trees
     {
         if(buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
         {
-            ROS_INFO("I have seen a person");
+            ROS_ERROR("I have seen a person");
             return BT::NodeStatus::SUCCESS;
         }
         else
         {
-            ROS_INFO("I haven't seen a person yet");
+            ROS_ERROR("I haven't seen a person yet");
             return BT::NodeStatus::RUNNING;  
         }
     }

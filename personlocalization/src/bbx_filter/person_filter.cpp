@@ -5,7 +5,7 @@ namespace bbx_filter
 
 Person_filter::Person_filter()
 : it_(nh_),
-image_sub(nh_, "/usb_cam/image_raw", 1),
+image_sub(nh_, "/camera/rgb/image_raw", 1),
 bbx_sub(nh_, "/darknet_ros/bounding_boxes", 1),
 sync_bbx(MySyncPolicy_bbx(10), image_sub, bbx_sub),
 buffer()
@@ -181,7 +181,7 @@ void Person_filter::fill_segment_debug(cv::Vec3i & segment, cv::Mat & img, int x
         	posdata = i * step + j * channels;
 			img.data[posdata] = segment[0];
 			img.data[posdata + 1] = segment[1];
-			img.data[posdata + 1] = segment[2];
+			img.data[posdata + 2] = segment[2];
       	}
   	}
 }

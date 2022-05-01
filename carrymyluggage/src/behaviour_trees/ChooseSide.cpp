@@ -23,14 +23,20 @@
 #include "tf2_geometry_msgs/tf2_geometry_msgs.h"
 #include "tf2/convert.h"
 
+#include "nav_msgs/Path.h"
+#include "nav_msgs/GetPlan.h"
+#include "geometry_msgs/PoseStamped.h"
+
 #include "ros/ros.h"
 
 namespace behaviour_trees
 {
+
     ChooseSide::ChooseSide(const std::string& name, const BT::NodeConfiguration& config)
     : BT::ActionNodeBase(name, config),
 	listener(buffer)
     {
+		client = nh_.serviceClient<nav_msgs::GetPlan>("/move_base/make_plan");
     }
 
     void 
@@ -42,41 +48,8 @@ namespace behaviour_trees
     BT::NodeStatus
     ChooseSide::tick()
     {
-        if(case_.get_side() != 0 && buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
-        {	
-			map2person_msg = buffer.lookupTransform("map", "person", ros::Time(0));
-      		tf2::fromMsg(map2person_msg, map2person);
-            move_base_msgs::MoveBaseGoal goal;
-            
-            goal.target_pose.header.frame_id = "map";
-            goal.target_pose.header.stamp = ros::Time::now();
-			ROS_INFO("x = %f y = %f", map2person.getOrigin().x(), map2person.getOrigin().y());
-            goal.target_pose.pose.position.x = map2person.getOrigin().x(); 
-            goal.target_pose.pose.position.y = map2person.getOrigin().y(); 
-            goal.target_pose.pose.position.z = 0.0;
-            goal.target_pose.pose.orientation.x = 0.0;
-            goal.target_pose.pose.orientation.y = 0.0;
-            goal.target_pose.pose.orientation.z = 0.0;
-            goal.target_pose.pose.orientation.w = 1.0;
-            if(case_.get_side() == 1){
-                goal.target_pose.pose.position.y = map2person.getOrigin().y() - 5;
-            }
-            else{
-                goal.target_pose.pose.position.y = map2person.getOrigin().y() + 5;
-            }
-            
-             
-            
-            setOutput<move_base_msgs::MoveBaseGoal>("goal_nav", goal);
-
-            // hacer una captura
-            return BT::NodeStatus::SUCCESS;
-        }
-        else
-        {
-			ROS_INFO("Unable to transform");
-            return BT::NodeStatus::RUNNING; 
-        }
+        ROS_ERROR("He ido al arbitro, le he pedido que apunte y me giro, después empieza la nav");
+		return BT::NodeStatus::SUCCESS;
     }
 
 }  // namespace behaviour_trees

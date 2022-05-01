@@ -53,6 +53,8 @@ class FollowPoint : public BTNavAction
 
   private:
     int counter_;
+    bool isDifferent(move_base_msgs::MoveBaseGoal newgoal);
+	  move_base_msgs::MoveBaseGoal goal_;
 };
 
 }  // namespace behaviour_trees

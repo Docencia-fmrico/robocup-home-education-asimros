@@ -34,8 +34,7 @@ namespace behaviour_trees
     BT::NodeStatus
     AskForCase::tick()
     {
-		  ROS_INFO("La navegación ha terminado");
-      speaker_.speak("Please give me your cases");
+      ROS_ERROR("Placeholder for speak");
       return BT::NodeStatus::SUCCESS;
     }
 

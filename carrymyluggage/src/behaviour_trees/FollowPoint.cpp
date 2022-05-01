@@ -26,19 +26,21 @@ FollowPoint::FollowPoint(
   const BT::NodeConfiguration & config)
 : BTNavAction(name, action_name, config), counter_(0)
 {
+  ROS_ERROR("Se lanza un followpoint");
 }
 
 void
 FollowPoint::on_halt()
 {
-  ROS_INFO("Move halt");
+  ROS_INFO("Followpoint halt");
 }
 
 void
 FollowPoint::on_start()
 {
-  move_base_msgs::MoveBaseGoal goal = getInput<move_base_msgs::MoveBaseGoal>("goal_nav").value();
-  set_goal(goal);
+  ROS_ERROR("Pongo el goal");
+  goal_ = getInput<move_base_msgs::MoveBaseGoal>("goal_nav").value();
+  set_goal(goal_);
 
   ROS_INFO("Move start");
 }
@@ -46,16 +48,6 @@ FollowPoint::on_start()
 BT::NodeStatus
 FollowPoint::on_tick()
 {
-  ROS_INFO("Move tick");
-  
-  if (counter_++ == 20)
-  {
-    std::cerr << "New Goal===========================" << std::endl;
-
-    move_base_msgs::MoveBaseGoal goal = getInput<move_base_msgs::MoveBaseGoal>("goal_nav").value();
-	set_goal(goal);
-  }
-
   return BT::NodeStatus::RUNNING;
 }
 
