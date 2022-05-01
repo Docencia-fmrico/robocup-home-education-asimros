@@ -45,7 +45,6 @@ class FollowPoint : public BTNavAction
     BT::NodeStatus on_tick() override;
     void on_start() override;
     void on_feedback(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback) override;
-	bool FollowPoint::isDifferent(move_base_msgs::MoveBaseGoal newgoal);
 
 	static BT::PortsList providedPorts() 
 	{ 
@@ -54,7 +53,8 @@ class FollowPoint : public BTNavAction
 
   private:
     int counter_;
-	move_base_msgs::MoveBaseGoal goal_;
+    bool isDifferent(move_base_msgs::MoveBaseGoal newgoal);
+	  move_base_msgs::MoveBaseGoal goal_;
 };
 
 }  // namespace behaviour_trees

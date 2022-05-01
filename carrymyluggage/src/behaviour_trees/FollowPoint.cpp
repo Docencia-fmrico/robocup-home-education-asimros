@@ -38,7 +38,7 @@ void
 FollowPoint::on_start()
 {
   goal_ = getInput<move_base_msgs::MoveBaseGoal>("goal_nav").value();
-  set_goal(goal);
+  set_goal(goal_);
 
   ROS_INFO("Move start");
 }
@@ -46,23 +46,23 @@ FollowPoint::on_start()
 BT::NodeStatus
 FollowPoint::on_tick()
 {
-  ROS_INFO("Move tick");
   return BT::NodeStatus::RUNNING;
 }
 
-bool
-FollowPoint::isDifferent(move_base_msgs::MoveBaseGoal newgoal)
+bool FollowPoint::isDifferent(move_base_msgs::MoveBaseGoal newgoal)
 {
 	if (newgoal.target_pose.pose.position.x != goal_.target_pose.pose.position.x) return true;
 	else if (newgoal.target_pose.pose.position.y != goal_.target_pose.pose.position.y) return true;
 	else if (newgoal.target_pose.pose.position.z != goal_.target_pose.pose.position.z) return true;
 
-	else if (newgoal.target_pose.pose.orientation.x != goal_.target_pose.pose.position.x) return true;
-	else if (newgoal.target_pose.pose.orientation.y != goal_.target_pose.pose.position.y) return true;
-	else if (newgoal.target_pose.pose.orientation.z != goal_.target_pose.pose.position.z) return true;
-	else if (newgoal.target_pose.pose.orientation.w != goal_.target_pose.pose.position.w) return true;
+	else if (newgoal.target_pose.pose.orientation.x != goal_.target_pose.pose.orientation.x) return true;
+	else if (newgoal.target_pose.pose.orientation.y != goal_.target_pose.pose.orientation.y) return true;
+	else if (newgoal.target_pose.pose.orientation.z != goal_.target_pose.pose.orientation.z) return true;
+	else if (newgoal.target_pose.pose.orientation.w != goal_.target_pose.pose.orientation.w) return true;
 	
-    return false;
+
+  ROS_INFO("No es diferente");
+  return false;
 }
 
 void
