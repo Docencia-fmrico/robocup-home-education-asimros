@@ -12,36 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "behaviour_trees/AskForCase.h"
-#include "behaviortree_cpp_v3/behavior_tree.h"
-#include <string>
+#ifndef SOUND_SPEAKER_H
+#define SOUND_SPEAKER_H
 
 #include "ros/ros.h"
+#include "std_msgs/String.h"
+#include <string>
 
-namespace behaviour_trees
+namespace sound
 {
-    AskForCase::AskForCase(const std::string& name)
-    : BT::ActionNodeBase(name, {})
-    {
-    }
 
-    void 
-    AskForCase::halt()
-    {
-        ROS_INFO("AskForCase halt");
-    }
-
-    BT::NodeStatus
-    AskForCase::tick()
-    {
-      ROS_ERROR("Placeholder for speak");
-      return BT::NodeStatus::SUCCESS;
-    }
-
-}  // namespace behaviour_trees
-
-#include "behaviortree_cpp_v3/bt_factory.h"
-BT_REGISTER_NODES(factory)
+class Speaker
 {
-  factory.registerNodeType<behaviour_trees::AskForCase>("ask_for_case");
-}
+public:
+  Speaker();
+
+  void speak(std::string say);
+
+private:
+  ros::NodeHandle n_;
+  ros::Publisher pub_;
+  std_msgs::String msg_;
+};
+
+}  // namespace sound
+
+#endif // SOUND_SPEAKER_H
