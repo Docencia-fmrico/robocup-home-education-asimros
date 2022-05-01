@@ -26,17 +26,19 @@ FollowPoint::FollowPoint(
   const BT::NodeConfiguration & config)
 : BTNavAction(name, action_name, config), counter_(0)
 {
+  ROS_ERROR("Se lanza un followpoint");
 }
 
 void
 FollowPoint::on_halt()
 {
-  ROS_INFO("Move halt");
+  ROS_INFO("Followpoint halt");
 }
 
 void
 FollowPoint::on_start()
 {
+  ROS_ERROR("Pongo el goal");
   goal_ = getInput<move_base_msgs::MoveBaseGoal>("goal_nav").value();
   set_goal(goal_);
 
@@ -47,22 +49,6 @@ BT::NodeStatus
 FollowPoint::on_tick()
 {
   return BT::NodeStatus::RUNNING;
-}
-
-bool FollowPoint::isDifferent(move_base_msgs::MoveBaseGoal newgoal)
-{
-	if (newgoal.target_pose.pose.position.x != goal_.target_pose.pose.position.x) return true;
-	else if (newgoal.target_pose.pose.position.y != goal_.target_pose.pose.position.y) return true;
-	else if (newgoal.target_pose.pose.position.z != goal_.target_pose.pose.position.z) return true;
-
-	else if (newgoal.target_pose.pose.orientation.x != goal_.target_pose.pose.orientation.x) return true;
-	else if (newgoal.target_pose.pose.orientation.y != goal_.target_pose.pose.orientation.y) return true;
-	else if (newgoal.target_pose.pose.orientation.z != goal_.target_pose.pose.orientation.z) return true;
-	else if (newgoal.target_pose.pose.orientation.w != goal_.target_pose.pose.orientation.w) return true;
-	
-
-  ROS_INFO("No es diferente");
-  return false;
 }
 
 void

@@ -40,6 +40,7 @@ public:
     nav_need_send_goal_ = true;;
     nav_finished_ = false;
     nav_succeded_ = false;
+    firstick_ = true;
   }
 
   virtual void on_halt() = 0;
@@ -57,6 +58,8 @@ public:
     nav_need_send_goal_ = true;
     nav_finished_ = false;
     nav_succeded_ = false;
+    firstick_ = true;
+
   }
 
   void set_goal(const move_base_msgs::MoveBaseGoal & new_goal)
@@ -67,9 +70,11 @@ public:
 
   BT::NodeStatus tick()
   {
-    if (status() == BT::NodeStatus::IDLE)
+    if (firstick_)
     {
       on_start();
+      ROS_ERROR("Hago el start");
+      firstick_ = false;
     }
 
     if (nav_need_send_goal_)
@@ -95,13 +100,7 @@ public:
 
     if (nav_finished_)
     {
-      if (nav_succeded_) {
-        return BT::NodeStatus::SUCCESS;
-      }
-      else
-      {
-        return BT::NodeStatus::FAILURE;
-      }
+      return BT::NodeStatus::SUCCESS;
     }
     else
     {
@@ -129,6 +128,7 @@ private:
   bool nav_need_send_goal_;
   bool nav_finished_;
   bool nav_succeded_;
+  bool firstick_;
 };
 
 }  // namespace behavior_trees
