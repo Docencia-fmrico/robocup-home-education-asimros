@@ -33,6 +33,16 @@ namespace behaviour_trees
     : BT::ActionNodeBase(name, config),
       listener(buffer)
     {
+        client = nh_.serviceClient<nav_msgs::GetPlan>("/move_base/make_plan");
+        // Coordenadas inicio de la nav, después se actualizan con siguiente destino. 
+        start.header.frame_id = "map";
+		start.pose.position.x = 3.0;  
+        start.pose.position.y = 2.0;  
+        start.pose.position.z = 0.0;
+        start.pose.orientation.x = 0.0;
+        start.pose.orientation.y = 0.0;
+        start.pose.orientation.z = 0.0;
+        start.pose.orientation.w = 1.0;
     }
     
     
@@ -53,31 +63,46 @@ namespace behaviour_trees
     BT::NodeStatus
     LocPerson::tick()
     {
-        move_base_msgs::MoveBaseGoal goal;
-
         if(buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
-        {
-            ROS_INFO("I have seen a person");
+        {			
+			map2person_msg = buffer.lookupTransform("map", "person", ros::Time(0));
+      		tf2::fromMsg(map2person_msg, map2person);
 
-            goal.target_pose.header.frame_id = "map";
-            goal.target_pose.header.stamp = ros::Time::now();
-            goal.target_pose.pose.position.x = bf2person_.getOrigin().x();
-            goal.target_pose.pose.position.y = bf2person_.getOrigin().y();
-            goal.target_pose.pose.position.z = 0.0;
-            goal.target_pose.pose.orientation.x = 0.0;
-            goal.target_pose.pose.orientation.y = 0.0;
-            goal.target_pose.pose.orientation.z = 0.0;
-            goal.target_pose.pose.orientation.w = 1.0;
+			nav_msgs::GetPlan srv;
+			srv.request.goal.header.frame_id = "map";
+        	srv.request.goal.pose.position.x = map2person.getOrigin().x();  //coord arbitro
+        	srv.request.goal.pose.position.y = map2person.getOrigin().y();  //coord arbitro
+        	srv.request.goal.pose.position.z = 0.0;
+        	srv.request.goal.pose.orientation.x = 0.0;
+        	srv.request.goal.pose.orientation.y = 0.0;
+        	srv.request.goal.pose.orientation.z = 0.0;
+        	srv.request.goal.pose.orientation.w = 1.0;
 
-            setOutput("goal_nav", goal);
+			srv.request.start = start;
 
-            return BT::NodeStatus::SUCCESS;
-        }
-        else
-        {
-            ROS_INFO("I haven't seen a person yet");
-            return BT::NodeStatus::FAILURE;  
-        }
+			srv.request.tolerance = 1.0;
+
+			if (client.call(srv))
+  			{
+    			auto index = srv.response.plan.poses.size() - 8;
+				move_base_msgs::MoveBaseGoal goal;
+
+        		goal.target_pose = srv.response.plan.poses[index];
+                start = goal.target_pose;
+
+        		setOutput<move_base_msgs::MoveBaseGoal>("goal_nav", goal);
+				return BT::NodeStatus::SUCCESS;
+  			}
+  			else
+  			{
+    			ROS_ERROR("Failed to call service distance");
+				return BT::NodeStatus::RUNNING;
+  			}
+			
+        	
+		}
+		ROS_ERROR("Unable to transform");
+        return BT::NodeStatus::RUNNING; 
     }
 
 }  // namespace behaviour_trees

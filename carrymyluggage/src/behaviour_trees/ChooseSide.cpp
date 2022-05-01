@@ -48,52 +48,8 @@ namespace behaviour_trees
     BT::NodeStatus
     ChooseSide::tick()
     {
-        if(buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
-        {			
-			map2person_msg = buffer.lookupTransform("map", "person", ros::Time(0));
-      		tf2::fromMsg(map2person_msg, map2person);
-
-			nav_msgs::GetPlan srv;
-			srv.request.goal.header.frame_id = "map";
-        	srv.request.goal.pose.position.x = map2person.getOrigin().x();  //coord arbitro
-        	srv.request.goal.pose.position.y = map2person.getOrigin().y();  //coord arbitro
-        	srv.request.goal.pose.position.z = 0.0;
-        	srv.request.goal.pose.orientation.x = 0.0;
-        	srv.request.goal.pose.orientation.y = 0.0;
-        	srv.request.goal.pose.orientation.z = 0.0;
-        	srv.request.goal.pose.orientation.w = 1.0;
-
-			srv.request.start.header.frame_id = "map";
-			srv.request.start.pose.position.x = 3.0;  //coord arbitro
-        	srv.request.start.pose.position.y = 2.0;  //coord arbitro
-        	srv.request.start.pose.position.z = 0.0;
-        	srv.request.start.pose.orientation.x = 0.0;
-        	srv.request.start.pose.orientation.y = 0.0;
-        	srv.request.start.pose.orientation.z = 0.0;
-        	srv.request.start.pose.orientation.w = 1.0;
-
-			srv.request.tolerance = 1.0;
-
-			if (client.call(srv))
-  			{
-    			auto index = srv.response.plan.poses.size() - 8;
-				move_base_msgs::MoveBaseGoal goal;
-
-        		goal.target_pose = srv.response.plan.poses[index];
-
-        		setOutput<move_base_msgs::MoveBaseGoal>("goal_nav", goal);
-				return BT::NodeStatus::SUCCESS;
-  			}
-  			else
-  			{
-    			ROS_ERROR("Failed to call service distance");
-				return BT::NodeStatus::RUNNING;
-  			}
-			
-        	
-		}
-		ROS_ERROR("Unable to transform");
-        return BT::NodeStatus::RUNNING; 
+        ROS_ERROR("He ido al arbitro, le he pedido que apunte y me giro, después empieza la nav");
+		return BT::NodeStatus::SUCCESS;
     }
 
 }  // namespace behaviour_trees
