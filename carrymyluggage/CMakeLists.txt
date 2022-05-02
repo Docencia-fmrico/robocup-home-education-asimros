@@ -63,11 +63,11 @@ add_library(asr_wait_for_person_node SHARED src/behaviour_trees/WaitForPerson.cp
 add_library(asr_choose_side_node SHARED src/behaviour_trees/ChooseSide.cpp)
 add_library(asr_follow_point_node SHARED src/behaviour_trees/FollowPoint.cpp)
 add_library(asr_ask_for_case_node SHARED src/behaviour_trees/AskForCase.cpp)
+add_library(asr_arena_node SHARED src/behaviour_trees/Arena.cpp)
 add_library(asr_loc_person_node SHARED src/behaviour_trees/LocPerson.cpp)
 add_library(asr_turn_around_node SHARED src/behaviour_trees/TurnAround.cpp)
 add_library(asr_request_come_closer_node SHARED src/behaviour_trees/RequestComeCloser.cpp)
-add_library(asr_sand_node SHARED src/behaviour_trees/Sand.cpp)
-add_library(asr_have_finished_node SHARED src/behaviour_trees/Sand.cpp)
+add_library(asr_have_finished_node SHARED src/behaviour_trees/HaveFinished.cpp)
 
 list(APPEND plugin_libs
   asr_choose_side_node
@@ -77,7 +77,7 @@ list(APPEND plugin_libs
   asr_loc_person_node
   asr_request_come_closer_node
   asr_turn_around_node
-  asr_sand_node
+  asr_arena_node
   asr_have_finished_node
 )
 
@@ -90,7 +90,6 @@ add_library(${PROJECT_NAME}
   src/detect_case/SideCase.cpp
   src/sound/Listener.cpp
 )
-
 
 add_executable(node_behaviour_tree_nav_init src/node_behaviour_tree_nav_init.cpp)
 target_link_libraries(node_behaviour_tree_nav_init ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
@@ -119,20 +118,20 @@ roslint_cpp(
   include/behaviour_trees/FollowPoint.h
   src/behaviour_trees/AskForCase.cpp
   include/behaviour_trees/AskForCase.h
+  src/behaviour_trees/Arena.cpp
+  include/behaviour_trees/Arena.cpp
+  include/behaviour_trees/BTNavAction.h
+  src/node_behaviour_tree_nav_init.cpp
   src/behaviour_trees/TurnAround.cpp
   include/behaviour_trees/TurnAround.cpp
   src/behaviour_trees/LocPerson.cpp
   include/behaviour_trees/LocPerson.h
   src/behaviour_trees/RequestComeCloser.cpp
   include/behaviour_trees/RequestComeCloser.h
-  include/behaviour_trees/BTNavAction.h
-  src/node_behaviour_tree_nav.cpp
-  src/node_behaviour_tree_nav_init.cpp
-  src/node_bt_together.cpp
-  src/behaviour_trees/Sand.cpp
-  include/behaviour_trees/Sand.h
   src/behaviour_trees/HaveFinished.cpp
   include/behaviour_trees/HaveFinished.h
+  src/node_behaviour_tree_nav.cpp
+  src/node_bt_together.cpp
   src/sound/Listener.cpp
   include/sound/Listener.h
 )

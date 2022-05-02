@@ -36,6 +36,8 @@ int main(int argc, char **argv)
   factory.registerFromPlugin(loader.getOSName("asr_turn_around_node"));
   factory.registerFromPlugin(loader.getOSName("asr_request_come_closer_node"));
   factory.registerFromPlugin(loader.getOSName("asr_follow_point_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_arena_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_have_finished_node"));
 
   auto blackboard = BT::Blackboard::create();
 

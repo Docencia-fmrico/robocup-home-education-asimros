@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "behaviour_trees/Sand.h"
+#include "behaviour_trees/Arena.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
 
 #include <string>
@@ -22,28 +22,28 @@
 namespace behaviour_trees
 {
     
-    Sand::Sand(const std::string& name, const BT::NodeConfiguration& config)
+    Arena::Arena(const std::string& name, const BT::NodeConfiguration& config)
     : BT::ActionNodeBase(name, config)
     {
     }
     
     
     void 
-    Sand::halt()
+    Arena::halt()
     {
-        ROS_INFO("Sand halt");
+        ROS_INFO("Arena halt");
     }
     
     
     BT::PortsList 
-    Sand::providedPorts() 
+    Arena::providedPorts() 
     { 
         return { BT::OutputPort<move_base_msgs::MoveBaseGoal>("goal_nav") }; 
     }
     
 
     BT::NodeStatus
-    Sand::tick()
+    Arena::tick()
     {
         move_base_msgs::MoveBaseGoal goal;
 
@@ -51,15 +51,15 @@ namespace behaviour_trees
 
         goal.target_pose.header.frame_id = "map";
         goal.target_pose.header.stamp = ros::Time::now();
-        goal.target_pose.pose.position.x = 3.0;  //coord arbitro
-        goal.target_pose.pose.position.y = 2.0;  //coord arbitro
+        goal.target_pose.pose.position.x = 20;  //coord arbitro
+        goal.target_pose.pose.position.y = 20;  //coord arbitro
         goal.target_pose.pose.position.z = 0.0;
         goal.target_pose.pose.orientation.x = 0.0;
         goal.target_pose.pose.orientation.y = 0.0;
         goal.target_pose.pose.orientation.z = 0.0;
         goal.target_pose.pose.orientation.w = 1.0;
 
-        setOutput<move_base_msgs::MoveBaseGoal>("goal_nav", goal);
+        setOutput("goal_nav", goal);
 
         return BT::NodeStatus::SUCCESS;
     }
@@ -69,5 +69,5 @@ namespace behaviour_trees
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<behaviour_trees::Sand>("sand");
+  factory.registerNodeType<behaviour_trees::Arena>("arena");
 }

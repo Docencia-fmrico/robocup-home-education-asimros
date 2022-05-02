@@ -16,7 +16,6 @@
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include <string>
 #include "ros/ros.h"
-#include "geometry_msgs/Twist.h"
 
 #include "tf2/transform_datatypes.h"
 #include "tf2_ros/transform_listener.h"
@@ -32,6 +31,13 @@ namespace behaviour_trees
     listener(buffer)
     {
         vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 100);
+
+        cmd_.linear.x = 0;
+        cmd_.linear.y = 0;
+        cmd_.linear.z = 0;
+        cmd_.angular.x = 0;
+        cmd_.angular.y = 0;
+        cmd_.angular.z = 0;
     }
 
     void 
@@ -43,16 +49,11 @@ namespace behaviour_trees
     BT::NodeStatus
     TurnAround::tick()
     {
-        // modificar el 50 -> de una vuelta
-        geometry_msgs::Twist cmd;
-        
-        
+        // modificar el 100 -> de una vuelta
+        cmd_.angular.z = angspeed_;
+        vel_pub_.publish(cmd_);
 
-        cmd.linear.x = 0.0;
-        cmd.angular.z = angspeed_;
-        vel_pub_.publish(cmd);
-
-        if(buffer.canTransform("base_footprint", "person/0", ros::Time(0), ros::Duration(1.0), &error_))
+        if(buffer.canTransform("base_footprint", "person", ros::Time(0), ros::Duration(1.0), &error_))
         {
             ROS_INFO("I have seen the person again");
             return BT::NodeStatus::SUCCESS;

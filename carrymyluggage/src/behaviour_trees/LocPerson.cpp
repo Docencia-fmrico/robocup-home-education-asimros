@@ -70,8 +70,8 @@ namespace behaviour_trees
 
 			nav_msgs::GetPlan srv;
 			srv.request.goal.header.frame_id = "map";
-        	srv.request.goal.pose.position.x = map2person.getOrigin().x();  //coord arbitro
-        	srv.request.goal.pose.position.y = map2person.getOrigin().y();  //coord arbitro
+        	srv.request.goal.pose.position.x = map2person.getOrigin().x();  
+        	srv.request.goal.pose.position.y = map2person.getOrigin().y(); 
         	srv.request.goal.pose.position.z = 0.0;
         	srv.request.goal.pose.orientation.x = 0.0;
         	srv.request.goal.pose.orientation.y = 0.0;
