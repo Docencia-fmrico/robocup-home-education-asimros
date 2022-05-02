@@ -35,6 +35,15 @@ namespace behaviour_trees
     ChooseSide::ChooseSide(const std::string& name)
     : BT::ActionNodeBase(name, {})
     {
+      know_side_ = false;
+      vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 100);
+
+      cmd_.linear.x = 0.0;
+      cmd_.linear.y = 0.0;
+      cmd_.linear.z = 0.0;
+      cmd_.angular.x = 0.0;
+      cmd_.angular.y = 0.0;
+      cmd_.angular.z = 0.0;
     }
 
     void 
