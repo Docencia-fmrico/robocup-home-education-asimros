@@ -33,14 +33,15 @@ bbx_sub(nh, "/darknet_ros/bounding_boxes", 1),
 sync_bbx(MySyncPolicy_bbx(10), image_depth_sub, bbx_sub)
 {
     sync_bbx.registerCallback(boost::bind(&SideCase::callback_bbx, this, _1, _2));
-
+    read_ts_ = ros::Time::now();
     side_ = 0;
-    position_ = 0;
+    dif_ = 0;
 }
 
 void
 SideCase::callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msgs::BoundingBoxesConstPtr& boxes)
 {
+    int px;
     cv_bridge::CvImagePtr img_ptr_depth;
     try
     {
@@ -54,25 +55,25 @@ SideCase::callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ro
 
     for (const auto & box : boxes->bounding_boxes)
     {
-        px_[position_] = (box.xmax + box.xmin) / 2;
+        px = (box.xmax + box.xmin) / 2;
     }
-
-    if(position_ == 49)
-    {
-        if(px_[5] - px_[position_] > 50)
-        {
+    if((ros::Time::now() - read_ts_).toSec() < 0.1){ //first time
+        px_= px;
+    }
+    if((ros::Time::now() - read_ts_).toSec() < READ_TIME){
+        dif_ = dif_ + px - px_ ;
+        side_= 0;
+    }
+    else{
+        if (dif_ < 0){
             side_ = 1;
         }
-        else if(px_[5] - px_[position_] < -50)
-        {
+        else{
             side_ = 2;
         }
-        else
-        {
-            position_ = -1;
-        }
     }
-    position_++;
+    px_= px;
+    
 }
 
 }  // namespace detect_case
