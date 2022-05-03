@@ -37,7 +37,7 @@ namespace behaviour_trees
     {
       ROS_ERROR("Placeholder for speak");
 
-      speaker_.speak("Please point the bag");
+      speaker_.speak("Put the bag on");
       return BT::NodeStatus::SUCCESS;
     }
 
