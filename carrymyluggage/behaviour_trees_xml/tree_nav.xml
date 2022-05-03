@@ -3,21 +3,15 @@
     <!-- ////////// -->
     <BehaviorTree ID="BehaviorTree">
         <Sequence>
-            <Fallback>
-                <ReactiveFallback>
-                    <Action ID="loc_person" goal_nav="{goal_nav}"/>
-                    <Inverter>
-                        <Fallback>
-                            <RetryUntilSuccessful num_attempts="100">
-                                <Action ID="turn_around"/>
-                            </RetryUntilSuccessful>
-                            <Action ID="request_come_closer"/>
-                        </Fallback>
-                    </Inverter>
-                </ReactiveFallback>
+            <Sequence>
+                <Fallback>
+                    <Action ID="turn_around"/>
+                    <Action ID="request_come_closer"/>
+                </Fallback>
+                <Action ID="loc_person" goal_nav="{goal_nav}"/>
                 <Action ID="follow_point" goal_nav="{goal_nav}"/>
                 <Action ID="have_finished"/>
-            </Fallback>
+            </Sequence>
             <Action ID="arena" goal_nav="{goal_nav}"/>
             <Action ID="follow_point" goal_nav="{goal_nav}"/>
         </Sequence>
