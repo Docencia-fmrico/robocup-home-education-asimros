@@ -20,8 +20,8 @@ class ListenerDF: public DialogInterface
         std::bind(&ListenerDF::sideIntentCB, this, ph::_1),
         "Side");
       this->registerCallback(
-        std::bind(&ListenerDF::nameIntentCB, this, ph::_1),
-        "Name");
+        std::bind(&ListenerDF::namesIntentCB, this, ph::_1),
+        "Names");
       this->registerCallback(
         std::bind(&ListenerDF::colorIntentCB, this, ph::_1),
         "Color");
@@ -37,16 +37,16 @@ class ListenerDF: public DialogInterface
         listen();
     }
 
-    void nameIntentCB(dialogflow_ros_msgs::DialogflowResult result)
+    void namesIntentCB(dialogflow_ros_msgs::DialogflowResult result)
     {
-      ROS_INFO("[ListenerDF] sideIntentCB: intent [%s]", result.intent.c_str());
+      ROS_INFO("[ListenerDF] namesIntentCB: intent [%s]", result.intent.c_str());
       msg_.data = result.fulfillment_text;
       pub_.publish(msg_);
     }
 
     void colorIntentCB(dialogflow_ros_msgs::DialogflowResult result)
     {
-      ROS_INFO("[ListenerDF] sideIntentCB: intent [%s]", result.intent.c_str());
+      ROS_INFO("[ListenerDF] colorIntentCB: intent [%s]", result.intent.c_str());
       msg_.data = result.fulfillment_text;
       pub_.publish(msg_);
     }
