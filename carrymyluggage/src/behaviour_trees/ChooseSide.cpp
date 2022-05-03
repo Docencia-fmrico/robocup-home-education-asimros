@@ -48,8 +48,12 @@ namespace behaviour_trees
     BT::NodeStatus
     ChooseSide::tick()
     {
-        ROS_ERROR("He ido al arbitro, le he pedido que apunte y me giro, después empieza la nav");
-		return BT::NodeStatus::SUCCESS;
+        ROS_ERROR("Porfi apunta");
+
+        ROS_ERROR("Detectando lado");
+
+        ROS_ERROR("Me giro a un lado");
+		    return BT::NodeStatus::SUCCESS;
     }
 
 }  // namespace behaviour_trees

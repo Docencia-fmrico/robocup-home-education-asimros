@@ -36,10 +36,11 @@ int main(int argc, char **argv)
   factory.registerFromPlugin(loader.getOSName("asr_turn_around_node"));
   factory.registerFromPlugin(loader.getOSName("asr_request_come_closer_node"));
   factory.registerFromPlugin(loader.getOSName("asr_follow_point_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_have_finished_node"));
 
   auto blackboard = BT::Blackboard::create();
 
-  std::string pkgpath = ros::package::getPath("robocup-home-education-asimros");
+  std::string pkgpath = ros::package::getPath("carrymyluggage");
 
   std::string xml_file = pkgpath + "/behaviour_trees_xml/tree_nav.xml";
 

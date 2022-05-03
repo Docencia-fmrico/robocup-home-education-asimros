@@ -34,7 +34,7 @@ namespace behaviour_trees
     BT::NodeStatus
     RequestComeCloser::tick()
     {
-        speaker_.speak("Could you come closer?");
+        ROS_ERROR("Could you come closer?");
         return BT::NodeStatus::SUCCESS;
     }
 

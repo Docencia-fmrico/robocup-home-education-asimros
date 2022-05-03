@@ -52,7 +52,7 @@ namespace behaviour_trees
         cmd.angular.z = angspeed_;
         vel_pub_.publish(cmd);
 
-        if(buffer.canTransform("base_footprint", "person/0", ros::Time(0), ros::Duration(1.0), &error_))
+        if(buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
         {
             ROS_INFO("I have seen the person again");
             return BT::NodeStatus::SUCCESS;

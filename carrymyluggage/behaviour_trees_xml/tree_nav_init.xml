@@ -6,8 +6,8 @@
             <Action ID="sand" goal_nav="{goal_nav}"/>
             <Action ID="follow_point" goal_nav="{goal_nav}"/>
             <Action ID="wait_for_person"/>
-            <Action ID="ask_for_case"/>
             <Action ID="choose_side"/>
+            <Action ID="ask_for_case"/>
         </Sequence>
     </BehaviorTree>
     <!-- ////////// -->
