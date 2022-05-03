@@ -27,6 +27,7 @@
 #include "geometry_msgs/TransformStamped.h"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.h"
 #include "tf2/convert.h"
+#include "geometry_msgs/Point.h"
 
 #include "nav_msgs/GetPlan.h"
 #include "nav_msgs/Path.h"
@@ -48,14 +49,16 @@ class LocPerson :  public BT::ActionNodeBase
 
     private:
         ros::NodeHandle nh_;
-        
+        double xgoal_;
+        double ygoal_;
         std::string error_;
         tf2_ros::Buffer buffer;
         tf2_ros::TransformListener listener;
         geometry_msgs::TransformStamped map2person_msg;
-    	tf2::Stamped<tf2::Transform> map2person;
+    	  tf2::Stamped<tf2::Transform> map2person;
         ros::ServiceClient client;
         geometry_msgs::PoseStamped start;
+        unsigned long calc_index(auto & poses);
 };
 
 }  // namespace behaviour_trees

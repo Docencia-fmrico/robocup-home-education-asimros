@@ -30,7 +30,7 @@ namespace behaviour_trees
     : BT::ActionNodeBase(name, {}),
     listener(buffer)
     {
-        vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 100);
+        vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
 
         cmd_.linear.x = 0;
         cmd_.linear.y = 0;

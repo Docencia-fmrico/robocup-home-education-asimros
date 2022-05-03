@@ -53,6 +53,7 @@ class TurnAround :  public BT::ActionNodeBase
 
         static constexpr double TURNING_TIME = 4.0;
 		ros::Time turn_ts_;
+        double angspeed_ = 0.4;
 };
 
 }  // namespace behaviour_trees

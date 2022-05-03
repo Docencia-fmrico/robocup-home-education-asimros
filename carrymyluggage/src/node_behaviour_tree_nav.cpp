@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 
   auto blackboard = BT::Blackboard::create();
 
-  std::string pkgpath = ros::package::getPath("robocup-home-education-asimros");
+  std::string pkgpath = ros::package::getPath("carrymyluggage");
 
   std::string xml_file = pkgpath + "/behaviour_trees_xml/tree_nav.xml";
 
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
   bool finish = false;
   while (ros::ok() && !finish)
   {
-    tree.rootNode()->executeTick();
+    finish = tree.rootNode()->executeTick() == BT::NodeStatus::SUCCESS;
 
     ros::spinOnce();
     loop_rate.sleep();
