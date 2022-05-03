@@ -26,10 +26,12 @@ namespace sound
     pub_ = n_.advertise<std_msgs::String>("/listen", 1);
     finished_ = false;
     warn_ = false;
+    recived_ = false;
     msg_.data = "listen bro";
   }
 
-   void
+  
+  void
   Listener::listen()
   {
     pub_.publish(msg_);    
@@ -41,10 +43,12 @@ namespace sound
     if(msg->data.compare("true"))
     {
       finished_ = true;
+      recived_ = true;
       warn_ = false;
     } 
     else
     {
+      recived_ = true;
       warn_ = true;
       warning_ts_ = (ros::Time::now()).toSec();
     }

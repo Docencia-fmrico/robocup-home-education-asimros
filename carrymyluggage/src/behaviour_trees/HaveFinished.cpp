@@ -15,6 +15,7 @@
 #include "behaviour_trees/HaveFinished.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include <string>
+#include "sound/Listener.h"
 
 #include "ros/ros.h"
 
@@ -23,6 +24,7 @@ namespace behaviour_trees
     HaveFinished::HaveFinished(const std::string& name)
     : BT::ActionNodeBase(name, {})
     {
+      first_ = true;
     }
 
     void
@@ -34,7 +36,13 @@ namespace behaviour_trees
     BT::NodeStatus
     HaveFinished::tick()
     {
-      if(listener_.get_finished())
+      if(first_)
+      {
+        first_ = false;
+        listener_.listen();
+      }
+
+      if(listener_.recived() && listener_.get_finished())
       {
         ROS_ERROR("si ha llegado");
         return BT::NodeStatus::SUCCESS;
