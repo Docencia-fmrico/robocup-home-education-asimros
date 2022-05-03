@@ -36,12 +36,12 @@ namespace behaviour_trees
     {
       if(listener_.get_finished())
       {
-        ROS_INFO("si ha llegado");
+        ROS_ERROR("si ha llegado");
         return BT::NodeStatus::SUCCESS;
       }
 
       listener_.warn();
-      ROS_INFO("no ha llegado");
+      ROS_ERROR("no ha llegado");
       return BT::NodeStatus::FAILURE;
     }
 

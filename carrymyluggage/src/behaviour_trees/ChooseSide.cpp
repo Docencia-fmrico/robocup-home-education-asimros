@@ -27,6 +27,8 @@
 #include "nav_msgs/GetPlan.h"
 #include "geometry_msgs/PoseStamped.h"
 
+#include "sound/Speaker.h"
+
 #include "ros/ros.h"
 
 namespace behaviour_trees
@@ -44,6 +46,7 @@ namespace behaviour_trees
       cmd_.angular.x = 0.0;
       cmd_.angular.y = 0.0;
       cmd_.angular.z = 0.0;
+      first_ = true;
     }
 
     void 
@@ -55,6 +58,11 @@ namespace behaviour_trees
     BT::NodeStatus
     ChooseSide::tick()
     {
+      if(first_) {
+        speaker_.speak("Please point the bag");
+        first_ = false;
+      }
+
       if(!know_side_ &&  case_.get_side() != 0)
       {
         know_side_ = true;
