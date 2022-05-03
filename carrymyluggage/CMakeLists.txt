@@ -98,14 +98,6 @@ target_link_libraries(node_behaviour_tree_nav ${PROJECT_NAME} ${catkin_LIBRARIES
 add_executable(node_bt_together src/node_bt_together.cpp)
 target_link_libraries(node_bt_together ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 
-add_executable(listener_df_node src/sound/listenerDF.cpp)
-add_dependencies(listener_df_node ${catkin_EXPORTED_TARGETS} )
-target_link_libraries(listener_df_node ${catkin_LIBRARIES} gb_dialog)
-
-add_executable(speaker_df_node src/sound/speakerDF.cpp)
-add_dependencies(speaker_df_node ${catkin_EXPORTED_TARGETS} )
-target_link_libraries(speaker_df_node ${catkin_LIBRARIES} gb_dialog)
-
 
 roslint_cpp(
   src/behaviour_trees/WaitForPerson.cpp
