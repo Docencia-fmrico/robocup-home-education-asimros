@@ -50,6 +50,9 @@ class TurnAround :  public BT::ActionNodeBase
         ros::Publisher vel_pub_;
         geometry_msgs::Twist cmd_;
         float angspeed_ = 0.4;
+
+        static constexpr double TURNING_TIME = 4.0;
+		ros::Time turn_ts_;
 };
 
 }  // namespace behaviour_trees

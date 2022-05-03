@@ -55,7 +55,6 @@ namespace behaviour_trees
     BT::NodeStatus
     ChooseSide::tick()
     {
-      
       if(!know_side_ &&  case_.get_side() != 0)
       {
         know_side_ = true;

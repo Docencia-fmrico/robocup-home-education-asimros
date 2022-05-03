@@ -30,7 +30,7 @@ namespace behaviour_trees
     : BT::ActionNodeBase(name, {}),
     listener(buffer)
     {
-        vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 100);
+        vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
 
         cmd_.linear.x = 0;
         cmd_.linear.y = 0;
@@ -49,20 +49,22 @@ namespace behaviour_trees
     BT::NodeStatus
     TurnAround::tick()
     {
-        // modificar el 100 -> de una vuelta
-        cmd_.angular.z = angspeed_;
-        vel_pub_.publish(cmd_);
-      
-        if(buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
+        if(buffer.canTransform("base_footprint", "person", ros::Time(0), ros::Duration(1.0), &error_))
         {
             ROS_INFO("I have seen the person again");
             return BT::NodeStatus::SUCCESS;
         }
-        else
+
+        if((ros::Time::now() - turn_ts_).toSec() < TURNING_TIME)
         {
-            ROS_INFO("I still haven't see the person");
-            return BT::NodeStatus::FAILURE;  
+            ROS_INFO("turnning");
+            cmd_.angular.z = angspeed_;
+            vel_pub_.publish(cmd_);
+            return BT::NodeStatus::RUNNING;  
         }
+        
+        ROS_INFO("turn: I have not seen the person again");
+        return BT::NodeStatus::FAILURE;
     }
 
 }  // namespace behaviour_trees

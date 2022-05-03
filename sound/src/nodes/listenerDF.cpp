@@ -1,4 +1,4 @@
-#include <sound/DialogInterface.h>
+#include <dialog/DialogInterface.h>
 #include <string>
 
 #include "ros/ros.h"
@@ -19,6 +19,12 @@ class ListenerDF: public DialogInterface
       this->registerCallback(
         std::bind(&ListenerDF::sideIntentCB, this, ph::_1),
         "Side");
+      this->registerCallback(
+        std::bind(&ListenerDF::namesIntentCB, this, ph::_1),
+        "Names");
+      this->registerCallback(
+        std::bind(&ListenerDF::colorIntentCB, this, ph::_1),
+        "Color");
       this->registerCallback(std::bind(&ListenerDF::noIntentCB, this, ph::_1));
 
       sub_ = nl_.subscribe("/listen", 1, &ListenerDF::messageCallback, this);
@@ -29,6 +35,20 @@ class ListenerDF: public DialogInterface
     {
         ROS_INFO("Message: [%s]", msg->data);
         listen();
+    }
+
+    void namesIntentCB(dialogflow_ros_msgs::DialogflowResult result)
+    {
+      ROS_INFO("[ListenerDF] namesIntentCB: intent [%s]", result.intent.c_str());
+      msg_.data = result.fulfillment_text;
+      pub_.publish(msg_);
+    }
+
+    void colorIntentCB(dialogflow_ros_msgs::DialogflowResult result)
+    {
+      ROS_INFO("[ListenerDF] colorIntentCB: intent [%s]", result.intent.c_str());
+      msg_.data = result.fulfillment_text;
+      pub_.publish(msg_);
     }
 
     void sideIntentCB(dialogflow_ros_msgs::DialogflowResult result)
@@ -64,7 +84,6 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "listener_df_node");
   gb_dialog::ListenerDF forwarder;
-  ROS_INFO("Right or left?");
   ros::spin();
   return 0;
 }
