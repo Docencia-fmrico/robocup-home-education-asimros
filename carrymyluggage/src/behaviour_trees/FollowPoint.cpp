@@ -38,11 +38,8 @@ FollowPoint::on_halt()
 void
 FollowPoint::on_start()
 {
-  ROS_ERROR("Pongo el goal");
   goal_ = getInput<move_base_msgs::MoveBaseGoal>("goal_nav").value();
   set_goal(goal_);
-
-  ROS_INFO("Move start");
 }
 
 BT::NodeStatus

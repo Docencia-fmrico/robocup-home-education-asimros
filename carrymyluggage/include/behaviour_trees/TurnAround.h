@@ -49,7 +49,7 @@ class TurnAround :  public BT::ActionNodeBase
         ros::NodeHandle nh_;
         ros::Publisher vel_pub_;
         geometry_msgs::Twist cmd_;
-        float angspeed_ = 0.4;
+        double angspeed_ = 0.4;
 };
 
 }  // namespace behaviour_trees
