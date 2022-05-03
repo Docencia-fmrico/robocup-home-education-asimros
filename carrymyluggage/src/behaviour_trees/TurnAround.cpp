@@ -38,6 +38,7 @@ namespace behaviour_trees
         cmd_.angular.x = 0;
         cmd_.angular.y = 0;
         cmd_.angular.z = 0;
+        turn_ts_ = ros::Time::now();
     }
 
     void 
