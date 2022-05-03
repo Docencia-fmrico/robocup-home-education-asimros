@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="BehaviorTree">
+    <!-- ////////// -->
+    <BehaviorTree ID="BehaviorTree">
+        <Sequence>
+            <Fallback>
+                <ReactiveFallback>
+                    <Action ID="loc_person" goal_nav="{goal_nav}"/>
+                    <Inverter>
+                        <Fallback>
+                            <RetryUntilSuccessful num_attempts="100">
+                                <Action ID="turn_around"/>
+                            </RetryUntilSuccessful>
+                            <Action ID="request_come_closer"/>
+                        </Fallback>
+                    </Inverter>
+                </ReactiveFallback>
+                <Action ID="follow_point" goal_nav="{goal_nav}"/>
+                <Action ID="have_finished"/>
+            </Fallback>
+            <Action ID="arena" goal_nav="{goal_nav}"/>
+            <Action ID="follow_point" goal_nav="{goal_nav}"/>
+        </Sequence>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <TreeNodesModel>
+        <Action ID="arena">
+            <output_port name="goal_nav"/>
+        </Action>
+        <Action ID="follow_point">
+            <input_port name="goal_nav"/>
+        </Action>
+        <Action ID="have_finished"/>
+        <Action ID="loc_person">
+            <output_port name="goal_nav"/>
+        </Action>
+        <Action ID="request_come_closer"/>
+        <Action ID="turn_around"/>
+    </TreeNodesModel>
+    <!-- ////////// -->
+</root>
