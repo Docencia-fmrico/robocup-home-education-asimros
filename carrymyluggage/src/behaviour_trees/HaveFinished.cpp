@@ -16,6 +16,8 @@
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include <string>
 
+#include "sound/Listener.h"
+
 #include "ros/ros.h"
 
 namespace behaviour_trees
