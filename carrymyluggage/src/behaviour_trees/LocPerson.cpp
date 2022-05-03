@@ -131,7 +131,7 @@ namespace behaviour_trees
 
             dist = sqrt(diffx * diffx + diffy * diffy);
             ROS_ERROR("La distancia es de %f metros", dist);
-            if (dist <= 1.0) return (unsigned long);
+            if (dist <= 1.0) return (unsigned long)i;
         }
 
         return -1;

@@ -26,7 +26,7 @@ namespace sound
   }
 
   void
-  Speaker::speak(string say)
+  Speaker::speak(std::string say)
   {
     msg_.data = say;
     pub_.publish(msg_);
