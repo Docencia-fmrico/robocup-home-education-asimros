@@ -1,0 +1,5 @@
+<launch>
+	<include file="$(find gb_dialog)/launch/gb_dialog_services_soundplay.launch"></include>
+	<node pkg="sound" type="listener_df_node" name="listenerDF" output="screen"></node>
+	<node pkg="sound" type="speaker_df_node" name="speakerDF" output="screen"></node>
+</launch>
