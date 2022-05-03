@@ -1,0 +1,5 @@
+<launch>
+	<include file="$(find gb_dialog)/launch/gb_dialog_services_soundplay.launch"></include>
+	<node pkg="personlocaliztion" type="listener_df_node2" name="listenerDF" output="screen"></node>
+	<node pkg="personlocaliztion" type="speaker_df_node2" name="speakerDF" output="screen"></node>
+</launch>

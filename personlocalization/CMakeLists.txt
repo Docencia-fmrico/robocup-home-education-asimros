@@ -18,6 +18,12 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
   darknet_ros_msgs
   geometry_msgs
+
+  dialogflow_ros_msgs
+  std_srvs
+  sound_play
+  actionlib
+  actionlib_msgs
 )
 
 find_package(OpenCV)
@@ -32,6 +38,8 @@ CATKIN_DEPENDS
   tf
   cv_bridge
   image_transport
+
+  LIBRARIES gb_dialog
 )
 
 include_directories(
@@ -49,6 +57,14 @@ add_executable(node_calc_tf_person src/node_calc_tf_person.cpp)
 target_link_libraries(node_calc_tf_person ${PROJECT_NAME}  ${OpenCV_LIBRARIES} ${catkin_LIBRARIES})
 add_executable(node_filter_bbx src/node_filter_bbx.cpp)
 target_link_libraries(node_filter_bbx ${PROJECT_NAME} ${catkin_LIBRARIES})
+
+add_executable(listener_df_node2 src/sound/listenerDF.cpp)
+add_dependencies(listener_df_node2 ${catkin_EXPORTED_TARGETS} )
+target_link_libraries(listener_df_node2 ${catkin_LIBRARIES} gb_dialog)
+
+add_executable(speaker_df_node2 src/sound/speakerDF.cpp)
+add_dependencies(speaker_df_node2 ${catkin_EXPORTED_TARGETS} )
+target_link_libraries(speaker_df_node2 ${catkin_LIBRARIES} gb_dialog)
 
 roslint_cpp(
   src/node_calc_tf_person.cpp
