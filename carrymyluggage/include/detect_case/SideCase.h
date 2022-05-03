@@ -45,6 +45,7 @@ class SideCase
         int dif_;
         ros::Time read_ts_;
         static constexpr double READ_TIME = 2.0;
+        bool first_;
 
         typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image, darknet_ros_msgs::BoundingBoxes> MySyncPolicy_bbx;
         message_filters::Subscriber<sensor_msgs::Image> image_depth_sub;

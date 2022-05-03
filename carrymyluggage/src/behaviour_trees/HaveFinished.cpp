@@ -41,7 +41,7 @@ namespace behaviour_trees
       }
 
       listener_.warn();
-      ROS_ERROR("no ha llegado");
+      ROS_ERROR("NO ME HAN DICHO QUE HEMOS LLEGADO, POR LO TANTO; REINICIO EL ARBOL************");
       return BT::NodeStatus::FAILURE;
     }
 

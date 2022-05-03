@@ -38,7 +38,7 @@ namespace behaviour_trees
         cmd_.angular.x = 0;
         cmd_.angular.y = 0;
         cmd_.angular.z = 0;
-        turn_ts_ = ros::Time::now();
+        first_ = true;
     }
 
     void 
@@ -50,21 +50,28 @@ namespace behaviour_trees
     BT::NodeStatus
     TurnAround::tick()
     {
+        if (first_) 
+        {
+            turn_ts_ = ros::Time::now();
+            first_ = false;
+        }
         if(buffer.canTransform("base_footprint", "person", ros::Time(0), ros::Duration(1.0), &error_))
         {
-            ROS_INFO("I have seen the person again");
+            ROS_ERROR("I have seen the person again*******************");
+            first_ = true;
             return BT::NodeStatus::SUCCESS;
         }
 
         if((ros::Time::now() - turn_ts_).toSec() < TURNING_TIME)
         {
-            ROS_INFO("turnning");
+            ROS_ERROR("turnning*************************************");
             cmd_.angular.z = angspeed_;
             vel_pub_.publish(cmd_);
             return BT::NodeStatus::RUNNING;  
         }
         
-        ROS_INFO("turn: I have not seen the person again");
+        ROS_ERROR("turn: I have not seen the person again********************");
+        first_ = true;
         return BT::NodeStatus::FAILURE;
     }
 

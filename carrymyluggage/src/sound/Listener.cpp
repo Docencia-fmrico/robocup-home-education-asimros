@@ -29,6 +29,12 @@ namespace sound
     msg_.data = "listen bro";
   }
 
+   void
+  Listener::listen()
+  {
+    pub_.publish(msg_);    
+  }
+
   void
   Listener::messageCallback(const std_msgs::String::ConstPtr& msg)
   {
