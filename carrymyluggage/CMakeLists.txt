@@ -89,6 +89,7 @@ endforeach()
 add_library(${PROJECT_NAME}
   src/detect_case/SideCase.cpp
   src/sound/Listener.cpp
+  src/sound/Speaker.cpp
 )
 
 add_executable(node_behaviour_tree_nav_init src/node_behaviour_tree_nav_init.cpp)
@@ -126,4 +127,6 @@ roslint_cpp(
   src/node_bt_together.cpp
   src/sound/Listener.cpp
   include/sound/Listener.h
+  src/sound/Speaker.cpp
+  include/sound/Speaker.h
 )
