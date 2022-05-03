@@ -60,7 +60,7 @@ namespace behaviour_trees
         goal.target_pose.pose.orientation.w = 1.0;
 
         setOutput("goal_nav", goal);
-
+        
         return BT::NodeStatus::SUCCESS;
     }
 

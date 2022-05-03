@@ -55,7 +55,7 @@ namespace behaviour_trees
     BT::NodeStatus
     ChooseSide::tick()
     {
-      /* parte a probar, pero primero ver si va bien el bt
+      
       if(!know_side_ &&  case_.get_side() != 0)
       {
         know_side_ = true;
@@ -87,10 +87,6 @@ namespace behaviour_trees
       }
 
       return BT::NodeStatus::RUNNING;
-      */
-
-      ROS_ERROR("He ido al arbitro, le he pedido que apunte y me giro, después empieza la nav");
-		  return BT::NodeStatus::SUCCESS;
     }
 
 }  // namespace behaviour_trees
