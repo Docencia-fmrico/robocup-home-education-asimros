@@ -16,6 +16,8 @@
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include <string>
 
+#include "sound/Speaker.h"
+
 #include "ros/ros.h"
 
 namespace behaviour_trees
@@ -23,6 +25,7 @@ namespace behaviour_trees
     AskForCase::AskForCase(const std::string& name)
     : BT::ActionNodeBase(name, {})
     {
+      Speaker speaker;
     }
 
     void 
@@ -35,6 +38,7 @@ namespace behaviour_trees
     AskForCase::tick()
     {
       ROS_ERROR("Placeholder for speak");
+
       return BT::NodeStatus::SUCCESS;
     }
 
