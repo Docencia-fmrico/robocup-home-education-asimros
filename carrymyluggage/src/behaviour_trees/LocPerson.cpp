@@ -34,7 +34,7 @@ namespace behaviour_trees
       listener(buffer)
     {
         client = nh_.serviceClient<nav_msgs::GetPlan>("/move_base/make_plan");
-        // Coordenadas inicio de la nav, después se actualizan con siguiente destino. 
+        // Coordenadas inicio de la nav, después se actualizan con siguiente destino (es donde está el árbitro)
         start.header.frame_id = "map";
 		start.pose.position.x = 3.0;  
         start.pose.position.y = 2.0;  
@@ -70,8 +70,10 @@ namespace behaviour_trees
 
 			nav_msgs::GetPlan srv;
 			srv.request.goal.header.frame_id = "map";
-        	srv.request.goal.pose.position.x = map2person.getOrigin().x();  
-        	srv.request.goal.pose.position.y = map2person.getOrigin().y(); 
+            xgoal_ = map2person.getOrigin().x();
+            ygoal_ = map2person.getOrigin().y();
+        	srv.request.goal.pose.position.x = xgoal_;  //coord arbitro
+        	srv.request.goal.pose.position.y = ygoal_;  //coord arbitro
         	srv.request.goal.pose.position.z = 0.0;
         	srv.request.goal.pose.orientation.x = 0.0;
         	srv.request.goal.pose.orientation.y = 0.0;
@@ -85,6 +87,7 @@ namespace behaviour_trees
 			if (client.call(srv))
   			{
     			auto index = srv.response.plan.poses.size() - 8;
+                LocPerson::calc_index(srv.response.plan.poses);
 				move_base_msgs::MoveBaseGoal goal;
 
         		goal.target_pose = srv.response.plan.poses[index];
@@ -103,6 +106,35 @@ namespace behaviour_trees
 		}
 		ROS_ERROR("Unable to transform");
         return BT::NodeStatus::RUNNING; 
+    }
+
+    unsigned long LocPerson::calc_index(auto & poses)
+    {
+        int size;
+        double x;
+        double y;
+        double diffx;
+        double diffy;
+        double dist;
+        unsigned long index;
+        int i;
+
+        size = poses.size();
+
+        for (i = 0; i < size; i++)
+        {
+            x = poses[i].pose.position.x;
+            y = poses[i].pose.position.y;
+
+            diffx = abs(xgoal_ - x);
+            diffy = abs(ygoal_ - y);
+
+            dist = sqrt(diffx * diffx + diffy * diffy);
+            ROS_ERROR("La distancia es de %f metros", dist);
+            if (dist <= 1.0) return (unsigned long);
+        }
+
+        return -1;
     }
 
 }  // namespace behaviour_trees

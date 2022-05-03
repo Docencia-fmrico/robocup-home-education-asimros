@@ -36,7 +36,6 @@ class RequestComeCloser :  public BT::ActionNodeBase
 
     private:
         ros::NodeHandle nh_;
-        sound::Speaker speaker_;
 };
 
 }  // namespace behaviour_trees
