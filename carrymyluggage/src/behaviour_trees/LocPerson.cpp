@@ -86,14 +86,15 @@ namespace behaviour_trees
 
 			if (client.call(srv))
   			{
-    			auto index = srv.response.plan.poses.size() - 8;
-                LocPerson::calc_index(srv.response.plan.poses);
+    			auto index = LocPerson::calc_index(srv.response.plan.poses) - 2;
 				move_base_msgs::MoveBaseGoal goal;
 
         		goal.target_pose = srv.response.plan.poses[index];
                 start = goal.target_pose;
 
         		setOutput<move_base_msgs::MoveBaseGoal>("goal_nav", goal);
+                
+                ROS_ERROR("x = %f y = %f", goal.target_pose.pose.position.x, goal.target_pose.pose.position.y);
 				return BT::NodeStatus::SUCCESS;
   			}
   			else
@@ -130,8 +131,7 @@ namespace behaviour_trees
             diffy = abs(ygoal_ - y);
 
             dist = sqrt(diffx * diffx + diffy * diffy);
-            ROS_ERROR("La distancia es de %f metros", dist);
-            if (dist <= 1.0) return (unsigned long);
+            if (dist <= 1.0) return (unsigned long)i;
         }
 
         return -1;
