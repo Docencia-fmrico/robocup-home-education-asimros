@@ -100,13 +100,13 @@ namespace behaviour_trees
   			else
   			{
     			ROS_ERROR("Failed to call service distance");
-				return BT::NodeStatus::RUNNING;
+				return BT::NodeStatus::RUNNING; 
   			}
 			
         	
 		}
 		ROS_ERROR("Unable to transform");
-        return BT::NodeStatus::RUNNING; 
+        return BT::NodeStatus::FAILURE;
     }
 
     unsigned long LocPerson::calc_index(auto & poses)

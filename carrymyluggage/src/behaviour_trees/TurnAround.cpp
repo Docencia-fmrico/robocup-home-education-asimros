@@ -49,21 +49,22 @@ namespace behaviour_trees
     BT::NodeStatus
     TurnAround::tick()
     {
-        // modificar el 100 -> de una vuelta
-        cmd_.angular.z = angspeed_;
-        vel_pub_.publish(cmd_);
-        ROS_ERROR("Ahora debería estar girando");
-      
-        if(buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
+        if(buffer.canTransform("base_footprint", "person", ros::Time(0), ros::Duration(1.0), &error_))
         {
             ROS_INFO("I have seen the person again");
             return BT::NodeStatus::SUCCESS;
         }
-        else
+
+        if((ros::Time::now() - turn_ts_).toSec() < TURNING_TIME)
         {
-            ROS_INFO("I still haven't see the person");
-            return BT::NodeStatus::FAILURE;  
+            ROS_INFO("turnning");
+            cmd_.angular.z = angspeed_;
+            vel_pub_.publish(cmd_);
+            return BT::NodeStatus::RUNNING;  
         }
+        
+        ROS_INFO("turn: I have not seen the person again");
+        return BT::NodeStatus::FAILURE;
     }
 
 }  // namespace behaviour_trees
