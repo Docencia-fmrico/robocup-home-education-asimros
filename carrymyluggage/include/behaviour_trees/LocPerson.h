@@ -55,7 +55,7 @@ class LocPerson :  public BT::ActionNodeBase
         tf2_ros::Buffer buffer;
         tf2_ros::TransformListener listener;
         geometry_msgs::TransformStamped map2person_msg;
-    	tf2::Stamped<tf2::Transform> map2person;
+    	  tf2::Stamped<tf2::Transform> map2person;
         ros::ServiceClient client;
         geometry_msgs::PoseStamped start;
         unsigned long calc_index(auto & poses);

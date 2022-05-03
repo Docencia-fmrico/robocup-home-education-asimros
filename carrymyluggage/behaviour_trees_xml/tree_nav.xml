@@ -5,7 +5,7 @@
         <Sequence>
             <Fallback>
                 <ReactiveFallback>
-                    <Action ID="loc_person" goal_nav="{goal_person}"/>
+                    <Action ID="loc_person" goal_nav="{goal_nav}"/>
                     <Inverter>
                         <Fallback>
                             <RetryUntilSuccessful num_attempts="100">
@@ -15,17 +15,16 @@
                         </Fallback>
                     </Inverter>
                 </ReactiveFallback>
-                <Action ID="follow_point" goal_nav="goal_person"/>
+                <Action ID="follow_point" goal_nav="{goal_nav}"/>
                 <Action ID="have_finished"/>
             </Fallback>
-            <Action ID="sand" goal_nav="goal_finish"/>
-            <Action ID="follow_point" goal_nav="goal_finish"/>
+            <Action ID="arena" goal_nav="{goal_nav}"/>
+            <Action ID="follow_point" goal_nav="{goal_nav}"/>
         </Sequence>
     </BehaviorTree>
     <!-- ////////// -->
     <TreeNodesModel>
-        <Action ID="ask_for_case"/>
-        <Action ID="choose_side">
+        <Action ID="arena">
             <output_port name="goal_nav"/>
         </Action>
         <Action ID="follow_point">
@@ -36,11 +35,7 @@
             <output_port name="goal_nav"/>
         </Action>
         <Action ID="request_come_closer"/>
-        <Action ID="sand">
-            <output_port name="goal_nav"/>
-        </Action>
         <Action ID="turn_around"/>
-        <Action ID="wait_for_person"/>
     </TreeNodesModel>
     <!-- ////////// -->
 </root>

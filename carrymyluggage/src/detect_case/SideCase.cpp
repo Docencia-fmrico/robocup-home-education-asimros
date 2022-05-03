@@ -35,7 +35,7 @@ sync_bbx(MySyncPolicy_bbx(10), image_depth_sub, bbx_sub)
     sync_bbx.registerCallback(boost::bind(&SideCase::callback_bbx, this, _1, _2));
 
     side_ = 0;
-    px_ = 0;
+    position_ = 0;
 }
 
 void
@@ -54,22 +54,25 @@ SideCase::callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ro
 
     for (const auto & box : boxes->bounding_boxes)
     {
-        int px = (box.xmax + box.xmin) / 2;
+        px_[position_] = (box.xmax + box.xmin) / 2;
+    }
 
-        if (px - px_ > 130 && px_ != 0)
+    if(position_ == 49)
+    {
+        if(px_[5] - px_[position_] > 50)
         {
-            side_ = 2; //right
+            side_ = 1;
         }
-        else if (px - px_< -130 && px_ != 0) 
+        else if(px_[5] - px_[position_] < -50)
         {
-            side_ = 1; //left
-        }         
+            side_ = 2;
+        }
         else
         {
-            side_ = 0; //not choose
-        }   
-        px_ = px;
+            position_ = -1;
+        }
     }
+    position_++;
 }
 
 }  // namespace detect_case

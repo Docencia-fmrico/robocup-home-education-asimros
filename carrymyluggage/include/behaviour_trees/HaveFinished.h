@@ -25,7 +25,7 @@
 namespace behaviour_trees
 {
 
-class RequestComeCloser :  public BT::ActionNodeBase
+class HaveFinished :  public BT::ActionNodeBase
 {
     public:
         explicit HaveFinished(const std::string& name);
