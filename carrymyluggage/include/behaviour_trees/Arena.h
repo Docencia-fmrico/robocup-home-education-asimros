@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BEHAVIOUR_TREES_SAND_H
-#define BEHAVIOUR_TREES_SAND_H
+#ifndef BEHAVIOUR_TREES_ARENA_H
+#define BEHAVIOUR_TREES_ARENA_H
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
@@ -24,10 +24,10 @@
 namespace behaviour_trees
 {
 
-class Sand :  public BT::ActionNodeBase
+class Arena :  public BT::ActionNodeBase
 {
     public:
-        explicit Sand(const std::string& name, const BT::NodeConfiguration& config);
+        explicit Arena(const std::string& name, const BT::NodeConfiguration& config);
 
         void halt();
 
@@ -42,4 +42,4 @@ class Sand :  public BT::ActionNodeBase
 
 }  // namespace behaviour_trees
 
-#endif  // BEHAVIOUR_TREES_SAND_H
+#endif  // BEHAVIOUR_TREES_ARENA_H

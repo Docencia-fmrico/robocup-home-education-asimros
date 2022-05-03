@@ -26,7 +26,7 @@
 #include "tf2_geometry_msgs/tf2_geometry_msgs.h"
 #include "tf2/convert.h"
 
-
+#include "geometry_msgs/Twist.h"
 #include "ros/ros.h"
 
 namespace behaviour_trees
@@ -44,10 +44,12 @@ class TurnAround :  public BT::ActionNodeBase
     private:
         tf2_ros::Buffer buffer;
         tf2_ros::TransformListener listener;
+        std::string error_;
+
         ros::NodeHandle nh_;
         ros::Publisher vel_pub_;
+        geometry_msgs::Twist cmd_;
         float angspeed_ = 0.4;
-        std::string error_;
 };
 
 }  // namespace behaviour_trees

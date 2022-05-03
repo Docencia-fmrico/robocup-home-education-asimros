@@ -32,11 +32,18 @@
 namespace behaviour_trees
 {
 
-    ChooseSide::ChooseSide(const std::string& name, const BT::NodeConfiguration& config)
-    : BT::ActionNodeBase(name, config),
-	listener(buffer)
+    ChooseSide::ChooseSide(const std::string& name)
+    : BT::ActionNodeBase(name, {})
     {
-		client = nh_.serviceClient<nav_msgs::GetPlan>("/move_base/make_plan");
+      know_side_ = false;
+      vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 100);
+
+      cmd_.linear.x = 0.0;
+      cmd_.linear.y = 0.0;
+      cmd_.linear.z = 0.0;
+      cmd_.angular.x = 0.0;
+      cmd_.angular.y = 0.0;
+      cmd_.angular.z = 0.0;
     }
 
     void 
@@ -48,8 +55,42 @@ namespace behaviour_trees
     BT::NodeStatus
     ChooseSide::tick()
     {
-        ROS_ERROR("He ido al arbitro, le he pedido que apunte y me giro, después empieza la nav");
-		return BT::NodeStatus::SUCCESS;
+      /* parte a probar, pero primero ver si va bien el bt
+      if(!know_side_ &&  case_.get_side() != 0)
+      {
+        know_side_ = true;
+        turn_ts_ = ros::Time::now();
+
+        if(case_.get_side() == 1)
+        {
+          angspeed_ = 0.4;
+        }
+        else
+        {
+          angspeed_ = -0.4;
+        }
+      }
+
+      if(know_side_)
+      {
+        if((ros::Time::now() - turn_ts_).toSec() < TURNING_TIME)
+        {
+          ROS_INFO("turnning");
+          cmd_.angular.z = angspeed_;
+          vel_pub_.publish(cmd_);
+        }
+        else
+        {
+          ROS_INFO("I have turned");
+          return BT::NodeStatus::SUCCESS;
+        }
+      }
+
+      return BT::NodeStatus::RUNNING;
+      */
+
+      ROS_ERROR("He ido al arbitro, le he pedido que apunte y me giro, después empieza la nav");
+		  return BT::NodeStatus::SUCCESS;
     }
 
 }  // namespace behaviour_trees

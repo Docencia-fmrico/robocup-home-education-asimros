@@ -34,15 +34,15 @@ namespace behaviour_trees
     BT::NodeStatus
     HaveFinished::tick()
     {
-        if(listener_.get_finished())
-        {
-            ROS_INFO("si ha llegado");
-            return BT::NodeStatus::SUCCESS;
-        }
+      if(listener_.get_finished())
+      {
+        ROS_INFO("si ha llegado");
+        return BT::NodeStatus::SUCCESS;
+      }
 
-        listener_.warn();
-        ROS_INFO("no ha llegado");
-        return BT::NodeStatus::FAILURE;
+      listener_.warn();
+      ROS_INFO("no ha llegado");
+      return BT::NodeStatus::FAILURE;
     }
 
 }  // namespace behaviour_trees
@@ -50,5 +50,5 @@ namespace behaviour_trees
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<behaviour_trees::HaveFinished>("request_come_closer");
+  factory.registerNodeType<behaviour_trees::HaveFinished>("have_finished");
 }
