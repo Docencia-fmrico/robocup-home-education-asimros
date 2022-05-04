@@ -12,20 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#ifndef SOUND_LISTENER_H
+#define SOUND_LISTENER_H
+
+#include "ros/ros.h"
+#include "std_msgs/String.h"
 #include <string>
 
-namespace information
+namespace sound
 {
-    class Info
-    {
-        public:
-            Info();
 
-            void set_carac(std::string carac, int type);
-            std::string get_carac(int type);
+class Listener
+{
+public:
+  Listener();
 
-        private:
-            int pos_; 
-    };
+  void messageCallback(const std_msgs::String::ConstPtr& msg);
 
-} // namespace information
+  bool get_finished() {return finished_;}
+  void listen();
+  void warn();
+  bool recived() {return recived_;}
+
+private:
+  ros::NodeHandle n_;
+  ros::Subscriber sub_;
+  ros::Publisher pub_;
+  std_msgs::String msg_;
+
+  bool recived_;
+
+};
+
+}  // namespace sound
+
+#endif // SOUND_LISTENER_H

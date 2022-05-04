@@ -21,6 +21,7 @@
 
 #include "ros/ros.h"
 #include "sound/Speaker.h"
+#include "sound/Lister.h"
 #include "information/Info.h"
 
 namespace behaviour_trees
@@ -41,6 +42,7 @@ namespace behaviour_trees
             ros::NodeHandle nh_;
             sound::Speaker speaker_;
             information::Info info_;
+            sound::Listener listener_;
     };
 
 }  // namespace behaviour_trees

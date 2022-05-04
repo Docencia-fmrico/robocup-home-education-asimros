@@ -16,6 +16,8 @@
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include <string>
 #include "ros/ros.h"
+#include "sound/Lister.h"
+#include "sound/Speaker.h"
 
 namespace behaviour_trees
 {
@@ -44,8 +46,8 @@ namespace behaviour_trees
     {
         info.set_carac(getInput<int>("count").value());
 
-
-        //speaker_.speak("")
+        speaker_.speak("What is your name?");
+        
 
         return BT::NodeStatus::SUCCESS;
     }

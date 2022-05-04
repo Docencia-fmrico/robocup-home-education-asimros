@@ -16,53 +16,23 @@
 
 namespace information
 {
-    Info::Info()
+    class Info
     {
-    }
+        public:
+            Info();
 
-    void 
-    set_pos(int pos)
-    {
-        pos_ = pos;
-    }
+            void set_pos(int pos);
+            int get_pos();
 
-    int
-    get_pos()
-    {
-        return pos_;
-    }
+            void set_carac(std::string carac, int type);
+            std::string get_carac(int type);
 
-    void 
-    set_carac(std::string carac, int type)
-    {
-        if(type == 0)
-        {
-            name_ = carac;
-        }
-        else if(type == 1)
-        {
-            color_ = carac;
-        }
-        else
-        {
-            object_ = carac;
-        }
-    }
+        private:
+            int pos_; 
+            std::string name_; // type 0
+            std::string color_; // type 1
+            std::string object_; // type 2
 
-    std::string get_carac(int type)
-    {
-        if(type == 0)
-        {
-            return name_;
-        }
-        else if(type == 1)
-        {
-            return color_;
-        }
-        else
-        {
-            return object_;
-        }
-    }
+    };
 
 } // namespace information
