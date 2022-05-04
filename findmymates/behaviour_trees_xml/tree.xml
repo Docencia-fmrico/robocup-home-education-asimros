@@ -2,40 +2,39 @@
 <root main_tree_to_execute="BehaviorTree">
     <!-- ////////// -->
     <BehaviorTree ID="BehaviorTree">
-        <Sequence>
-            <Fallback>
-                <ReactiveFallback>
-                    <Action ID="loc_person" goal_nav="{goal_nav}"/>
-                    <Inverter>
-                        <Fallback>
-                            <RetryUntilSuccessful num_attempts="100">
-                                <Action ID="turn_around"/>
-                            </RetryUntilSuccessful>
-                            <Action ID="request_come_closer"/>
-                        </Fallback>
-                    </Inverter>
-                </ReactiveFallback>
-                <Action ID="follow_point" goal_nav="{goal_nav}"/>
-                <Action ID="have_finished"/>
-            </Fallback>
-            <Action ID="arena" goal_nav="{goal_nav}"/>
-            <Action ID="follow_point" goal_nav="{goal_nav}"/>
-        </Sequence>
+        <Repeat num_cycles="3">
+            <Sequence>
+                <Sequence>
+                    <Action ID="localization" goal_nav="{goal_nav}"/>
+                    <Action ID="go_point" goal_nav="{goal_nav}"/>
+                    <Action ID="check_person"/>
+                </Sequence>
+                <Action ID="ask_info" info="{info}"/>
+                <Action ID="referee" goal_nav="{goal_nav}"/>
+                <Action ID="go_point" goal_nav="{goal_nav}"/>
+                <Action ID="tell_info" info="{info}"/>
+            </Sequence>
+        </Repeat>
     </BehaviorTree>
     <!-- ////////// -->
     <TreeNodesModel>
-        <Action ID="arena">
-            <output_port name="goal_nav"/>
+        <Action ID="ask_info">
+            <output_port name="info"/>
         </Action>
-        <Action ID="follow_point">
+        <Action ID="check_person"/>
+        <Action ID="go_point">
             <input_port name="goal_nav"/>
         </Action>
-        <Action ID="have_finished"/>
-        <Action ID="loc_person">
+        <Action ID="localization">
             <output_port name="goal_nav"/>
         </Action>
-        <Action ID="request_come_closer"/>
-        <Action ID="turn_around"/>
+        <Action ID="referee">
+            <output_port name="goal_nav"/>
+        </Action>
+        <Action ID="tell_info">
+            <input_port name="info"/>
+        </Action>
     </TreeNodesModel>
     <!-- ////////// -->
 </root>
+
