@@ -50,15 +50,35 @@ namespace behaviour_trees
 
         speaker_.speak("What is your name?");
         //esperar
-        // set
+        
+        listener_.listen();
+        if(listener_.recived())
+        {
+            //setname =
+            listener_.answer();
+        }
 
         speaker_.speak("What is the color of your clothes");
         //esperar
-        // set
+        
+        listener_.listen();
+        if(listener_.recived())
+        {
+            //setcolor =
+            listener_.answer();
+        }
 
         speaker_.speak("Which object are you holding");
         //esperar
-        //set
+        
+        listener_.listen();
+        if(listener_.recived())
+        {
+            //setobject =
+            listener_.answer();
+        }
+
+        //si no recibe nada volver a ponerle a escuchar, no sé como se hace un bucle en un bt
 
         return BT::NodeStatus::SUCCESS;
     }

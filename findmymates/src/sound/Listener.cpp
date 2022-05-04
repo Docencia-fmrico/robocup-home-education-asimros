@@ -40,7 +40,7 @@ namespace sound
   {
     if(msg->data.compare("false"))
     {
-      recived_ = true;
+      recived_ = false;
     } 
     else
     {

@@ -29,10 +29,9 @@ public:
 
   void messageCallback(const std_msgs::String::ConstPtr& msg);
 
-  bool get_finished() {return finished_;}
   void listen();
-  void warn();
   bool recived() {return recived_;}
+  std::string answer() {return answer_;}
 
 private:
   ros::NodeHandle n_;
