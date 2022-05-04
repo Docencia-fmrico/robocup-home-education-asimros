@@ -47,6 +47,9 @@ namespace behaviour_trees
     {
         info_ = getInput<information::Info>("info").value();
 
+        speaker_.speak("The person who is at the position");
+        speaker_.speak()
+
         return BT::NodeStatus::SUCCESS;
     }
 
