@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BEHAVIOUR_TREES_ASKINFO_H
-#define BEHAVIOUR_TREES_ASKINFO_H
+#ifndef BEHAVIOUR_TREES_TELLINFO_H
+#define BEHAVIOUR_TREES_TELLINFO_H
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
@@ -27,10 +27,10 @@
 namespace behaviour_trees
 {
 
-    class AskInfo : ublic BT::ActionNodeBase
+    class TellInfo : ublic BT::ActionNodeBase
     {
         public:
-            explicit AskInfo(const std::string& name, const BT::NodeConfiguration& config);
+            explicit TellInfo(const std::string& name, const BT::NodeConfiguration& config);
 
             void halt();
 
@@ -42,9 +42,8 @@ namespace behaviour_trees
             ros::NodeHandle nh_;
             sound::Speaker speaker_;
             information::Info info_;
-            sound::Listener listener_;
     };
 
 }  // namespace behaviour_trees
 
-#endif  // BEHAVIOUR_TREES_ASKINFO_H
+#endif  // BEHAVIOUR_TREES_TELLINFO_H

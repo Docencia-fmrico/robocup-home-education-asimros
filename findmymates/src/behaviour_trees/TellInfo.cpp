@@ -12,53 +12,43 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "behaviour_trees/AskInfo.h"
+#include "behaviour_trees/TellInfo.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include <string>
 #include "ros/ros.h"
 
-#include "sound/Listener.h"
 #include "sound/Speaker.h"
 #include "information/Info.h"
 
 namespace behaviour_trees
 {
-    AskInfo::AskInfo(const std::string& name, const BT::NodeConfiguration& config)
+    TellInfo::TellInfo(const std::string& name, const BT::NodeConfiguration& config)
     : BT::ActionNodeBase(name, config)
     {
     }
     
     
     void 
-    AskInfo::halt()
+    TellInfo::halt()
     {
-        ROS_INFO("AskInfo halt");
+        ROS_INFO("TellInfo halt");
     }
     
     
     BT::PortsList 
-    AskInfo::providedPorts() 
+    TellInfo::providedPorts() 
     { 
-        return { BT::OutputPort<information::Info>("info"), BT::InputPort<int>("count") }; 
+        return { BT::InputPort<information::Info>("info") }; 
     }
     
 
     BT::NodeStatus
-    AskInfo::tick()
+    TellInfo::tick()
     {
-        info.set_carac(getInput<int>("count").value());
+        info_ = getInput<information::Info>("info").value();
 
-        speaker_.speak("What is your name?");
-        //esperar
-        // set
-
-        speaker_.speak("What is the color of your clothes");
-        //esperar
-        // set
-
-        speaker_.speak("Which object are you holding");
-        //esperar
-        //set
+        speaker_.speak("The person who is at the position");
+        speaker_.speak()
 
         return BT::NodeStatus::SUCCESS;
     }
@@ -68,6 +58,5 @@ namespace behaviour_trees
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<behaviour_trees::AskInfo>("ask_info");
+  factory.registerNodeType<behaviour_trees::TellInfo>("ask_info");
 }
-
