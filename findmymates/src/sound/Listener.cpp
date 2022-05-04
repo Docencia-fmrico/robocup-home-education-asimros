@@ -45,6 +45,7 @@ namespace sound
     else
     {
       recived_ = true;
+      answer_ = msg->data;
 
     }
   }

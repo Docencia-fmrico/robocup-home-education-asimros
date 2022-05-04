@@ -40,6 +40,8 @@ private:
   ros::Publisher pub_;
   std_msgs::String msg_;
 
+  std::string answer_;
+
   bool recived_;
 
 };
