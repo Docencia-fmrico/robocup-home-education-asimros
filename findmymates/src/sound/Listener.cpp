@@ -24,8 +24,6 @@ namespace sound
   {
     sub_ = n_.subscribe("/answer", 1, &Listener::messageCallback, this);
     pub_ = n_.advertise<std_msgs::String>("/listen", 1);
-    finished_ = false;
-    warn_ = false;
     recived_ = false;
     msg_.data = "listen bro";
   }
@@ -40,26 +38,14 @@ namespace sound
   void
   Listener::messageCallback(const std_msgs::String::ConstPtr& msg)
   {
-    if(msg->data.compare("true"))
+    if(msg->data.compare("false"))
     {
-      finished_ = true;
       recived_ = true;
-      warn_ = false;
     } 
     else
     {
       recived_ = true;
-      warn_ = true;
-      warning_ts_ = (ros::Time::now()).toSec();
-    }
-  }
 
-  void
-  Listener::warn()
-  {
-    if(warn_ && ((warning_ts_ - ros::Time::now().toSec()) >= WARNING_TIME))
-    {
-      pub_.publish(msg_);
     }
   }
 

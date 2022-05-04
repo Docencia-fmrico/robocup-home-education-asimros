@@ -47,7 +47,13 @@ namespace behaviour_trees
         info.set_carac(getInput<int>("count").value());
 
         speaker_.speak("What is your name?");
-        
+        // set
+
+        speaker_.speak("What is the color of your clothes");
+        // set
+
+        speaker_.speak("Which object are you holding");
+        //set
 
         return BT::NodeStatus::SUCCESS;
     }
