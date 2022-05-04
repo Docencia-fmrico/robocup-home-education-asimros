@@ -33,7 +33,6 @@ bbx_sub(nh, "/darknet_ros/bounding_boxes", 1),
 sync_bbx(MySyncPolicy_bbx(10), image_depth_sub, bbx_sub)
 {
     sync_bbx.registerCallback(boost::bind(&SideCase::callback_bbx, this, _1, _2));
-    read_ts_ = ros::Time::now();
     side_ = 0;
     dif_ = 0;
 }
@@ -57,14 +56,19 @@ SideCase::callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ro
     {
         px = (box.xmax + box.xmin) / 2;
     }
-    if((ros::Time::now() - read_ts_).toSec() < 0.1){ //first time
+    if (first_)
+    {
+        read_ts_ = ros::Time::now();
         px_= px;
+        first_ = false;
     }
+    
     if((ros::Time::now() - read_ts_).toSec() < READ_TIME){
         dif_ = dif_ + px - px_ ;
         side_= 0;
     }
-    else{
+    else
+    {
         if (dif_ < 0){
             side_ = 1;
         }

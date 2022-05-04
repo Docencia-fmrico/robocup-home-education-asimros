@@ -45,6 +45,7 @@ class TurnAround :  public BT::ActionNodeBase
         tf2_ros::Buffer buffer;
         tf2_ros::TransformListener listener;
         std::string error_;
+        bool first_;
 
         ros::NodeHandle nh_;
         ros::Publisher vel_pub_;

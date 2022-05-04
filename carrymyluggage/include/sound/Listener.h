@@ -30,7 +30,9 @@ public:
   void messageCallback(const std_msgs::String::ConstPtr& msg);
 
   bool get_finished() {return finished_;}
+  void listen();
   void warn();
+  bool recived() {return recived_;}
 
 private:
   ros::NodeHandle n_;
@@ -40,6 +42,7 @@ private:
 
   bool finished_;
   bool warn_;
+  bool recived_;
 
   double warning_ts_;
   static constexpr double WARNING_TIME = 0.25;
