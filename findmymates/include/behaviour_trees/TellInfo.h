@@ -21,13 +21,12 @@
 
 #include "ros/ros.h"
 #include "sound/Speaker.h"
-#include "sound/Lister.h"
 #include "information/Info.h"
 
 namespace behaviour_trees
 {
 
-    class TellInfo : ublic BT::ActionNodeBase
+    class TellInfo : public BT::ActionNodeBase
     {
         public:
             explicit TellInfo(const std::string& name, const BT::NodeConfiguration& config);
@@ -42,6 +41,7 @@ namespace behaviour_trees
             ros::NodeHandle nh_;
             sound::Speaker speaker_;
             information::Info info_;
+            std::string info_speaker_;
     };
 
 }  // namespace behaviour_trees

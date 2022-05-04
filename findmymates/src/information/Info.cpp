@@ -25,48 +25,42 @@ namespace information
     {
         if(pos == 0)
         {
-            pos_ = "uno";
+            pos_ = "one";
         }
         else if(pos == 1)
         {
-            pos_ = "dos";
+            pos_ = "two";
         }
         else if(pos == 2)
         {
-            pos_ = "tres";
+            pos_ = "three";
         }
         else if(pos == 3)
         {
-            pos_ = "cuatro";
+            pos_ = "four";
         }
         else if(pos == 4)
         {
-            pos_ = "cinco";
+            pos_ = "five";
         }
         else
         {
-            pos_ = "seis";
+            pos_ = "six";
         }
-    }
-
-    int
-    get_pos()
-    {
-        return pos_;
     }
 
     void 
     set_carac(std::string carac, int type)
     {
-        if(type == 0)
+        if(type == 1)
         {
             name_ = carac;
         }
-        else if(type == 1)
+        else if(type == 2)
         {
-            color_ = carac;
+            colour_ = carac;
         }
-        else
+        else 
         {
             object_ = carac;
         }
@@ -74,17 +68,21 @@ namespace information
 
     std::string get_carac(int type)
     {
-        if(type == 0)
+        if(type == 1)
         {
             return name_;
         }
-        else if(type == 1)
+        else if(type == 2)
         {
-            return color_;
+            return colour_;
+        }
+        else if(type == 3)
+        {
+            return object_;
         }
         else
         {
-            return object_;
+            return pos_;
         }
     }
 

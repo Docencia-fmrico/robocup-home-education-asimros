@@ -64,6 +64,7 @@ add_library(asr_referee_node SHARED src/behaviour_trees/Referee.cpp)
 add_library(asr_localization_node SHARED src/behaviour_trees/Localization.cpp)
 add_library(asr_check_person_node SHARED src/behaviour_trees/CheckPerson.cpp)
 add_library(asr_ask_info_node SHARED src/behaviour_trees/AskInfo.cpp)
+add_library(asr_tell_info_node SHARED src/behaviour_trees/TellInfo.cpp)
 
 list(APPEND plugin_libs
   asr_go_point_node
@@ -71,6 +72,7 @@ list(APPEND plugin_libs
   asr_localization_node
   asr_check_person_node
   asr_ask_info_node
+  asr_tell_info_node 
 )
 
 foreach(bt_plugin ${plugin_libs})
@@ -104,4 +106,6 @@ roslint_cpp(
   include/sound/Speaker.h
   src/behaviour_trees/AskInfo.cpp
   include/behaviour_trees/AskInfo.h
+  src/behaviour_trees/TellInfo.cpp
+  include/behaviour_trees/TellInfo.h
 )

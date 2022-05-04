@@ -46,39 +46,23 @@ namespace behaviour_trees
     BT::NodeStatus
     AskInfo::tick()
     {
-        info.set_carac(getInput<int>("count").value());
+        std::string questions[3] = {"What is your name?", "What is the color of your clothes?", "Which object are you holding?"};
 
-        speaker_.speak("What is your name?");
-        //esperar
-        
-        listener_.listen();
-        if(listener_.recived())
+        info_.set_pos(getInput<int>("count").value());
+
+        for(int i = 0; i < 3; i++)
         {
-            //setname =
-            listener_.answer();
-        }
-
-        speaker_.speak("What is the color of your clothes");
-        //esperar
+            speaker_.speak(questions[i]);
+            //esperar -> se pisa con el listener
         
-        listener_.listen();
-        if(listener_.recived())
-        {
-            //setcolor =
-            listener_.answer();
-        }
+            listener_.listen();
+            std::string answer = listener_.answer();
 
-        speaker_.speak("Which object are you holding");
-        //esperar
-        
-        listener_.listen();
-        if(listener_.recived())
-        {
-            //setobject =
-            listener_.answer();
+            //si recibe algo
+            info_.set_carac(answer, i + 1);
+            //sino
+            // pedirle que lo repita y volver a ponerlo a escuchar
         }
-
-        //si no recibe nada volver a ponerle a escuchar, no sé como se hace un bucle en un bt
 
         return BT::NodeStatus::SUCCESS;
     }

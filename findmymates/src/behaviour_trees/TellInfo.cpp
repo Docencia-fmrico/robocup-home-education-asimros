@@ -47,8 +47,10 @@ namespace behaviour_trees
     {
         info_ = getInput<information::Info>("info").value();
 
-        speaker_.speak("The person who is at the position");
-        speaker_.speak()
+        info_speaker_ = "The person at the position " + info_.get_carac(0) + "is " + info_.get_carac(1) + 
+                       "the colour of his clothes is " + info_.get_carac(2) + "and he is holding a " + info_.get_carac(3); 
+
+        speaker_.speak(info_speaker_);
 
         return BT::NodeStatus::SUCCESS;
     }
@@ -58,5 +60,5 @@ namespace behaviour_trees
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<behaviour_trees::TellInfo>("ask_info");
+  factory.registerNodeType<behaviour_trees::TellInfo>("tell_info");
 }

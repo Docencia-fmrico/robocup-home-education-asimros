@@ -21,13 +21,13 @@
 
 #include "ros/ros.h"
 #include "sound/Speaker.h"
-#include "sound/Lister.h"
+#include "sound/Listener.h"
 #include "information/Info.h"
 
 namespace behaviour_trees
 {
 
-    class AskInfo : ublic BT::ActionNodeBase
+    class AskInfo : public BT::ActionNodeBase
     {
         public:
             explicit AskInfo(const std::string& name, const BT::NodeConfiguration& config);

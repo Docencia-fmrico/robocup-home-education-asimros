@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#ifndef BEHAVIOUR_TREES_INFO_H
+#define BEHAVIOUR_TREES_INFO_H
+
 #include <string>
 
 namespace information
@@ -22,17 +25,17 @@ namespace information
             Info();
 
             void set_pos(int pos);
-            int get_pos();
 
             void set_carac(std::string carac, int type);
             std::string get_carac(int type);
 
         private:
-            std::string pos_; 
-            std::string name_; // type 0
-            std::string color_; // type 1
-            std::string object_; // type 2
-
+            std::string pos_; // type 0
+            std::string name_; // type 1
+            std::string colour_; // type 2
+            std::string object_; // type 3
     };
 
 } // namespace information
+
+#endif  // BEHAVIOUR_TREES_INFO_H
