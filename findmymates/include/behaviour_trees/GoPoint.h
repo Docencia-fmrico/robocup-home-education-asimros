@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BEHAVIOUR_TREES_FOLLOWPOINT_H
-#define BEHAVIOUR_TREES_FOLLOWPOINT_H
+#ifndef BEHAVIOUR_TREES_GOPOINT_H
+#define BEHAVIOUR_TREES_GOPOINT_H
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
@@ -34,10 +34,10 @@
 namespace behaviour_trees
 {
 
-class FollowPoint : public BTNavAction
+class GoPoint : public BTNavAction
 {
   public:
-    explicit FollowPoint(const std::string& name,
+    explicit GoPoint(const std::string& name,
     const std::string & action_name,
     const BT::NodeConfiguration & config);
 
@@ -59,4 +59,4 @@ class FollowPoint : public BTNavAction
 
 }  // namespace behaviour_trees
 
-#endif  // BEHAVIOUR_TREES_FOLLOWPOINT_H
+#endif  // BEHAVIOUR_TREES_GOPOINT_H
