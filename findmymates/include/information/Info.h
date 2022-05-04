@@ -28,7 +28,7 @@ namespace information
             std::string get_carac(int type);
 
         private:
-            int pos_; 
+            std::string pos_; 
             std::string name_; // type 0
             std::string color_; // type 1
             std::string object_; // type 2

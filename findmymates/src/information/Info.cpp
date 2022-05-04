@@ -23,7 +23,30 @@ namespace information
     void 
     set_pos(int pos)
     {
-        pos_ = pos;
+        if(pos == 0)
+        {
+            pos_ = "uno";
+        }
+        else if(pos == 1)
+        {
+            pos_ = "dos";
+        }
+        else if(pos == 2)
+        {
+            pos_ = "tres";
+        }
+        else if(pos == 3)
+        {
+            pos_ = "cuatro";
+        }
+        else if(pos == 4)
+        {
+            pos_ = "cinco";
+        }
+        else
+        {
+            pos_ = "seis";
+        }
     }
 
     int
