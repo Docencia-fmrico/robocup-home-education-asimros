@@ -77,8 +77,7 @@ foreach(bt_plugin ${plugin_libs})
 endforeach()
 
 add_library(${PROJECT_NAME}
-  src/sound/Listener.cpp
-  src/sound/Speaker.h
+  src/detect_person/DetectPerson.cpp
 )
 
 add_executable(node_behaviour_tree src/node_behaviour_tree.cpp)
@@ -93,8 +92,6 @@ roslint_cpp(
   include/behaviour_trees/Localization.h
   src/behaviour_trees/CheckPerson.cpp
   include/behaviour_trees/CheckPerson.h
-  src/sound/Listener.cpp
-  include/sound/Listener.h
-  src/sound/Speaker.cpp
-  include/sound/Speaker.h
+  include/behaviour_trees/DetectPerson.h
+  src/behaviour_trees/DetectPerson.cpp
 )

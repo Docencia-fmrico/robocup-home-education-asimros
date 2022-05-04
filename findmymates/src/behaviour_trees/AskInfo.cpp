@@ -35,13 +35,18 @@ namespace behaviour_trees
     BT::PortsList 
     AskInfo::providedPorts() 
     { 
-        return { BT::OutputPort<int>("info") }; 
+        return { BT::OutputPort<information::Info>("info"), BT::InputPort<int>("count") }; 
     }
     
 
     BT::NodeStatus
     AskInfo::tick()
     {
+        info.set_carac(getInput<int>("count").value());
+
+
+        //speaker_.speak("")
+
         return BT::NodeStatus::SUCCESS;
     }
 

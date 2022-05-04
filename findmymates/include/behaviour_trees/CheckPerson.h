@@ -18,6 +18,7 @@
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 #include <string>
+#include "detect_person/DetectPerson.h"
 
 #include "geometry_msgs/Twist.h"
 #include "ros/ros.h"
@@ -38,7 +39,7 @@ class CheckPerson :  public BT::ActionNodeBase
         ros::NodeHandle nh_;
         ros::Publisher vel_pub_;
         geometry_msgs::Twist cmd_;
-
+        detect_person::DetectPerson person_;
         float angspeed_ = 0.4;
         bool first_;
         static constexpr double TURNING_TIME = 4.0;

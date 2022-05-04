@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "behaviour_trees/CheckPerso.h"
+#include "behaviour_trees/CheckPerson.h"
+#include "detect_person/DetectPerson.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include <string>
 #include "ros/ros.h"
@@ -20,7 +21,7 @@
 namespace behaviour_trees
 {
     CheckPerson::CheckPerson(const std::string& name)
-    : BT::ActionNodeBase(name, {}),
+    : BT::ActionNodeBase(name, {})
     {
         vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 100);
 
@@ -48,8 +49,11 @@ namespace behaviour_trees
             first_ = false;
         }
 
-        //success
-        //fisrt = true
+        if(person_.has_seen()){
+            first_ = true;
+            person_.lost();
+            return BT::NodeStatus::SUCCESS; 
+        }
 
         if((ros::Time::now() - turn_ts_).toSec() < TURNING_TIME)
         {

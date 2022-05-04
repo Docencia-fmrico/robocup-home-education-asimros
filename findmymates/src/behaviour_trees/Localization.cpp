@@ -58,7 +58,7 @@ namespace behaviour_trees
     BT::PortsList 
     Localization::providedPorts() 
     { 
-        return { BT::OutputPort<move_base_msgs::MoveBaseGoal>("goal_nav") }; 
+        return { BT::OutputPort<move_base_msgs::MoveBaseGoal>("goal_nav"), BT::OutputPort<int>("count") }; 
     }
     
 
@@ -73,7 +73,7 @@ namespace behaviour_trees
         srv.request.goal.pose.orientation.x = 0.0;
         srv.request.goal.pose.orientation.y = 0.0;
         srv.request.goal.pose.orientation.z = 0.0;
-        srv.request.goal.pose.oroc_person
+        srv.request.goal.pose.orientation.w = 1.0;
         srv.request.tolerance = 1.0;
 
         if (client.call(srv))
@@ -85,6 +85,7 @@ namespace behaviour_trees
             start = goal.target_pose;
 
             setOutput<move_base_msgs::MoveBaseGoal>("goal_nav", goal);
+            setOutput<int>("count", position_);
             position_++;
             ROS_ERROR("x = %f y = %f", goal.target_pose.pose.position.x, goal.target_pose.pose.position.y);
             return BT::NodeStatus::SUCCESS;
@@ -119,8 +120,8 @@ namespace behaviour_trees
             x = poses[i].pose.position.x;
             y = poses[i].pose.position.y;
 
-            diffx = abs(xgoal_ - x);
-            diffy = abs(ygoal_ - y);
+            diffx = abs(point_[position_].x - x);
+            diffy = abs(point_[position_].y - y);
 
             dist = sqrt(diffx * diffx + diffy * diffy);
             if (dist <= 1.0) return (unsigned long)i;
