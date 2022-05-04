@@ -1,3 +1,4 @@
+// Copyright 2019 Intelligent Robotics Lab
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "behaviour_trees/FollowPoint.h"
+#include "behaviour_trees/GoPoint.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include <string>
 
@@ -20,23 +21,23 @@
 namespace behaviour_trees
 {
 
-FollowPoint::FollowPoint(
+GoPoint::GoPoint(
   const std::string& name,
   const std::string & action_name,
   const BT::NodeConfiguration & config)
 : BTNavAction(name, action_name, config), counter_(0)
 {
-  ROS_ERROR("Se lanza un followpoint");
+  ROS_ERROR("Se lanza un GoPoint");
 }
 
 void
-FollowPoint::on_halt()
+GoPoint::on_halt()
 {
-  ROS_INFO("Followpoint halt");
+  ROS_INFO("GoPoint halt");
 }
 
 void
-FollowPoint::on_start()
+GoPoint::on_start()
 {
   ROS_ERROR("Pongo el goal");
   goal_ = getInput<move_base_msgs::MoveBaseGoal>("goal_nav").value();
@@ -46,13 +47,13 @@ FollowPoint::on_start()
 }
 
 BT::NodeStatus
-FollowPoint::on_tick()
+GoPoint::on_tick()
 {
   return BT::NodeStatus::RUNNING;
 }
 
 void
-FollowPoint::on_feedback(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback)
+GoPoint::on_feedback(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback)
 {
 	ROS_INFO("Current count %lf", feedback->base_position.pose.position.x);
 }
@@ -65,10 +66,10 @@ BT_REGISTER_NODES(factory)
     BT::NodeBuilder builder =
     [](const std::string & name, const BT::NodeConfiguration & config)
     {
-      return std::make_unique<behaviour_trees::FollowPoint>(
+      return std::make_unique<behaviour_trees::GoPoint>(
         name, "move_base", config);
     };
 
-  factory.registerBuilder<behaviour_trees::FollowPoint>(
-    "follow_point", builder);
+  factory.registerBuilder<behaviour_trees::GoPoint>(
+    "go_point", builder);
 }

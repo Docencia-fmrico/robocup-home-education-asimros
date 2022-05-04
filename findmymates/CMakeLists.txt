@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(carrymyluggage)
+project(findmymates)
 set(CMAKE_CXX_FLAGS "-std=c++17")
 
 set(CMAKE_CONFIG_PATH ${CMAKE_MODULE_PATH}  "${CMAKE_CURRENT_LIST_DIR}/cmake")
@@ -59,26 +59,16 @@ include_directories(
   ${ZMQ_INCLUDE_DIRS}
 )
 
-add_library(asr_wait_for_person_node SHARED src/behaviour_trees/WaitForPerson.cpp)
-add_library(asr_choose_side_node SHARED src/behaviour_trees/ChooseSide.cpp)
-add_library(asr_follow_point_node SHARED src/behaviour_trees/FollowPoint.cpp)
-add_library(asr_ask_for_case_node SHARED src/behaviour_trees/AskForCase.cpp)
-add_library(asr_arena_node SHARED src/behaviour_trees/Arena.cpp)
-add_library(asr_loc_person_node SHARED src/behaviour_trees/LocPerson.cpp)
-add_library(asr_turn_around_node SHARED src/behaviour_trees/TurnAround.cpp)
-add_library(asr_request_come_closer_node SHARED src/behaviour_trees/RequestComeCloser.cpp)
-add_library(asr_have_finished_node SHARED src/behaviour_trees/HaveFinished.cpp)
+add_library(asr_go_point_node SHARED src/behaviour_trees/GoPoint.cpp)
+add_library(asr_referee_node SHARED src/behaviour_trees/Referee.cpp)
+add_library(asr_localization_node SHARED src/behaviour_trees/Localization.cpp)
+add_library(asr_check_person_node SHARED src/behaviour_trees/CheckPerson.cpp)
 
 list(APPEND plugin_libs
-  asr_choose_side_node
-  asr_wait_for_person_node
-  asr_follow_point_node
-  asr_ask_for_case_node
-  asr_loc_person_node
-  asr_request_come_closer_node
-  asr_turn_around_node
-  asr_arena_node
-  asr_have_finished_node
+  asr_go_point_node
+  asr_referee_node
+  asr_localization_node
+  asr_check_person_node
 )
 
 foreach(bt_plugin ${plugin_libs})
@@ -87,51 +77,24 @@ foreach(bt_plugin ${plugin_libs})
 endforeach()
 
 add_library(${PROJECT_NAME}
-  src/detect_case/SideCase.cpp
   src/sound/Listener.cpp
+  src/sound/Speaker.h
 )
 
-add_executable(node_behaviour_tree_nav_init src/node_behaviour_tree_nav_init.cpp)
-target_link_libraries(node_behaviour_tree_nav_init ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
-add_executable(node_behaviour_tree_nav src/node_behaviour_tree_nav.cpp)
-target_link_libraries(node_behaviour_tree_nav ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
-add_executable(node_bt_together src/node_bt_together.cpp)
-target_link_libraries(node_bt_together ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
-
-add_executable(listener_df_node src/sound/listenerDF.cpp)
-add_dependencies(listener_df_node ${catkin_EXPORTED_TARGETS} )
-target_link_libraries(listener_df_node ${catkin_LIBRARIES} gb_dialog)
-
-add_executable(speaker_df_node src/sound/speakerDF.cpp)
-add_dependencies(speaker_df_node ${catkin_EXPORTED_TARGETS} )
-target_link_libraries(speaker_df_node ${catkin_LIBRARIES} gb_dialog)
-
+add_executable(node_behaviour_tree src/node_behaviour_tree.cpp)
+target_link_libraries(node_behaviour_tree ${PROJECT_NAME} ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 
 roslint_cpp(
-  src/behaviour_trees/WaitForPerson.cpp
-  include/behaviour_trees/WaitForPerson.h
-  src/behaviour_trees/ChooseSide.cpp
-  include/behaviour_trees/ChooseSide.h
-  src/detect_case/SideCase.cpp
-  include/detect_case/SideCase.h
-  src/behaviour_trees/FollowPoint.cpp
-  include/behaviour_trees/FollowPoint.h
-  src/behaviour_trees/AskForCase.cpp
-  include/behaviour_trees/AskForCase.h
-  src/behaviour_trees/Arena.cpp
-  include/behaviour_trees/Arena.cpp
-  include/behaviour_trees/BTNavAction.h
-  src/node_behaviour_tree_nav_init.cpp
-  src/behaviour_trees/TurnAround.cpp
-  include/behaviour_trees/TurnAround.cpp
-  src/behaviour_trees/LocPerson.cpp
-  include/behaviour_trees/LocPerson.h
-  src/behaviour_trees/RequestComeCloser.cpp
-  include/behaviour_trees/RequestComeCloser.h
-  src/behaviour_trees/HaveFinished.cpp
-  include/behaviour_trees/HaveFinished.h
-  src/node_behaviour_tree_nav.cpp
-  src/node_bt_together.cpp
+  src/behaviour_trees/GoPoint.cpp
+  include/behaviour_trees/GoPoint.h
+  src/behaviour_trees/Referee.cpp
+  include/behaviour_trees/Referee.h
+  src/behaviour_trees/Localization.cpp
+  include/behaviour_trees/Localization.h
+  src/behaviour_trees/CheckPerson.cpp
+  include/behaviour_trees/CheckPerson.h
   src/sound/Listener.cpp
   include/sound/Listener.h
+  src/sound/Speaker.cpp
+  include/sound/Speaker.h
 )

@@ -12,34 +12,44 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BEHAVIOUR_TREES_ARENA_H
-#define BEHAVIOUR_TREES_ARENA_H
-
+#include "behaviour_trees/AskInfo.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
-#include "behaviortree_cpp_v3/bt_factory.h"
 #include <string>
-
 #include "ros/ros.h"
 
 namespace behaviour_trees
 {
+    AskInfo::AskInfo(const std::string& name, const BT::NodeConfiguration& config)
+    : BT::ActionNodeBase(name, config)
+    {
+    }
+    
+    
+    void 
+    AskInfo::halt()
+    {
+        ROS_INFO("AskInfo halt");
+    }
+    
+    
+    BT::PortsList 
+    AskInfo::providedPorts() 
+    { 
+        return { BT::OutputPort<int>("info") }; 
+    }
+    
 
-class Arena :  public BT::ActionNodeBase
-{
-    public:
-        explicit Arena(const std::string& name, const BT::NodeConfiguration& config);
-
-        void halt();
-
-        static BT::PortsList providedPorts();
-
-        BT::NodeStatus tick();
-
-    private:
-        ros::NodeHandle nh_;
-        
-};
+    BT::NodeStatus
+    AskInfo::tick()
+    {
+        return BT::NodeStatus::SUCCESS;
+    }
 
 }  // namespace behaviour_trees
 
-#endif  // BEHAVIOUR_TREES_ARENA_H
+#include "behaviortree_cpp_v3/bt_factory.h"
+BT_REGISTER_NODES(factory)
+{
+  factory.registerNodeType<behaviour_trees::AskInfo>("ask_info");
+}
+

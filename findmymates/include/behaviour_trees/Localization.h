@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BEHAVIOUR_TREES_LOCPERSON_H
-#define BEHAVIOUR_TREES_LOCPERSON_H
+#ifndef BEHAVIOUR_TREES_LOCALIZATION_H
+#define BEHAVIOUR_TREES_LOCALIZATION_H
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 #include <string>
+#include <opencv2/core/types.hpp>
 
 #include "ros/ros.h"
 
@@ -36,10 +37,10 @@
 namespace behaviour_trees
 {
 
-class LocPerson :  public BT::ActionNodeBase
+class Localization :  public BT::ActionNodeBase
 {
     public:
-        explicit LocPerson(const std::string& name, const BT::NodeConfiguration& config);
+        explicit Localization(const std::string& name, const BT::NodeConfiguration& config);
 
         void halt();
 
@@ -49,13 +50,14 @@ class LocPerson :  public BT::ActionNodeBase
 
     private:
         ros::NodeHandle nh_;
-        double xgoal_;
-        double ygoal_;
+        cv::Point point_[6];
+        int position_;
         std::string error_;
         tf2_ros::Buffer buffer;
         tf2_ros::TransformListener listener;
         geometry_msgs::TransformStamped map2person_msg;
     	tf2::Stamped<tf2::Transform> map2person;
+
         ros::ServiceClient client;
         geometry_msgs::PoseStamped start;
         unsigned long calc_index(auto & poses);
@@ -63,4 +65,4 @@ class LocPerson :  public BT::ActionNodeBase
 
 }  // namespace behaviour_trees
 
-#endif  // BEHAVIOUR_TREES_LOCPERSON_H
+#endif  // BEHAVIOUR_TREES_LOCALIZATION_H

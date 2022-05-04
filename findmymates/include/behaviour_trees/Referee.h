@@ -12,41 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BEHAVIOUR_TREES_WAITFORPERSON_H
-#define BEHAVIOUR_TREES_WAITFORPERSON_H
+#ifndef BEHAVIOUR_TREES_REFEREE_H
+#define BEHAVIOUR_TREES_REFEREE_H
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 #include <string>
-
-#include "tf2/transform_datatypes.h"
-#include "tf2_ros/transform_listener.h"
-#include "tf2/LinearMath/Transform.h"
-#include "geometry_msgs/TransformStamped.h"
-#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
-#include "tf2/convert.h"
 
 #include "ros/ros.h"
 
 namespace behaviour_trees
 {
 
-class WaitForPerson : public BT::ActionNodeBase
+class Referee :  public BT::ActionNodeBase
 {
     public:
-        explicit WaitForPerson(const std::string& name);
-        
+        explicit Referee(const std::string& name, const BT::NodeConfiguration& config);
+
         void halt();
+
+        static BT::PortsList providedPorts();
 
         BT::NodeStatus tick();
 
     private:
         ros::NodeHandle nh_;
-        std::string error_;
-		tf2_ros::Buffer buffer;
-        tf2_ros::TransformListener listener;
+        
 };
 
 }  // namespace behaviour_trees
 
-#endif  // BEHAVIOUR_TREES_WAITFORPERSON_H
+#endif  // BEHAVIOUR_TREES_REFEREE_H

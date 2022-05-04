@@ -32,18 +32,18 @@ int main(int argc, char **argv)
   BT::BehaviorTreeFactory factory;
   BT::SharedLibrary loader;
 
-  factory.registerFromPlugin(loader.getOSName("asr_loc_person_node"));
-  factory.registerFromPlugin(loader.getOSName("asr_turn_around_node"));
-  factory.registerFromPlugin(loader.getOSName("asr_request_come_closer_node"));
-  factory.registerFromPlugin(loader.getOSName("asr_follow_point_node"));
-  factory.registerFromPlugin(loader.getOSName("asr_arena_node"));
-  factory.registerFromPlugin(loader.getOSName("asr_have_finished_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_go_point_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_localization_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_referee_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_ask_info_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_tell_info_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_check_person_node"));
 
   auto blackboard = BT::Blackboard::create();
 
   std::string pkgpath = ros::package::getPath("carrymyluggage");
 
-  std::string xml_file = pkgpath + "/behaviour_trees_xml/tree_nav.xml";
+  std::string xml_file = pkgpath + "/behaviour_trees_xml/tree.xml";
 
   BT::Tree tree = factory.createTreeFromFile(xml_file, blackboard);
   auto publisher_zmq = std::make_shared<BT::PublisherZMQ>(tree, 10, 1666, 1667);

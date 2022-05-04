@@ -12,23 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BEHAVIOUR_TREES_REQUESTCOMECLOSER_H
-#define BEHAVIOUR_TREES_REQUESTCOMECLOSER_H
+#ifndef BEHAVIOUR_TREES_CHECKPERSON_H
+#define BEHAVIOUR_TREES_CHECKPERSON_H
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 #include <string>
 
-#include "sound/Speaker.h"
+#include "geometry_msgs/Twist.h"
 #include "ros/ros.h"
 
 namespace behaviour_trees
 {
 
-class RequestComeCloser :  public BT::ActionNodeBase
+class CheckPerson :  public BT::ActionNodeBase
 {
     public:
-        explicit RequestComeCloser(const std::string& name);
+        explicit CheckPerson(const std::string& name);
         
         void halt();
 
@@ -36,8 +36,15 @@ class RequestComeCloser :  public BT::ActionNodeBase
 
     private:
         ros::NodeHandle nh_;
+        ros::Publisher vel_pub_;
+        geometry_msgs::Twist cmd_;
+
+        float angspeed_ = 0.4;
+        bool first_;
+        static constexpr double TURNING_TIME = 4.0;
+        ros::Time turn_ts_;
 };
 
 }  // namespace behaviour_trees
 
-#endif  // BEHAVIOUR_TREES_REQUESTCOMECLOSER_H
+#endif  // BEHAVIOUR_TREES_CHECKPERSON_H

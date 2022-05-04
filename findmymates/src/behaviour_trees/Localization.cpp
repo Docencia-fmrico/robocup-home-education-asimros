@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "behaviour_trees/LocPerson.h"
+#include "behaviour_trees/Localization.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
 
 #include <string>
 #include "ros/ros.h"
 #include <move_base_msgs/MoveBaseAction.h>
+#include <opencv2/core/types.hpp>
 
 #include "tf2/transform_datatypes.h"
 #include "tf2_ros/transform_listener.h"
@@ -29,86 +30,78 @@
 namespace behaviour_trees
 {
     
-    LocPerson::LocPerson(const std::string& name, const BT::NodeConfiguration& config)
+    Localization::Localization(const std::string& name, const BT::NodeConfiguration& config)
     : BT::ActionNodeBase(name, config),
       listener(buffer)
     {
         client = nh_.serviceClient<nav_msgs::GetPlan>("/move_base/make_plan");
-        // Coordenadas inicio de la nav, después se actualizan con siguiente destino (es donde empieza en la arena)
+        // Coordenadas inicio de la nav, después se actualizan con siguiente destino (es donde está el árbitro)
         start.header.frame_id = "map";
-		start.pose.position.x = 3.0;  // Inicio en la arena
-        start.pose.position.y = 2.0;  
+		start.pose.position.x = 0.0;  
+        start.pose.position.y = 0.0;  
         start.pose.position.z = 0.0;
         start.pose.orientation.x = 0.0;
         start.pose.orientation.y = 0.0;
         start.pose.orientation.z = 0.0;
         start.pose.orientation.w = 1.0;
+        position_ = 0;
     }
     
     
     void 
-    LocPerson::halt()
+    Localization::halt()
     {
-        ROS_INFO("LocPerson halt");
+        ROS_INFO("Localization halt");
     }
     
     
     BT::PortsList 
-    LocPerson::providedPorts() 
+    Localization::providedPorts() 
     { 
         return { BT::OutputPort<move_base_msgs::MoveBaseGoal>("goal_nav") }; 
     }
     
 
     BT::NodeStatus
-    LocPerson::tick()
+    Localization::tick()
     {
-        if(buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
-        {			
-			map2person_msg = buffer.lookupTransform("map", "person", ros::Time(0));
-      		tf2::fromMsg(map2person_msg, map2person);
+        nav_msgs::GetPlan srv;
+        srv.request.goal.header.frame_id = "map";
+        srv.request.goal.pose.position.x = point_[position_].x;  //coord arbitro
+        srv.request.goal.pose.position.y = point_[position_].y; //coord arbitro
+        srv.request.goal.pose.position.z = 0.0;
+        srv.request.goal.pose.orientation.x = 0.0;
+        srv.request.goal.pose.orientation.y = 0.0;
+        srv.request.goal.pose.orientation.z = 0.0;
+        srv.request.goal.pose.oroc_person
+        srv.request.tolerance = 1.0;
 
-			nav_msgs::GetPlan srv;
-			srv.request.goal.header.frame_id = "map";
-            xgoal_ = map2person.getOrigin().x();
-            ygoal_ = map2person.getOrigin().y();
-        	srv.request.goal.pose.position.x = xgoal_;  //coord arbitro
-        	srv.request.goal.pose.position.y = ygoal_;  //coord arbitro
-        	srv.request.goal.pose.position.z = 0.0;
-        	srv.request.goal.pose.orientation.x = 0.0;
-        	srv.request.goal.pose.orientation.y = 0.0;
-        	srv.request.goal.pose.orientation.z = 0.0;
-        	srv.request.goal.pose.orientation.w = 1.0;
+        if (client.call(srv))
+        {
+            auto index = Localization::calc_index(srv.response.plan.poses) - 2;
+            move_base_msgs::MoveBaseGoal goal;
 
-			srv.request.start = start;
+            goal.target_pose = srv.response.plan.poses[index];
+            start = goal.target_pose;
 
-			srv.request.tolerance = 1.0;
-
-			if (client.call(srv))
-  			{
-    			auto index = srv.response.plan.poses.size() - 8;
-                LocPerson::calc_index(srv.response.plan.poses);
-				move_base_msgs::MoveBaseGoal goal;
-
-        		goal.target_pose = srv.response.plan.poses[index];
-                start = goal.target_pose;
-
-        		setOutput<move_base_msgs::MoveBaseGoal>("goal_nav", goal);
-				return BT::NodeStatus::SUCCESS;
-  			}
-  			else
-  			{
-    			ROS_ERROR("Failed to call service distance");
-				return BT::NodeStatus::RUNNING;
-  			}
-			
-        	
-		}
+            setOutput<move_base_msgs::MoveBaseGoal>("goal_nav", goal);
+            position_++;
+            ROS_ERROR("x = %f y = %f", goal.target_pose.pose.position.x, goal.target_pose.pose.position.y);
+            return BT::NodeStatus::SUCCESS;
+        }
+        else
+        {
+            ROS_ERROR("Failed to call service distance");
+            return BT::NodeStatus::RUNNING; 
+        }
+        
+        
+    
 		ROS_ERROR("Unable to transform");
-        return BT::NodeStatus::RUNNING; 
+        return BT::NodeStatus::FAILURE;
     }
 
-    unsigned long LocPerson::calc_index(auto & poses)
+    unsigned long Localization::calc_index(auto & poses)
     {
         int size;
         double x;
@@ -130,8 +123,7 @@ namespace behaviour_trees
             diffy = abs(ygoal_ - y);
 
             dist = sqrt(diffx * diffx + diffy * diffy);
-            ROS_ERROR("La distancia es de %f metros", dist);
-            if (dist <= 1.0) return (unsigned long);
+            if (dist <= 1.0) return (unsigned long)i;
         }
 
         return -1;
@@ -142,5 +134,5 @@ namespace behaviour_trees
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<behaviour_trees::LocPerson>("loc_person");
+  factory.registerNodeType<behaviour_trees::Localization>("localization");
 }
