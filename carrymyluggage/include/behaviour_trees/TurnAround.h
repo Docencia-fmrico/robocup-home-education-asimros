@@ -45,11 +45,15 @@ class TurnAround :  public BT::ActionNodeBase
         tf2_ros::Buffer buffer;
         tf2_ros::TransformListener listener;
         std::string error_;
+        bool first_;
 
         ros::NodeHandle nh_;
         ros::Publisher vel_pub_;
         geometry_msgs::Twist cmd_;
         float angspeed_ = 0.4;
+
+        static constexpr double TURNING_TIME = 4.0;
+		ros::Time turn_ts_;
 };
 
 }  // namespace behaviour_trees

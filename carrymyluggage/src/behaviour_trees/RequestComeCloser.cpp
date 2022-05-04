@@ -16,6 +16,7 @@
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include <string>
 
+#include "sound/Speaker.h"
 #include "ros/ros.h"
 
 namespace behaviour_trees
@@ -35,6 +36,7 @@ namespace behaviour_trees
     RequestComeCloser::tick()
     {
         ROS_ERROR("Could you come closer?");
+        speaker_.speak("Could you come closer?");
         return BT::NodeStatus::SUCCESS;
     }
 

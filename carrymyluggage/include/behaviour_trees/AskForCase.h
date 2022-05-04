@@ -19,6 +19,7 @@
 #include "behaviortree_cpp_v3/bt_factory.h"
 #include <string>
 
+#include "sound/Speaker.h"
 #include "ros/ros.h"
 
 namespace behaviour_trees
@@ -35,6 +36,7 @@ class AskForCase :  public BT::ActionNodeBase
 
     private:
         ros::NodeHandle nh_;
+        sound::Speaker speaker_;
 };
 
 }  // namespace behaviour_trees

@@ -37,6 +37,7 @@ class HaveFinished :  public BT::ActionNodeBase
     private:
         ros::NodeHandle nh_;
         sound::Listener listener_;
+        bool first_;
 };
 
 }  // namespace behaviour_trees
