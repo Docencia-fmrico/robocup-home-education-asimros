@@ -75,6 +75,10 @@ add_dependencies(speaker_df_node ${catkin_EXPORTED_TARGETS} )
 target_link_libraries(speaker_df_node ${catkin_LIBRARIES} gb_dialog)
 
 
+add_executable(test_df_node src/nodes/testDF.cpp)
+add_dependencies(test_df_node ${catkin_EXPORTED_TARGETS} )
+target_link_libraries(test_df_node ${catkin_LIBRARIES} gb_dialog)
+
 roslint_cpp(
   src/nodes/listenerDF.cpp
   src/nodes/speakerDF.cpp
