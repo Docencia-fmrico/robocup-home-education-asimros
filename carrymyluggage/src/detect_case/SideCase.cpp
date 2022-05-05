@@ -35,6 +35,8 @@ sync_bbx(MySyncPolicy_bbx(10), image_depth_sub, bbx_sub)
     sync_bbx.registerCallback(boost::bind(&SideCase::callback_bbx, this, _1, _2));
     side_ = 0;
     dif_ = 0;
+    elapsedtime_ = 0.0;
+    first_ = true;
 }
 
 void
@@ -52,20 +54,19 @@ SideCase::callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ro
         return;
     }
 
-    for (const auto & box : boxes->bounding_boxes)
-    {
-        px = (box.xmax + box.xmin) / 2;
-    }
+    auto & box = boxes->bounding_boxes[0];
+    px = (box.xmax + box.xmin) / 2;
+
     if (first_)
     {
         read_ts_ = ros::Time::now();
         px_= px;
         first_ = false;
     }
-        first_ = false;
 
-    ROS_ERROR("EL PUTO TIEMPO ES %f", (ros::Time::now() - read_ts_).toSec());
-    if((ros::Time::now() - read_ts_).toSec() < READ_TIME){
+    elapsedtime_ = ros::Time::now().toSec() - read_ts_.toSec();
+    ROS_ERROR("EL TIEMPO ES %f", elapsedtime_);
+    if(elapsedtime_ < READ_TIME){
         ROS_ERROR("EL tiempo sigue siendo menor, side es 0!!!!!");
         dif_ = dif_ + px - px_ ;
         side_= 0;
