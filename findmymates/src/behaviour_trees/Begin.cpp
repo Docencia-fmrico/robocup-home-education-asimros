@@ -24,6 +24,7 @@ namespace behaviour_trees
     Begin::Begin(const std::string& name)
     : BT::ActionNodeBase(name, {})
     {
+      first_ = true;
     }
 
     void
@@ -35,13 +36,23 @@ namespace behaviour_trees
     BT::NodeStatus
     Begin::tick()
     {
-      listener_.listen();
+      if(first_){
+        first_ = false;
+        listen_ts_ = ros::Time::now();
+      }
+      if((ros::Time::now() - listen_ts_).toSec() < LISTEN_TIME){
+        listener_.listen();
 
-      if(listener_.answer().compare("True"))
-      {
-        ROS_ERROR("Me ha dicho de empezar");
+        if(listener_.answer().compare("True"))
+        {
+          ROS_ERROR("Me ha dicho de empezar");
+          return BT::NodeStatus::SUCCESS;
+        }
+      }
+      else{
         return BT::NodeStatus::SUCCESS;
       }
+      
 
       ROS_ERROR("Aún no empiezo");
       return BT::NodeStatus::RUNNING;

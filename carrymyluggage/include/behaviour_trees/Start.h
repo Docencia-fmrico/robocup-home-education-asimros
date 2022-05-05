@@ -37,8 +37,10 @@ class Start :  public BT::ActionNodeBase
     private:
         ros::NodeHandle nh_;
         sound::Listener listener_;
+        ros::Time listen_ts_;
+        double LISTEN_TIME = 30.0;
+        bool first_;
 };
 
 }  // namespace behaviour_trees
-
-#endif  // BEHAVIOUR_TREES_START_H
+#endif  
