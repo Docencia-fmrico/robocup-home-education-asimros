@@ -36,28 +36,28 @@ namespace behaviour_trees
         position_ = 0;
         loc_index_ = 0;
 
-        point_[0].x = 2.12; // posición 1 (lo dejemos a un metro)
-        point_[0].y = 2.65;
+        point_[0].x = 2.1; // posición 1 (lo dejemos a un metro)
+        point_[0].y = 2.6;
         locs_[0] = 0.0;
 
-        point_[1].x = 0.61;
-        point_[1].y = 2.93;
+        point_[1].x = 0.6;
+        point_[1].y = 2.9;
         locs_[1] = 0.0;
 
-        point_[2].x = -0.36;
-        point_[2].y = 3.77;
+        point_[2].x = -0.3;
+        point_[2].y = 3.7;
         locs_[2] = 0.0;
 
-        point_[3].x = -0.77;
-        point_[3].y = 5.83;
+        point_[3].x = -0.7;
+        point_[3].y = 5.8;
         locs_[3] = 0.0;
 
-        point_[4].x = -0.58;
-        point_[4].y = 6.70;
+        point_[4].x = -0.5;
+        point_[4].y = 6.7;
         locs_[4] = 0.0;
 
-        point_[5].x = 1.42;
-        point_[5].y = 6.45;
+        point_[5].x = 1.4;
+        point_[5].y = 6.4;
         locs_[5] = 0.0;
     }
     
