@@ -26,7 +26,7 @@ workingFrameId_("/base_footprint")
 {
 	detected_ = false;
 	modeladquired_ = false;
-    sub_cam_ = nh_.subscribe("/camera/depth/camera_info", 1, &Tf_calc::callback_caminfo, this);
+    sub_cam_ = nh_.subscribe("/camera/depth_registered/camera_info", 1, &Tf_calc::callback_caminfo, this);
     sync_bbx.registerCallback(boost::bind(&Tf_calc::callback_tf, this, _1, _2));
 }
 
