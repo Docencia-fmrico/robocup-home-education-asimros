@@ -28,7 +28,7 @@ namespace detect_case
 {
 
 SideCase::SideCase()
-: image_depth_sub(nh, "/camera/depth_registered/image_raw", 1),
+: image_depth_sub(nh, "/camera/depth/image_raw", 1),
 bbx_sub(nh, "/bbx_filtered", 1),
 sync_bbx(MySyncPolicy_bbx(10), image_depth_sub, bbx_sub)
 {

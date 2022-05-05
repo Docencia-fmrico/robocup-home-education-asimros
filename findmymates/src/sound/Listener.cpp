@@ -38,7 +38,7 @@ namespace sound
   Listener::messageCallback(const std_msgs::String::ConstPtr& msg)
   {
     
-      answer_ = msg->data;
+    answer_ = msg->data;
 
   }
 

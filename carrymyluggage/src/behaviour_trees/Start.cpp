@@ -42,8 +42,9 @@ namespace behaviour_trees
       }
       if((ros::Time::now() - listen_ts_).toSec() < LISTEN_TIME){
         listener_.listen();
+        ROS_ERROR("Estoy viendo a ver si recibo start");
 
-        if(listener_.recived() && listener_.get_finished())
+        if(listener_.get_finished())
         {
           ROS_ERROR("Me ha dicho de empezar");
           return BT::NodeStatus::SUCCESS;

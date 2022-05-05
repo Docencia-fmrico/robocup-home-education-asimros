@@ -86,6 +86,7 @@ namespace behaviour_trees
         goal.target_pose.header.frame_id = "map";
         goal.target_pose.header.stamp = ros::Time::now();
         goal.target_pose.pose.position.x = point_[position_].x;
+        ROS_ERROR("Vamos a la posición %f y %f", point_[position_].x, point_[position_].y);
         goal.target_pose.pose.position.y = point_[position_].y;  
         goal.target_pose.pose.position.z = 0.0;
         goal.target_pose.pose.orientation.x = 0.0;

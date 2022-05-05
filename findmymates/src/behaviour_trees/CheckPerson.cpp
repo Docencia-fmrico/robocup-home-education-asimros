@@ -50,6 +50,7 @@ namespace behaviour_trees
         }
 
         if(person_.has_seen()){
+            ROS_ERROR("He visto a la persona");
             first_ = true;
             person_.lost();
             return BT::NodeStatus::SUCCESS; 

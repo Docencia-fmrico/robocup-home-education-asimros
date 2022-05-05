@@ -40,6 +40,7 @@ namespace sound
   void
   Listener::messageCallback(const std_msgs::String::ConstPtr& msg)
   {
+    ROS_ERROR("%s", msg->data);
     if(msg->data.compare("True"))
     {
       ROS_ERROR("ME HA LLEGADO EL TRUE");

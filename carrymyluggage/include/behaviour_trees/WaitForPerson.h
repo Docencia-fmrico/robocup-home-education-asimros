@@ -26,6 +26,8 @@
 #include "tf2_geometry_msgs/tf2_geometry_msgs.h"
 #include "tf2/convert.h"
 
+#include "std_msgs/Int64.h"
+
 #include "ros/ros.h"
 
 namespace behaviour_trees
@@ -45,6 +47,10 @@ class WaitForPerson : public BT::ActionNodeBase
         std::string error_;
 		tf2_ros::Buffer buffer;
         tf2_ros::TransformListener listener;
+        
+        ros::Publisher activation_;
+        std_msgs::Int64 msg_;
+        bool first_;
 };
 
 }  // namespace behaviour_trees
