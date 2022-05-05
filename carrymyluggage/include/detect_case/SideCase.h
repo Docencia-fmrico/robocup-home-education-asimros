@@ -36,6 +36,7 @@ class SideCase
 
         void callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msgs::BoundingBoxesConstPtr& boxes);
         int get_side() {return side_;}
+        void start(){start_ = true;}
 
     private:
         ros::NodeHandle nh;
@@ -45,8 +46,9 @@ class SideCase
         int dif_;
         ros::Time read_ts_;
         double elapsedtime_;
-        double READ_TIME = 10.0;
+        double READ_TIME = 5.0;
         bool first_;
+        bool start_;
 
         typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image, darknet_ros_msgs::BoundingBoxes> MySyncPolicy_bbx;
         message_filters::Subscriber<sensor_msgs::Image> image_depth_sub;
