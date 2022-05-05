@@ -31,20 +31,27 @@ namespace behaviour_trees
 {
     
     Localization::Localization(const std::string& name, const BT::NodeConfiguration& config)
-    : BT::ActionNodeBase(name, config),
-      listener(buffer)
+    : BT::ActionNodeBase(name, config)
     {
-        client = nh_.serviceClient<nav_msgs::GetPlan>("/move_base/make_plan");
-        // Coordenadas inicio de la nav, después se actualizan con siguiente destino (es donde está el árbitro)
-        start.header.frame_id = "map";
-		start.pose.position.x = 0.0;  
-        start.pose.position.y = 0.0;  
-        start.pose.position.z = 0.0;
-        start.pose.orientation.x = 0.0;
-        start.pose.orientation.y = 0.0;
-        start.pose.orientation.z = 0.0;
-        start.pose.orientation.w = 1.0;
         position_ = 0;
+
+        point_[0].x = 1; // posición 1 (lo dejemos a un metro)
+        point_[0].y = 1;
+
+        point_[1].x = 2;
+        point_[1].y = 2;
+
+        point_[2].x = 3;
+        point_[2].y = 3;
+
+        point_[3].x = 4;
+        point_[3].y = 4;
+
+        point_[4].x = 5;
+        point_[4].y = 5;
+
+        point_[5].x = 6;
+        point_[5].y = 6;
     }
     
     
@@ -65,69 +72,25 @@ namespace behaviour_trees
     BT::NodeStatus
     Localization::tick()
     {
-        nav_msgs::GetPlan srv;
-        srv.request.goal.header.frame_id = "map";
-        srv.request.goal.pose.position.x = point_[position_].x;  //coord arbitro
-        srv.request.goal.pose.position.y = point_[position_].y; //coord arbitro
-        srv.request.goal.pose.position.z = 0.0;
-        srv.request.goal.pose.orientation.x = 0.0;
-        srv.request.goal.pose.orientation.y = 0.0;
-        srv.request.goal.pose.orientation.z = 0.0;
-        srv.request.goal.pose.orientation.w = 1.0;
-        srv.request.tolerance = 1.0;
+        move_base_msgs::MoveBaseGoal goal;
 
-        if (client.call(srv))
-        {
-            auto index = Localization::calc_index(srv.response.plan.poses) - 2;
-            move_base_msgs::MoveBaseGoal goal;
+        ROS_ERROR("Envio posicion %d", position_);
 
-            goal.target_pose = srv.response.plan.poses[index];
-            start = goal.target_pose;
+        goal.target_pose.header.frame_id = "map";
+        goal.target_pose.header.stamp = ros::Time::now();
+        goal.target_pose.pose.position.x = point_[position_].x;
+        goal.target_pose.pose.position.y = point_[position_].y;  
+        goal.target_pose.pose.position.z = 0.0;
+        goal.target_pose.pose.orientation.x = 0.0;
+        goal.target_pose.pose.orientation.y = 0.0;
+        goal.target_pose.pose.orientation.z = 0.0;
+        goal.target_pose.pose.orientation.w = 1.0;
 
-            setOutput<move_base_msgs::MoveBaseGoal>("goal_nav", goal);
-            setOutput<int>("count", position_);
-            position_++;
-            ROS_ERROR("x = %f y = %f", goal.target_pose.pose.position.x, goal.target_pose.pose.position.y);
-            return BT::NodeStatus::SUCCESS;
-        }
-        else
-        {
-            ROS_ERROR("Failed to call service distance");
-            return BT::NodeStatus::RUNNING; 
-        }
-        
-        
-    
-		ROS_ERROR("Unable to transform");
-        return BT::NodeStatus::FAILURE;
-    }
+        setOutput("goal_nav", goal);
+        setOutput("count", position_);
+        position_++;
 
-    unsigned long Localization::calc_index(auto & poses)
-    {
-        int size;
-        double x;
-        double y;
-        double diffx;
-        double diffy;
-        double dist;
-        unsigned long index;
-        int i;
-
-        size = poses.size();
-
-        for (i = 0; i < size; i++)
-        {
-            x = poses[i].pose.position.x;
-            y = poses[i].pose.position.y;
-
-            diffx = abs(point_[position_].x - x);
-            diffy = abs(point_[position_].y - y);
-
-            dist = sqrt(diffx * diffx + diffy * diffy);
-            if (dist <= 1.0) return (unsigned long)i;
-        }
-
-        return -1;
+        return BT::NodeStatus::SUCCESS;
     }
 
 }  // namespace behaviour_trees

@@ -19,20 +19,7 @@
 #include "behaviortree_cpp_v3/bt_factory.h"
 #include <string>
 #include <opencv2/core/types.hpp>
-
 #include "ros/ros.h"
-
-#include "tf2/transform_datatypes.h"
-#include "tf2_ros/transform_listener.h"
-#include "tf2/LinearMath/Transform.h"
-#include "geometry_msgs/TransformStamped.h"
-#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
-#include "tf2/convert.h"
-#include "geometry_msgs/Point.h"
-
-#include "nav_msgs/GetPlan.h"
-#include "nav_msgs/Path.h"
-#include "geometry_msgs/PoseStamped.h"
 
 namespace behaviour_trees
 {
@@ -52,15 +39,6 @@ class Localization :  public BT::ActionNodeBase
         ros::NodeHandle nh_;
         cv::Point point_[6];
         int position_;
-        std::string error_;
-        tf2_ros::Buffer buffer;
-        tf2_ros::TransformListener listener;
-        geometry_msgs::TransformStamped map2person_msg;
-    	tf2::Stamped<tf2::Transform> map2person;
-
-        ros::ServiceClient client;
-        geometry_msgs::PoseStamped start;
-        unsigned long calc_index(auto & poses);
 };
 
 }  // namespace behaviour_trees

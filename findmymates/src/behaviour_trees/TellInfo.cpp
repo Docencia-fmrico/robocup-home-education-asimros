@@ -47,8 +47,10 @@ namespace behaviour_trees
     {
         info_ = getInput<information::Info>("info").value();
 
-        info_speaker_ = "The person at the position " + info_.get_carac(0) + "is " + info_.get_carac(1) + 
+        info_speaker_ = "The person is at the position " + info_.get_carac(0) + "is " + info_.get_carac(1) + 
                        "the colour of his clothes is " + info_.get_carac(2) + "and he is holding a " + info_.get_carac(3); 
+        
+        ROS_ERROR("LA INFO ES: %s", info_speaker_);
 
         speaker_.speak(info_speaker_);
 
