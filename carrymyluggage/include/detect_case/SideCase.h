@@ -44,6 +44,7 @@ class SideCase
         int side_;
         int dif_;
         ros::Time read_ts_;
+        double elapsedtime_;
         double READ_TIME = 10.0;
         bool first_;
 
