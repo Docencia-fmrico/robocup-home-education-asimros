@@ -33,6 +33,7 @@ private:
   	image_transport::ImageTransport it_;
   	image_transport::Subscriber image_sub_;
 	ros::Publisher bbx_pub;
+	ros::Subscriber sub_;
 
   	typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image,
             darknet_ros_msgs::BoundingBoxes> MySyncPolicy_bbx;

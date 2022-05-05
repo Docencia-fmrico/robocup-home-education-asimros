@@ -15,6 +15,7 @@ buffer()
     sync_bbx.registerCallback(boost::bind(&Person_filter::filter_callback, this, _1, _2));
 	first_time = true;
 	activated_ = false;
+	sub_ = nh_.subscribe("/activation", 1, &Person_filter::callback_activation, this);
 }
 
 
