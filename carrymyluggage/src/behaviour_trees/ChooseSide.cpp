@@ -60,6 +60,7 @@ namespace behaviour_trees
     {
       if(first_) {
         speaker_.speak("Please point the bag");
+        case_.start();
         first_ = false;
       }
 
