@@ -41,7 +41,6 @@ private:
 
   std::string answer_;
 
-  bool recived_;
 
 };
 

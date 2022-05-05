@@ -62,6 +62,7 @@ namespace behaviour_trees
             info_.set_carac(answer, i + 1);
             //sino
             // pedirle que lo repita y volver a ponerlo a escuchar
+            //equivalente a reastar 1 a i
         }
 
         return BT::NodeStatus::SUCCESS;

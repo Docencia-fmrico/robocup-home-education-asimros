@@ -24,7 +24,6 @@ namespace sound
   {
     sub_ = n_.subscribe("/answer", 1, &Listener::messageCallback, this);
     pub_ = n_.advertise<std_msgs::String>("/listen", 1);
-    recived_ = false;
     msg_.data = "listen bro";
   }
 
@@ -38,16 +37,9 @@ namespace sound
   void
   Listener::messageCallback(const std_msgs::String::ConstPtr& msg)
   {
-    if(msg->data.compare("false"))
-    {
-      recived_ = false;
-    } 
-    else
-    {
-      recived_ = true;
+    
       answer_ = msg->data;
 
-    }
   }
 
 }  // namespace sound
