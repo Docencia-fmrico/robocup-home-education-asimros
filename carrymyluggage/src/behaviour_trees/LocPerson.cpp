@@ -36,8 +36,8 @@ namespace behaviour_trees
         client = nh_.serviceClient<nav_msgs::GetPlan>("/move_base/make_plan");
         // Coordenadas inicio de la nav, después se actualizan con siguiente destino (es donde está el árbitro)
         start.header.frame_id = "map";
-		start.pose.position.x = 3.0;  
-        start.pose.position.y = 2.0;  
+		start.pose.position.x = 2.0;  
+        start.pose.position.y = 5.0;  
         start.pose.position.z = 0.0;
         start.pose.orientation.x = 0.0;
         start.pose.orientation.y = 0.0;
@@ -86,7 +86,7 @@ namespace behaviour_trees
 
 			if (client.call(srv))
   			{
-    			auto index = LocPerson::calc_index(srv.response.plan.poses) - 2;
+    			auto index = LocPerson::calc_index(srv.response.plan.poses);
 				move_base_msgs::MoveBaseGoal goal;
 
         		goal.target_pose = srv.response.plan.poses[index];
@@ -99,13 +99,13 @@ namespace behaviour_trees
   			}
   			else
   			{
-    			ROS_ERROR("Failed to call service distance");
+    			ROS_ERROR("REINICIO LA SECUENCIA");
 				return BT::NodeStatus::RUNNING; 
   			}
 			
         	
 		}
-		ROS_ERROR("Unable to transform");
+		ROS_ERROR("UNABLE TO TRANSFORM");
         return BT::NodeStatus::FAILURE;
     }
 
@@ -124,6 +124,7 @@ namespace behaviour_trees
 
         for (i = 0; i < size; i++)
         {
+            ROS_ERROR("Calculando la distancia!!!!!!!!");
             x = poses[i].pose.position.x;
             y = poses[i].pose.position.y;
 

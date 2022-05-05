@@ -42,12 +42,14 @@ namespace sound
   {
     if(msg->data.compare("true"))
     {
+      ROS_ERROR("ME HA LLEGADO EL TRUE");
       finished_ = true;
       recived_ = true;
       warn_ = false;
     } 
     else
     {
+      ROS_ERROR("ME HA LLEGADO EL FALSE");
       recived_ = true;
       warn_ = true;
       warning_ts_ = (ros::Time::now()).toSec();

@@ -100,6 +100,11 @@ public:
 
     if (nav_finished_)
     {
+      nav_need_send_goal_ = true;
+      nav_finished_ = false;
+      nav_succeded_ = false;
+      firstick_ = true;
+      ROS_ERROR("LA NAVEGACION HA PUTO TERMINADO");
       return BT::NodeStatus::SUCCESS;
     }
     else

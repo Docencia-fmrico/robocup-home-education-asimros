@@ -46,7 +46,7 @@ class ChooseSide : public BT::ActionNodeBase
 		bool know_side_;
 		float angspeed_;
 
-		static constexpr double TURNING_TIME = 2.0;
+		static constexpr double TURNING_TIME = 3.0;
 		ros::Time turn_ts_;
         sound::Speaker speaker_;
 };

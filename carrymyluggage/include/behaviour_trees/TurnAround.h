@@ -52,7 +52,7 @@ class TurnAround :  public BT::ActionNodeBase
         geometry_msgs::Twist cmd_;
         float angspeed_ = 0.4;
 
-        static constexpr double TURNING_TIME = 4.0;
+        static constexpr double TURNING_TIME = 8.0;
 		ros::Time turn_ts_;
 };
 
