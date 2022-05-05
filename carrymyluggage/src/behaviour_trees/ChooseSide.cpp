@@ -26,6 +26,7 @@
 #include "nav_msgs/Path.h"
 #include "nav_msgs/GetPlan.h"
 #include "geometry_msgs/PoseStamped.h"
+#include "std_msgs/Int64.h"
 
 #include "sound/Speaker.h"
 
@@ -39,7 +40,7 @@ namespace behaviour_trees
     {
       know_side_ = false;
       vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 100);
-
+      activation_ = nh_.advertise<std_msgs::Int64>("/activation", 1);
       cmd_.linear.x = 0.0;
       cmd_.linear.y = 0.0;
       cmd_.linear.z = 0.0;
@@ -62,6 +63,8 @@ namespace behaviour_trees
         speaker_.speak("Please point the bag");
         case_.start();
         first_ = false;
+        msg_.data = 1;
+        activation_.publish(msg_);
       }
 
       if(!know_side_ &&  case_.get_side() != 0)

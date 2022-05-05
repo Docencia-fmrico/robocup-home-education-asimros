@@ -21,6 +21,8 @@
 #include "detect_case/SideCase.h"
 #include "geometry_msgs/Twist.h"
 
+#include "std_msgs/Int64.h"
+
 #include "sound/Speaker.h"
 
 namespace behaviour_trees
@@ -49,6 +51,9 @@ class ChooseSide : public BT::ActionNodeBase
 		static constexpr double TURNING_TIME = 3.0;
 		ros::Time turn_ts_;
         sound::Speaker speaker_;
+
+        ros::Publisher activation_;
+        std_msgs::Int64 msg_;
 };
 
 }  // namespace behaviour_trees
