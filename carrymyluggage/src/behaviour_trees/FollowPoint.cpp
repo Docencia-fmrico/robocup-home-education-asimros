@@ -45,6 +45,7 @@ FollowPoint::on_start()
 BT::NodeStatus
 FollowPoint::on_tick()
 {
+  ROS_ERROR("ESTOY NAVEGANDO");
   return BT::NodeStatus::RUNNING;
 }
 

@@ -85,6 +85,7 @@ namespace behaviour_trees
 
       if(know_side_)
       {
+        ROS_ERROR("KNOW SIDE ES VERDADERO");
         if((ros::Time::now() - turn_ts_).toSec() < TURNING_TIME)
         {
           ROS_ERROR("I AM TURNING******************************");

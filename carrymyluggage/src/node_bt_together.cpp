@@ -50,7 +50,7 @@ int main(int argc, char **argv)
 
   auto blackboard = BT::Blackboard::create();
 
-  std::string pkgpath = ros::package::getPath("robocup-home-education-asimros");
+  std::string pkgpath = ros::package::getPath("carrymyluggage");
 
   std::string xml_file = pkgpath + "/behaviour_trees_xml/tree_nav_init.xml";
   std::string xml_file2 = pkgpath + "/behaviour_trees_xml/tree_nav.xml";
@@ -59,7 +59,6 @@ int main(int argc, char **argv)
   BT::Tree tree2 = factory2.createTreeFromFile(xml_file2, blackboard);
 
   auto publisher_zmq = std::make_shared<BT::PublisherZMQ>(tree, 10, 1666, 1667);
-  auto publisher_zmq2 = std::make_shared<BT::PublisherZMQ>(tree2, 10, 1666, 1667);
 
   ros::Rate loop_rate(10);
 
@@ -75,7 +74,8 @@ int main(int argc, char **argv)
     }
     else
     {
-        finish2 = tree2.rootNode()->executeTick() == BT::NodeStatus::SUCCESS;
+      ROS_ERROR("HACIENDO TICK AL SEGUNDO ARBOLLLL");
+      finish2 = tree2.rootNode()->executeTick() == BT::NodeStatus::SUCCESS;
     }
 
     ros::spinOnce();

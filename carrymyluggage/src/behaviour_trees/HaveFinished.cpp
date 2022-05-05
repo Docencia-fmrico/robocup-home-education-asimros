@@ -38,11 +38,7 @@ namespace behaviour_trees
     BT::NodeStatus
     HaveFinished::tick()
     {
-      if(first_)
-      {
-        first_ = false;
-        listener_.listen();
-      }
+      listener_.listen();
 
       if(listener_.recived() && listener_.get_finished())
       {
@@ -50,7 +46,6 @@ namespace behaviour_trees
         return BT::NodeStatus::SUCCESS;
       }
 
-      listener_.warn();
       ROS_ERROR("NO ME HAN DICHO QUE HEMOS LLEGADO, POR LO TANTO; REINICIO EL ARBOL************");
       return BT::NodeStatus::FAILURE;
     }
