@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "behaviour_trees/HaveFinished.h"
+#include "behaviour_trees/Begin.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include <string>
 #include "sound/Listener.h"
@@ -21,31 +21,30 @@
 
 namespace behaviour_trees
 {
-    HaveFinished::HaveFinished(const std::string& name)
+    Begin::Begin(const std::string& name)
     : BT::ActionNodeBase(name, {})
     {
-      first_ = true;
     }
 
     void
-    HaveFinished::halt()
+    Begin::halt()
     {
-      ROS_INFO("HaveFinished halt");
+      ROS_INFO("Begin halt");
     }
 
     BT::NodeStatus
-    HaveFinished::tick()
+    Begin::tick()
     {
       listener_.listen();
 
-      if(listener_.recived() && listener_.get_finished())
+      if(listener_.answer().compare("True"))
       {
-        ROS_ERROR("si ha llegado");
+        ROS_ERROR("Me ha dicho de empezar");
         return BT::NodeStatus::SUCCESS;
       }
 
-      ROS_ERROR("NO ME HAN DICHO QUE HEMOS LLEGADO, POR LO TANTO; REINICIO EL ARBOL************");
-      return BT::NodeStatus::FAILURE;
+      ROS_ERROR("Aún no empiezo");
+      return BT::NodeStatus::RUNNING;
     }
 
 }  // namespace behaviour_trees
@@ -53,5 +52,5 @@ namespace behaviour_trees
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<behaviour_trees::HaveFinished>("have_finished");
+  factory.registerNodeType<behaviour_trees::Begin>("begin");
 }

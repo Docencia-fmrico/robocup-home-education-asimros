@@ -2,19 +2,22 @@
 <root main_tree_to_execute="BehaviorTree">
     <!-- ////////// -->
     <BehaviorTree ID="BehaviorTree">
-        <Repeat num_cycles="3">
-            <Sequence>
+        <Sequence>
+            <Action ID="begin"/>
+            <Repeat num_cycles="3">
                 <Sequence>
-                    <Action ID="localization" count="{count}" goal_nav="{goal_nav}"/>
+                    <Sequence>
+                        <Action ID="localization" count="{count}" goal_nav="{goal_nav}"/>
+                        <Action ID="go_point" goal_nav="{goal_nav}"/>
+                        <Action ID="check_person"/>
+                    </Sequence>
+                    <Action ID="ask_info" count="{count}" info="{info}"/>
+                    <Action ID="referee" goal_nav="{goal_nav}"/>
                     <Action ID="go_point" goal_nav="{goal_nav}"/>
-                    <Action ID="check_person"/>
+                    <Action ID="tell_info" info="{info}"/>
                 </Sequence>
-                <Action ID="ask_info" count="{count}" info="{info}"/>
-                <Action ID="referee" goal_nav="{goal_nav}"/>
-                <Action ID="go_point" goal_nav="{goal_nav}"/>
-                <Action ID="tell_info" info="{info}"/>
-            </Sequence>
-        </Repeat>
+            </Repeat>
+        </Sequence>
     </BehaviorTree>
     <!-- ////////// -->
     <TreeNodesModel>
@@ -22,6 +25,7 @@
             <input_port name="count"/>
             <output_port name="info"/>
         </Action>
+        <Action ID="begin"/>
         <Action ID="check_person"/>
         <Action ID="go_point">
             <input_port name="goal_nav"/>
