@@ -39,6 +39,7 @@ int main(int argc, char **argv)
   factory.registerFromPlugin(loader.getOSName("asr_follow_point_node"));
   factory.registerFromPlugin(loader.getOSName("asr_ask_for_case_node"));
   factory.registerFromPlugin(loader.getOSName("asr_arena_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_start_node"));
 
   factory2.registerFromPlugin(loader2.getOSName("asr_loc_person_node"));
   factory2.registerFromPlugin(loader2.getOSName("asr_turn_around_node"));

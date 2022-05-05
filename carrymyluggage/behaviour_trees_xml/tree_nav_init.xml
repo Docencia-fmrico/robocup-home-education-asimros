@@ -3,6 +3,7 @@
     <!-- ////////// -->
     <BehaviorTree ID="BehaviorTree">
         <Sequence>
+            <Action ID="start"/>
             <Action ID="arena" goal_nav="{goal_nav}"/>
             <Action ID="follow_point" goal_nav="{goal_nav}"/>
             <Action ID="wait_for_person"/>
@@ -20,6 +21,7 @@
         <Action ID="follow_point">
             <input_port name="goal_nav"/>
         </Action>
+        <Action ID="start"/>
         <Action ID="wait_for_person"/>
     </TreeNodesModel>
     <!-- ////////// -->

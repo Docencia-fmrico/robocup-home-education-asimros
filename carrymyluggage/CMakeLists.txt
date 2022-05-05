@@ -68,6 +68,7 @@ add_library(asr_loc_person_node SHARED src/behaviour_trees/LocPerson.cpp)
 add_library(asr_turn_around_node SHARED src/behaviour_trees/TurnAround.cpp)
 add_library(asr_request_come_closer_node SHARED src/behaviour_trees/RequestComeCloser.cpp)
 add_library(asr_have_finished_node SHARED src/behaviour_trees/HaveFinished.cpp)
+add_library(asr_start_node SHARED src/behaviour_trees/Start.cpp)
 
 list(APPEND plugin_libs
   asr_choose_side_node
@@ -79,6 +80,7 @@ list(APPEND plugin_libs
   asr_turn_around_node
   asr_arena_node
   asr_have_finished_node
+  asr_start_node
 )
 
 foreach(bt_plugin ${plugin_libs})
@@ -123,6 +125,8 @@ roslint_cpp(
   include/behaviour_trees/RequestComeCloser.h
   src/behaviour_trees/HaveFinished.cpp
   include/behaviour_trees/HaveFinished.h
+  src/behaviour_trees/Start.cpp
+  include/behaviour_trees/Start.h
   src/node_behaviour_tree_nav.cpp
   src/node_bt_together.cpp
   src/sound/Listener.cpp

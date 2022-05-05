@@ -69,7 +69,7 @@ namespace behaviour_trees
             listener_.listen();
             std::string answer = listener_.answer();
 
-            if(!answer.compare("false"))
+            if(!answer.compare("False"))
             {
                 i++;
                 info_.set_carac(answer, i);

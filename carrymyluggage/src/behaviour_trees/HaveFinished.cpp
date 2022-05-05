@@ -17,8 +17,6 @@
 #include <string>
 #include "sound/Listener.h"
 
-#include "sound/Listener.h"
-
 #include "ros/ros.h"
 
 namespace behaviour_trees

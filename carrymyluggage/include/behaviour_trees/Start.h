@@ -12,37 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BEHAVIOUR_TREES_LOCALIZATION_H
-#define BEHAVIOUR_TREES_LOCALIZATION_H
+#ifndef BEHAVIOUR_TREES_START_H
+#define BEHAVIOUR_TREES_START_H
 
+#include "sound/Listener.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 #include <string>
-#include <opencv2/core/types.hpp>
+
 #include "ros/ros.h"
 
 namespace behaviour_trees
 {
 
-class Localization :  public BT::ActionNodeBase
+class Start :  public BT::ActionNodeBase
 {
     public:
-        explicit Localization(const std::string& name, const BT::NodeConfiguration& config);
-
+        explicit Start(const std::string& name);
+        
         void halt();
-
-        static BT::PortsList providedPorts();
 
         BT::NodeStatus tick();
 
     private:
         ros::NodeHandle nh_;
-        cv::Point point_[6];
-        double locs_[6];
-        int position_;
-        int loc_index_;
+        sound::Listener listener_;
 };
 
 }  // namespace behaviour_trees
 
-#endif  // BEHAVIOUR_TREES_LOCALIZATION_H
+#endif  // BEHAVIOUR_TREES_START_H

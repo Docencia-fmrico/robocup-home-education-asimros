@@ -34,24 +34,31 @@ namespace behaviour_trees
     : BT::ActionNodeBase(name, config)
     {
         position_ = 0;
+        loc_index_ 0;
 
-        point_[0].x = 1; // posición 1 (lo dejemos a un metro)
-        point_[0].y = 1;
+        point_[0].x = 2.12; // posición 1 (lo dejemos a un metro)
+        point_[0].y = 2.65;
+        locs_[0] = 0.0;
 
-        point_[1].x = 2;
-        point_[1].y = 2;
+        point_[1].x = 0.61;
+        point_[1].y = 2.93;
+        locs_[1] = 0.0;
 
-        point_[2].x = 3;
-        point_[2].y = 3;
+        point_[2].x = -0.36;
+        point_[2].y = 3.77;
+        locs_[2] = 0.0;
 
-        point_[3].x = 4;
-        point_[3].y = 4;
+        point_[3].x = -0.77;
+        point_[3].y = 5.83;
+        locs_[3] = 0.0;
 
-        point_[4].x = 5;
-        point_[4].y = 5;
+        point_[4].x = -0.58;
+        point_[4].y = 6.70;
+        locs_[4] = 0.0;
 
-        point_[5].x = 6;
-        point_[5].y = 6;
+        point_[5].x = 1.42;
+        point_[5].y = 6.45;
+        locs_[5] = 0.0;
     }
     
     
@@ -83,12 +90,13 @@ namespace behaviour_trees
         goal.target_pose.pose.position.z = 0.0;
         goal.target_pose.pose.orientation.x = 0.0;
         goal.target_pose.pose.orientation.y = 0.0;
-        goal.target_pose.pose.orientation.z = 0.0;
+        goal.target_pose.pose.orientation.z = locs_[loc_index_];
         goal.target_pose.pose.orientation.w = 1.0;
 
         setOutput("goal_nav", goal);
         setOutput("count", position_);
         position_++;
+        loc_index_++;
 
         return BT::NodeStatus::SUCCESS;
     }

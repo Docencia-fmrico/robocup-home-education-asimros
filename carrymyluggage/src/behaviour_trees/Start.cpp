@@ -12,37 +12,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BEHAVIOUR_TREES_LOCALIZATION_H
-#define BEHAVIOUR_TREES_LOCALIZATION_H
-
+#include "behaviour_trees/Start.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
-#include "behaviortree_cpp_v3/bt_factory.h"
 #include <string>
-#include <opencv2/core/types.hpp>
+#include "sound/Listener.h"
+
 #include "ros/ros.h"
 
 namespace behaviour_trees
 {
+    Start::Start(const std::string& name)
+    : BT::ActionNodeBase(name, {})
+    {
+    }
 
-class Localization :  public BT::ActionNodeBase
-{
-    public:
-        explicit Localization(const std::string& name, const BT::NodeConfiguration& config);
+    void
+    Start::halt()
+    {
+      ROS_INFO("Start halt");
+    }
 
-        void halt();
+    BT::NodeStatus
+    Start::tick()
+    {
+      listener_.listen();
 
-        static BT::PortsList providedPorts();
+      if(listener_.recived() && listener_.get_finished())
+      {
+        ROS_ERROR("Me ha dicho de empezar");
+        return BT::NodeStatus::SUCCESS;
+      }
 
-        BT::NodeStatus tick();
-
-    private:
-        ros::NodeHandle nh_;
-        cv::Point point_[6];
-        double locs_[6];
-        int position_;
-        int loc_index_;
-};
+      ROS_ERROR("Aún no empiezo");
+      return BT::NodeStatus::RUNNING;
+    }
 
 }  // namespace behaviour_trees
 
-#endif  // BEHAVIOUR_TREES_LOCALIZATION_H
+#include "behaviortree_cpp_v3/bt_factory.h"
+BT_REGISTER_NODES(factory)
+{
+  factory.registerNodeType<behaviour_trees::Start>("start");
+}
