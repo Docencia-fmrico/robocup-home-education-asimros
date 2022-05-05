@@ -12,7 +12,7 @@
 #include <message_filters/subscriber.h>
 #include <message_filters/time_synchronizer.h>
 #include <message_filters/sync_policies/approximate_time.h>
-
+#include "std_msgs/Int64.h"
 #include <darknet_ros_msgs/BoundingBoxes.h>
 
 #include "img_buffer.h"
@@ -25,6 +25,7 @@ class Person_filter
 public:
 	Person_filter();
   	void filter_callback(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msgs::BoundingBoxesConstPtr& boxes);
+	void callback_activation(const std_msgs::Int64::ConstPtr& msg);
 
 private:
 	// Pubs and subs
@@ -44,7 +45,8 @@ private:
 	cv::Point2d pixel_;
 	bool first_time;
 	Img_buffer buffer;
-	
+	bool activated_;
+
 	// Private functions
 	void segment_image(cv::Mat img, const darknet_ros_msgs::BoundingBox &box, Segmented_Image & s_img);
 	void calc_segment_rgb(cv::Vec3i & segment, cv::Mat img, int x_min, int x_max, int y_min, int y_max); 

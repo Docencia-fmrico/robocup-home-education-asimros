@@ -86,6 +86,7 @@ add_library(${PROJECT_NAME}
   src/detect_person/DetectPerson.cpp
   src/sound/Listener.cpp
   src/sound/Speaker.cpp
+  src/information/Info.cpp
 )
 
 add_executable(node_behaviour_tree src/node_behaviour_tree.cpp)
