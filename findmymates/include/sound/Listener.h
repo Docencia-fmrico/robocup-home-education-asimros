@@ -30,7 +30,6 @@ public:
   void messageCallback(const std_msgs::String::ConstPtr& msg);
 
   void listen();
-  bool recived() {return recived_;}
   std::string answer() {return answer_;}
 
 private:
@@ -41,7 +40,6 @@ private:
 
   std::string answer_;
 
-  bool recived_;
 
 };
 

@@ -65,7 +65,6 @@ namespace behaviour_trees
             speak_ts_ = ros::Time::now();
             first_ = false;
         }
-        //esperar -> se pisa con el listener
 
         if((ros::Time::now() - speak_ts_).toSec() > SPEAKING_TIME)
         {
