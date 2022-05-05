@@ -14,55 +14,66 @@ buffer()
 	bbx_pub = nh_.advertise<darknet_ros_msgs::BoundingBoxes>("/bbx_filtered", 1);
     sync_bbx.registerCallback(boost::bind(&Person_filter::filter_callback, this, _1, _2));
 	first_time = true;
+	activated_ = false;
 }
+
+
+void Person_filter::callback_activation(const std_msgs::Int64::ConstPtr& msg)
+{
+	if (msg->data == 1) activated_ = true;
+}
+
 
 
 void Person_filter::filter_callback(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msgs::BoundingBoxesConstPtr& boxes)
 {
-	cv_bridge::CvImagePtr cv_ptr, cv_imageout;
-    try
-    {
-      cv_ptr = cv_bridge::toCvCopy(image, sensor_msgs::image_encodings::BGR8);
-	  cv_imageout = cv_bridge::toCvCopy(image, sensor_msgs::image_encodings::BGR8);
-    }
-    catch (cv_bridge::Exception& e)
-    {
-      ROS_ERROR("cv_bridge exception: %s", e.what());
-      return;
-    }
-
-    cv::Mat rgb;
-	cv::Mat debug_img;
-	darknet_ros_msgs::BoundingBoxes bbx_filtered;
-
-	rgb = cv_ptr->image;
-	debug_img = cv_imageout->image;
-
-	if (first_time) {
-		const auto & box = boxes->bounding_boxes[0];
-		Segmented_Image img_init;
-		Person_filter::segment_image(rgb, box, img_init);
-		buffer.add(img_init);
-		first_time = false;
-	}
-	else {
-		for (const auto & box : boxes->bounding_boxes)
+	if (activated_) {
+		cv_bridge::CvImagePtr cv_ptr, cv_imageout;
+    	try
     	{
-			Segmented_Image img_ref;
-			Person_filter::segment_image(rgb, box, img_ref);
-			if(buffer.stored_similar(img_ref)) {
-				Person_filter::calc_debug_img(debug_img, box, img_ref);
-				bbx_filtered.bounding_boxes.push_back(box);
-				bbx_filtered.image_header = image->header;
-				bbx_filtered.header = boxes->header;
-				bbx_pub.publish(bbx_filtered);
-				buffer.add(img_ref);
-				// ROS_INFO("Es la persona objetivo");
-				cv::imshow("Image debug", debug_img);
-				cv::waitKey(3);
+      		cv_ptr = cv_bridge::toCvCopy(image, sensor_msgs::image_encodings::BGR8);
+	  		cv_imageout = cv_bridge::toCvCopy(image, sensor_msgs::image_encodings::BGR8);
+    	}
+    	catch (cv_bridge::Exception& e)
+    	{
+      		ROS_ERROR("cv_bridge exception: %s", e.what());
+      		return;
+    	}
+
+   		cv::Mat rgb;
+		cv::Mat debug_img;
+		darknet_ros_msgs::BoundingBoxes bbx_filtered;
+
+		rgb = cv_ptr->image;
+		debug_img = cv_imageout->image;
+
+		if (first_time) {
+			const auto & box = boxes->bounding_boxes[0];
+			Segmented_Image img_init;
+			Person_filter::segment_image(rgb, box, img_init);
+			buffer.add(img_init);
+			first_time = false;
+		}
+		else {
+			for (const auto & box : boxes->bounding_boxes)
+			{
+				Segmented_Image img_ref;
+				Person_filter::segment_image(rgb, box, img_ref);
+				if(buffer.stored_similar(img_ref)) {
+					Person_filter::calc_debug_img(debug_img, box, img_ref);
+					bbx_filtered.bounding_boxes.push_back(box);
+					bbx_filtered.image_header = image->header;
+					bbx_filtered.header = boxes->header;
+					bbx_pub.publish(bbx_filtered);
+					buffer.add(img_ref);
+					// ROS_INFO("Es la persona objetivo");
+					cv::imshow("Image debug", debug_img);
+					cv::waitKey(3);
+				}
 			}
 		}
 	}
+	
 }
 
 

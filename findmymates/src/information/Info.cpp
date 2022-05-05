@@ -14,6 +14,8 @@
 
 #include <string>
 
+#include "information/Info.h"
+
 namespace information
 {
     Info::Info()
@@ -21,7 +23,7 @@ namespace information
     }
 
     void 
-    set_pos(int pos)
+    Info::set_pos(int pos)
     {
         if(pos == 0)
         {
@@ -50,7 +52,7 @@ namespace information
     }
 
     void 
-    set_carac(std::string carac, int type)
+    Info::set_carac(std::string carac, int type)
     {
         if(type == 1)
         {
@@ -66,7 +68,7 @@ namespace information
         }
     }
 
-    std::string get_carac(int type)
+    std::string Info::get_carac(int type)
     {
         if(type == 1)
         {

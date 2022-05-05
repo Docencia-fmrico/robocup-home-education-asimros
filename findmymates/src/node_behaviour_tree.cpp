@@ -38,10 +38,11 @@ int main(int argc, char **argv)
   factory.registerFromPlugin(loader.getOSName("asr_ask_info_node"));
   factory.registerFromPlugin(loader.getOSName("asr_tell_info_node"));
   factory.registerFromPlugin(loader.getOSName("asr_check_person_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_begin_node"));
 
   auto blackboard = BT::Blackboard::create();
 
-  std::string pkgpath = ros::package::getPath("carrymyluggage");
+  std::string pkgpath = ros::package::getPath("findmymates");
 
   std::string xml_file = pkgpath + "/behaviour_trees_xml/tree.xml";
 
