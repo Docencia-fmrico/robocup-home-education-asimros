@@ -26,6 +26,8 @@ namespace behaviour_trees
     AskInfo::AskInfo(const std::string& name, const BT::NodeConfiguration& config)
     : BT::ActionNodeBase(name, config)
     {
+        first_ = true;
+        speak_ = true;
     }
     
     
@@ -50,21 +52,42 @@ namespace behaviour_trees
 
         info_.set_pos(getInput<int>("count").value());
 
-        for(int i = 0; i < 3; i++)
+        int i = 0;
+
+        if(speak_)
         {
             speaker_.speak(questions[i]);
-            //esperar -> se pisa con el listener
+            speak_ = false;
+        }
         
+        if(first_)
+        {
+            speak_ts_ = ros::Time::now();
+            first_ = false;
+        }
+        //esperar -> se pisa con el listener
+
+        if((ros::Time::now() - speak_ts_).toSec() > SPEAKING_TIME)
+        {
             listener_.listen();
             std::string answer = listener_.answer();
 
-            //si recibe algo
-            info_.set_carac(answer, i + 1);
-            //sino
-            // pedirle que lo repita y volver a ponerlo a escuchar
+            if(!answer.compare("false"))
+            {
+                i++;
+                info_.set_carac(answer, i);
+                speak_ = true;
+
+                if(i == 3)
+                {
+                    first_ = true;
+                    setOutput<information::Info>("info", info_);
+                    return BT::NodeStatus::SUCCESS;
+                }
+            }
         }
 
-        return BT::NodeStatus::SUCCESS;
+        return BT::NodeStatus::RUNNING;
     }
 
 }  // namespace behaviour_trees
