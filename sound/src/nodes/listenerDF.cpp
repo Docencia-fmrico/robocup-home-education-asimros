@@ -25,6 +25,9 @@ class ListenerDF: public DialogInterface
       this->registerCallback(
         std::bind(&ListenerDF::colorIntentCB, this, ph::_1),
         "Color");
+      this->registerCallback(
+        std::bind(&ListenerDF::objectIntentCB, this, ph::_1),
+        "Object");
       this->registerCallback(std::bind(&ListenerDF::noIntentCB, this, ph::_1));
 
       sub_ = nl_.subscribe("/listen", 1, &ListenerDF::messageCallback, this);
@@ -47,6 +50,13 @@ class ListenerDF: public DialogInterface
     void colorIntentCB(dialogflow_ros_msgs::DialogflowResult result)
     {
       ROS_INFO("[ListenerDF] colorIntentCB: intent [%s]", result.intent.c_str());
+      msg_.data = result.fulfillment_text;
+      pub_.publish(msg_);
+    }
+
+    void objectIntentCB(dialogflow_ros_msgs::DialogflowResult result)
+    {
+      ROS_INFO("[ListenerDF] objectIntentCB: intent [%s]", result.intent.c_str());
       msg_.data = result.fulfillment_text;
       pub_.publish(msg_);
     }
