@@ -38,7 +38,7 @@ class Start :  public BT::ActionNodeBase
         ros::NodeHandle nh_;
         sound::Listener listener_;
         ros::Time listen_ts_;
-        double LISTEN_TIME = 30.0;
+        double LISTEN_TIME = 10.0;
         bool first_;
 };
 

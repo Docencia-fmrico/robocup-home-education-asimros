@@ -28,7 +28,7 @@ namespace detect_person
 {
 
 DetectPerson::DetectPerson()
-: image_depth_sub(nh, "/camera/depth_registered/image_raw", 1),
+: image_depth_sub(nh, "/camera/depth/image_raw", 1),
 bbx_sub(nh, "/darknet_ros/bounding_boxes", 1),
 sync_bbx(MySyncPolicy_bbx(10), image_depth_sub, bbx_sub)
 {
@@ -39,22 +39,7 @@ sync_bbx(MySyncPolicy_bbx(10), image_depth_sub, bbx_sub)
 void
 DetectPerson::callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msgs::BoundingBoxesConstPtr& boxes)
 {
-    cv_bridge::CvImagePtr img_ptr_depth;
-    try
-    {
-        img_ptr_depth = cv_bridge::toCvCopy(*image, sensor_msgs::image_encodings::TYPE_32FC1);
-    }
-    catch (cv_bridge::Exception& e)
-    {
-        ROS_ERROR("cv_bridge exception: %s", e.what());
-        return;
-    }
-
-    for (const auto & box : boxes->bounding_boxes)
-    {
-        seen_ = true;
-    }
-    
+    seen_ = true;
 }
 
 }  // namespace detect_person

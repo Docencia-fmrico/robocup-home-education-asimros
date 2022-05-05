@@ -23,6 +23,8 @@ namespace behaviour_trees
     : BT::ActionNodeBase(name, {}),
    	  listener(buffer)
     {
+        first_ = true;
+        activation_ = nh_.advertise<std_msgs::Int64>("/activation", 1);
     }
 
     void 
@@ -34,6 +36,11 @@ namespace behaviour_trees
     BT::NodeStatus
     WaitForPerson::tick()
     {
+        if (first_) {
+            msg_.data = 1;
+            activation_.publish(msg_);
+            first_ = false;
+        }
         if(buffer.canTransform("map", "person", ros::Time(0), ros::Duration(1.0), &error_))
         {
             ROS_ERROR("I have seen a person");

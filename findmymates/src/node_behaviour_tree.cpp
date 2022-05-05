@@ -56,7 +56,7 @@ int main(int argc, char **argv)
   bool finish = false;
   while (ros::ok() && !finish)
   {
-    tree.rootNode()->executeTick();
+    tree.rootNode()->executeTick() ==  BT::NodeStatus::SUCCESS;
 
     ros::spinOnce();
     loop_rate.sleep();
