@@ -34,7 +34,7 @@ namespace behaviour_trees
     : BT::ActionNodeBase(name, config)
     {
         position_ = 0;
-        loc_index_ 0;
+        loc_index_ = 0;
 
         point_[0].x = 2.12; // posición 1 (lo dejemos a un metro)
         point_[0].y = 2.65;
