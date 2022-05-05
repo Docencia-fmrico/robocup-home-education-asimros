@@ -51,8 +51,8 @@ namespace behaviour_trees
 
         goal.target_pose.header.frame_id = "map";
         goal.target_pose.header.stamp = ros::Time::now();
-        goal.target_pose.pose.position.x = -0.09;  //coord arbitro
-        goal.target_pose.pose.position.y = 3.29;  //coord arbitro
+        goal.target_pose.pose.position.x = 0.0;  //coord arbitro
+        goal.target_pose.pose.position.y = 3.3;  //coord arbitro
         goal.target_pose.pose.position.z = 0.0;
         goal.target_pose.pose.orientation.x = 0.0;
         goal.target_pose.pose.orientation.y = 0.0;
