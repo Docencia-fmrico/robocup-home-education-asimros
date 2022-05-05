@@ -26,6 +26,8 @@ namespace behaviour_trees
     AskInfo::AskInfo(const std::string& name, const BT::NodeConfiguration& config)
     : BT::ActionNodeBase(name, config)
     {
+        first_ = true;
+        speak_ = true;
     }
     
     
@@ -47,25 +49,47 @@ namespace behaviour_trees
     AskInfo::tick()
     {
         std::string questions[3] = {"What is your name?", "What is the color of your clothes?", "Which object are you holding?"};
+        int i = 0;
+        
+        if(first_)
+        {
+            info_.set_pos(getInput<int>("count").value());
+            speak_ts_ = ros::Time::now();
+            first_ = false;
+        }
 
-        info_.set_pos(getInput<int>("count").value());
-
-        for(int i = 0; i < 3; i++)
+        if(speak_)
         {
             speaker_.speak(questions[i]);
-            //esperar -> se pisa con el listener
-        
+            speak_ = false;
+        }
+
+        if((ros::Time::now() - speak_ts_).toSec() > SPEAKING_TIME)
+        {
             listener_.listen();
             std::string answer = listener_.answer();
 
-            //si recibe algo
-            info_.set_carac(answer, i + 1);
-            //sino
-            // pedirle que lo repita y volver a ponerlo a escuchar
-            //equivalente a reastar 1 a i
+            if(!answer.compare("false"))
+            {
+                i++;
+                info_.set_carac(answer, i);
+                speak_ = true;
+
+                if(i == 3)
+                {
+                    ROS_ERROR("He terminado de rellenar info");
+                    first_ = true;
+                    setOutput<information::Info>("info", info_);
+                    return BT::NodeStatus::SUCCESS;
+                }
+            }
+            else
+            {
+                speak_ = true;
+            }
         }
 
-        return BT::NodeStatus::SUCCESS;
+        return BT::NodeStatus::RUNNING;
     }
 
 }  // namespace behaviour_trees

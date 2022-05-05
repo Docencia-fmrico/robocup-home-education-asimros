@@ -43,6 +43,12 @@ namespace behaviour_trees
             sound::Speaker speaker_;
             information::Info info_;
             sound::Listener listener_;
+
+            static constexpr double SPEAKING_TIME = 3.0;
+            ros::Time speak_ts_;
+
+            bool speak_;
+            bool first_;
     };
 
 }  // namespace behaviour_trees
