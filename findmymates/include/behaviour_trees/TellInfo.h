@@ -20,7 +20,7 @@
 #include <string>
 
 #include "ros/ros.h"
-#include "sound/Speaker.h"
+#include "sound2/Speaker.h"
 #include "information/Info.h"
 
 namespace behaviour_trees

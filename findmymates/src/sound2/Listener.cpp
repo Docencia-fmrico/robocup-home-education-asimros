@@ -15,21 +15,31 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include <string>
-#include "sound/Speaker.h"
+#include "sound2/Listener.h"
 
 namespace sound
 {
 
-  Speaker::Speaker(): n_()
+  Listener::Listener(): n_()
   {
-    pub_ = n_.advertise<std_msgs::String>("/speak", 1);
+    sub_ = n_.subscribe("/answer", 1, &Listener::messageCallback, this);
+    pub_ = n_.advertise<std_msgs::String>("/listen", 1);
+    msg_.data = "listen bro";
+  }
+
+  
+  void
+  Listener::listen()
+  {
+    pub_.publish(msg_);    
   }
 
   void
-  Speaker::speak(std::string say)
+  Listener::messageCallback(const std_msgs::String::ConstPtr& msg)
   {
-    msg_.data = say;
-    pub_.publish(msg_);
+    
+    answer_ = msg->data;
+
   }
 
 }  // namespace sound

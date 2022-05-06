@@ -20,8 +20,8 @@
 #include <string>
 
 #include "ros/ros.h"
-#include "sound/Speaker.h"
-#include "sound/Listener.h"
+#include "sound2/Speaker.h"
+#include "sound2/Listener.h"
 #include "information/Info.h"
 
 namespace behaviour_trees

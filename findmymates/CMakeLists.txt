@@ -84,8 +84,8 @@ endforeach()
 
 add_library(${PROJECT_NAME}
   src/detect_person/DetectPerson.cpp
-  src/sound/Listener.cpp
-  src/sound/Speaker.cpp
+  src/sound2/Listener.cpp
+  src/sound2/Speaker.cpp
   src/information/Info.cpp
 )
 
@@ -103,10 +103,10 @@ roslint_cpp(
   include/behaviour_trees/CheckPerson.h
   include/behaviour_trees/DetectPerson.h
   src/behaviour_trees/DetectPerson.cpp
-  src/sound/Listener.cpp
-  src/sound/Speaker.cpp
-  include/sound/Listener.h
-  include/sound/Speaker.h
+  src/sound2/Listener.cpp
+  src/sound2/Speaker.cpp
+  include/sound2/Listener.h
+  include/sound2/Speaker.h
   src/behaviour_trees/AskInfo.cpp
   include/behaviour_trees/AskInfo.h
   src/behaviour_trees/TellInfo.cpp
