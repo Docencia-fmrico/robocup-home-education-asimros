@@ -17,7 +17,7 @@
 #include <string>
 #include "sound2/Speaker.h"
 
-namespace sound
+namespace sound2
 {
 
   Speaker::Speaker(): n_()
@@ -32,4 +32,4 @@ namespace sound
     pub_.publish(msg_);
   }
 
-}  // namespace sound
+}  // namespace sound2

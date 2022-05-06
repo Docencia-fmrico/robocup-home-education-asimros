@@ -19,7 +19,7 @@
 #include "std_msgs/String.h"
 #include <string>
 
-namespace sound
+namespace sound2
 {
 
 class Speaker
@@ -35,6 +35,6 @@ private:
   std_msgs::String msg_;
 };
 
-}  // namespace sound
+}  // namespace sound2
 
 #endif // SOUND_SPEAKER_H

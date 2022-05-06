@@ -39,7 +39,7 @@ namespace behaviour_trees
 
         private:
             ros::NodeHandle nh_;
-            sound::Speaker speaker_;
+            sound2::Speaker speaker_;
             information::Info info_;
             std::string info_speaker_;
     };

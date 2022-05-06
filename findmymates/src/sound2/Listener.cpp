@@ -17,7 +17,7 @@
 #include <string>
 #include "sound2/Listener.h"
 
-namespace sound
+namespace sound2
 {
 
   Listener::Listener(): n_()
@@ -43,4 +43,4 @@ namespace sound
 
   }
 
-}  // namespace sound
+}  // namespace sound2

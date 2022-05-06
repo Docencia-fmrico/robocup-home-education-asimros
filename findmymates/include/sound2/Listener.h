@@ -19,7 +19,7 @@
 #include "std_msgs/String.h"
 #include <string>
 
-namespace sound
+namespace sound2
 {
 
 class Listener
@@ -43,6 +43,6 @@ private:
 
 };
 
-}  // namespace sound
+}  // namespace sound2
 
 #endif // SOUND_LISTENER_H

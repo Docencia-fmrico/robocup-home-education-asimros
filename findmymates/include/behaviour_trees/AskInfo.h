@@ -40,9 +40,9 @@ namespace behaviour_trees
 
         private:
             ros::NodeHandle nh_;
-            sound::Speaker speaker_;
+            sound2::Speaker speaker_;
             information::Info info_;
-            sound::Listener listener_;
+            sound2::Listener listener_;
 
             static constexpr double SPEAKING_TIME = 3.0;
             ros::Time speak_ts_;
