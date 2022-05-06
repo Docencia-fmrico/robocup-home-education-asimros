@@ -38,27 +38,33 @@ namespace behaviour_trees
 
         point_[0].x = 2.1; // posición 1 (lo dejemos a un metro)
         point_[0].y = 2.6;
-        locs_[0] = 0.0;
+        locs_[0].x = 0.0;
+        locs_[0].y = 0.0;
 
         point_[1].x = 0.6;
         point_[1].y = 2.9;
-        locs_[1] = 0.0;
+        locs_[0].x = 0.0;
+        locs_[0].y = 0.0;
 
         point_[2].x = -0.3;
         point_[2].y = 3.7;
-        locs_[2] = 0.0;
+        locs_[0].x = 0.0;
+        locs_[0].y = 0.0;
 
         point_[3].x = -0.7;
         point_[3].y = 5.8;
-        locs_[3] = 0.0;
+        locs_[0].x = 0.0;
+        locs_[0].y = 0.0;
 
         point_[4].x = -0.5;
         point_[4].y = 6.7;
-        locs_[4] = 0.0;
+        locs_[0].x = 0.0;
+        locs_[0].y = 0.0;
 
         point_[5].x = 1.4;
         point_[5].y = 6.4;
-        locs_[5] = 0.0;
+        locs_[0].x = 0.0;
+        locs_[0].y = 0.0;
     }
     
     
@@ -91,8 +97,8 @@ namespace behaviour_trees
         goal.target_pose.pose.position.z = 0.0;
         goal.target_pose.pose.orientation.x = 0.0;
         goal.target_pose.pose.orientation.y = 0.0;
-        goal.target_pose.pose.orientation.z = locs_[loc_index_];
-        goal.target_pose.pose.orientation.w = 1.0;
+        goal.target_pose.pose.orientation.z = locs_[loc_index_].x;
+        goal.target_pose.pose.orientation.w = locs_[loc_index_].y;
 
         setOutput("goal_nav", goal);
         setOutput("count", position_);
