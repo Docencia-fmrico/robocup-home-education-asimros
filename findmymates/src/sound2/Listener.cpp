@@ -25,6 +25,7 @@ namespace sound
     sub_ = n_.subscribe("/answer", 1, &Listener::messageCallback, this);
     pub_ = n_.advertise<std_msgs::String>("/listen", 1);
     msg_.data = "listen bro";
+    answer_ = "no answer";
   }
 
   
