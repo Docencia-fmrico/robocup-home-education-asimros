@@ -54,13 +54,13 @@ namespace behaviour_trees
         if(first_)
         {
             info_.set_pos(getInput<int>("count").value());
-            speak_ts_ = ros::Time::now();
             first_ = false;
         }
 
         if(speak_)
         {
             speaker_.speak(questions[i]);
+            speak_ts_ = ros::Time::now();
             speak_ = false;
         }
 
