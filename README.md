@@ -22,6 +22,11 @@
 
 ## Sound
 
+#### Intents
 ![Image text](https://github.com/Docencia-fmrico/robocup-home-education-asimros/blob/main/img/Intents.png)
+
+#### Buleanos
 ![Image text](https://github.com/Docencia-fmrico/robocup-home-education-asimros/blob/main/img/Funcionamiento.png)
+
+#### Variables
 ![Image text](https://github.com/Docencia-fmrico/robocup-home-education-asimros/blob/main/img/Side.png)
