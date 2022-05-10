@@ -38,7 +38,7 @@ class Localization :  public BT::ActionNodeBase
     private:
         ros::NodeHandle nh_;
         cv::Point2d point_[6];
-        double locs_[6];
+        cv::Point2d locs_[6];
         int position_;
         int loc_index_;
 };

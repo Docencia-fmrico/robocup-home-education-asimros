@@ -28,6 +28,7 @@ namespace behaviour_trees
     {
         first_ = true;
         speak_ = true;
+        i = 0; 
     }
     
     
@@ -49,18 +50,17 @@ namespace behaviour_trees
     AskInfo::tick()
     {
         std::string questions[3] = {"What is your name?", "What is the color of your clothes?", "Which object are you holding?"};
-        int i = 0;
-        
+                
         if(first_)
         {
             info_.set_pos(getInput<int>("count").value());
-            speak_ts_ = ros::Time::now();
             first_ = false;
         }
 
         if(speak_)
         {
             speaker_.speak(questions[i]);
+            speak_ts_ = ros::Time::now();
             speak_ = false;
         }
 
@@ -68,24 +68,17 @@ namespace behaviour_trees
         {
             listener_.listen();
             std::string answer = listener_.answer();
+        
+            i++;
+            info_.set_carac(answer, i);
+            speak_ = true;
 
-            if(!answer.compare("False"))
+            if(i == 3)
             {
-                i++;
-                info_.set_carac(answer, i);
-                speak_ = true;
-
-                if(i == 3)
-                {
-                    ROS_ERROR("He terminado de rellenar info");
-                    first_ = true;
-                    setOutput<information::Info>("info", info_);
-                    return BT::NodeStatus::SUCCESS;
-                }
-            }
-            else
-            {
-                speak_ = true;
+                ROS_ERROR("He terminado de rellenar info");
+                first_ = true;
+                setOutput<information::Info>("info", info_);
+                return BT::NodeStatus::SUCCESS;
             }
         }
 

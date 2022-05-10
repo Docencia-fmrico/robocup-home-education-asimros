@@ -36,13 +36,13 @@ namespace behaviour_trees
         client = nh_.serviceClient<nav_msgs::GetPlan>("/move_base/make_plan");
         // Coordenadas inicio de la nav, después se actualizan con siguiente destino (es donde está el árbitro)
         start.header.frame_id = "map";
-		start.pose.position.x = 0.0;  // 0.0
-        start.pose.position.y = 3.3;  // 3.3
+		start.pose.position.x = 0.88;  // 0.0
+        start.pose.position.y = 4.48;  // 3.3
         start.pose.position.z = 0.0;
         start.pose.orientation.x = 0.0;
         start.pose.orientation.y = 0.0;
-        start.pose.orientation.z = 0.0;
-        start.pose.orientation.w = 1.0;
+        start.pose.orientation.z = -0.96;
+        start.pose.orientation.w = 0.26;
     }
     
     

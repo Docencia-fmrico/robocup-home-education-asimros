@@ -1,0 +1,7 @@
+<launch>
+	<include file="$(find usb_cam)/launch/usb_cam-test.launch"></include>
+	<include file="$(find darknet_ros)/launch/darknet_ros.launch">
+		<arg name="image" value="/usb_cam/image_raw" />
+	</include>
+	<node pkg="personlocalization" type="node_filter_bbx" name="filter_bbx" output="screen"></node>
+</launch>

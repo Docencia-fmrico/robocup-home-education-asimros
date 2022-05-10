@@ -51,13 +51,13 @@ namespace behaviour_trees
 
         goal.target_pose.header.frame_id = "map";
         goal.target_pose.header.stamp = ros::Time::now();
-        goal.target_pose.pose.position.x = 0.0;  //coord arbitro
-        goal.target_pose.pose.position.y = 3.3;  //coord arbitro
+        goal.target_pose.pose.position.x = 0.88;  //coord arbitro
+        goal.target_pose.pose.position.y = 4.48;  //coord arbitro
         goal.target_pose.pose.position.z = 0.0;
         goal.target_pose.pose.orientation.x = 0.0;
         goal.target_pose.pose.orientation.y = 0.0;
-        goal.target_pose.pose.orientation.z = 0.0;
-        goal.target_pose.pose.orientation.w = 1.0;
+        goal.target_pose.pose.orientation.z = -0.96;
+        goal.target_pose.pose.orientation.w = 0.26;
 
         setOutput("goal_nav", goal);
         
