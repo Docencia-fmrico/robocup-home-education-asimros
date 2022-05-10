@@ -43,7 +43,7 @@ namespace behaviour_trees
       if((ros::Time::now() - listen_ts_).toSec() < LISTEN_TIME){
         listener_.listen();
 
-        if(listener_.answer().compare("True"))
+        if(!listener_.answer().compare("false"))
         {
           ROS_ERROR("Me ha dicho de empezar");
           return BT::NodeStatus::SUCCESS;

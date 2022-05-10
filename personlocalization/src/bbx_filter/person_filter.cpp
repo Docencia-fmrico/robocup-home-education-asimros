@@ -5,7 +5,7 @@ namespace bbx_filter
 
 Person_filter::Person_filter()
 : it_(nh_),
-image_sub(nh_, "/camera/rgb/image_raw", 1),
+image_sub(nh_, "/usb_cam/image_raw", 1),
 bbx_sub(nh_, "/darknet_ros/bounding_boxes", 1),
 sync_bbx(MySyncPolicy_bbx(10), image_sub, bbx_sub),
 buffer()
@@ -14,7 +14,7 @@ buffer()
 	bbx_pub = nh_.advertise<darknet_ros_msgs::BoundingBoxes>("/bbx_filtered", 1);
     sync_bbx.registerCallback(boost::bind(&Person_filter::filter_callback, this, _1, _2));
 	first_time = true;
-	activated_ = false;
+	activated_ = true;
 	sub_ = nh_.subscribe("/activation", 1, &Person_filter::callback_activation, this);
 }
 

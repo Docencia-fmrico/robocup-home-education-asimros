@@ -47,6 +47,7 @@ namespace behaviour_trees
             static constexpr double SPEAKING_TIME = 3.0;
             ros::Time speak_ts_;
 
+            int i;
             bool speak_;
             bool first_;
     };
